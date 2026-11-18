@@ -758,7 +758,7 @@ void k9Main::updateSelection() {
               break;
 	}
 	bool singleAudio=(Ui_MainDlg.cbOutput->currentIndex()==oMP4) && (title->getEncOpt()->getEncoder()=="mencoder");
-	bool singleSubp=(Ui_MainDlg.cbOutput->currentIndex()==oMP4) && (title->getEncOpt()->getEncoder()=="mencoder");
+	bool singleSubp=(Ui_MainDlg.cbOutput->currentIndex()==oMP4); // only one subtitle can be burned in
         bool noSubp=(Ui_MainDlg.cbOutput->currentIndex()==oMP4) && (title->getEncOpt()->getEncoder()=="ffmpeg") && (!Ui_MainDlg.urOutput->url().path().endsWith(".mkv"));
 	
         switch ( litem->streamType ) {
@@ -884,7 +884,7 @@ void k9Main::checkTitle ( bool state, ckLvItem *_item ) {
         title= ( k9DVDTitle* ) _item->obj;
    
     bool singleAudio=(Ui_MainDlg.cbOutput->currentIndex()==oMP4) && (title->getEncOpt()->getEncoder()=="mencoder");
-    bool singleSubp=(Ui_MainDlg.cbOutput->currentIndex()==oMP4) && (title->getEncOpt()->getEncoder()=="mencoder");
+    bool singleSubp=(Ui_MainDlg.cbOutput->currentIndex()==oMP4); // only one subtitle can be burned in
     //bool noSubp=(Ui_MainDlg.cbOutput->currentIndex()==oMP4) && (title->getEncOpt()->getEncoder()=="ffmpeg") && (!Ui_MainDlg.urOutput->url().fileName().endsWith(".mkv"));
 
     
