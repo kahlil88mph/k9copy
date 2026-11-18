@@ -183,7 +183,7 @@ void k9Subtitle2Pgm::pes_ac3_loop (void) {
 
 
     uint index=0;
-    void *vobsub_h=vobsub_out_open(m_baseName.toUtf8(), m_palette,720,576,m_langCod.toLatin1(), index);
+    void *vobsub_h=vobsub_out_open(m_baseName.toUtf8(), m_palette,m_frameW,m_frameH,m_langCod.toLatin1(), index);
 
 
     do {

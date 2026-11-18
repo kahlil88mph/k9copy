@@ -5,6 +5,9 @@
 #include "k9dvdtitle.h"
 #include <QApplication>
 #include <QTimer>
+#include "k9videocodecs.h"
+#include "k9audiocodecs.h"
+#include "k9titleencopt.h"
 
 
 void k9batch::showHelp()
@@ -20,6 +23,64 @@ void k9batch::showHelp()
     k9log::writeln("--backup-menus\t\t\tKeep original menus");
     k9log::writeln("--prefered-audio-lang <lang,lang,lang>\tAudio streams to backup. If the first is not found, takes the second...");
     k9log::writeln("--prefered-sub-lang <lang,lang,lang>\tSubtitles streams to backup. If the first is not found, takes the second...");
+    k9log::writeln("\nEncoding (instead of a DVD backup):");
+    k9log::writeln("--encode <file>\t\t\tEncode the selected titles to <file> (.mkv, .mp4, .avi, .webm, .mpg)");
+    k9log::writeln("--video-codec <name>\t\tVideo preset whose name contains <name> (e.g. x264, HEVC, AV1)");
+    k9log::writeln("--audio-codec <name>\t\tAudio preset whose name contains <name> (e.g. AAC, Opus)");
+    k9log::writeln("--size <MB>\t\t\tTarget file size, or --video-bitrate <kbit/s>");
+    k9log::writeln("--audio-bitrate <kbit/s>\tAudio bitrate (default 128)");
+    k9log::writeln("--width <pixels>\t\tOutput width (height follows the aspect ratio)");
+    k9log::writeln("--2pass\t\t\t\tTwo-pass video encoding");
+    k9log::writeln("\nThe preferred audio/subtitle languages select the streams to encode; for");
+    k9log::writeln("MPEG-4 output a selected subtitle is burned into the picture.");
+}
+
+// Index of the first preset whose name contains _name (case-insensitive), or -1.
+template<class Codecs>
+static int findPreset(Codecs &codecs, const QString &_name)
+{
+    for (int i = 0; i < codecs.count(); i++)
+        if (codecs.getCodecName(i).contains(_name, Qt::CaseInsensitive))
+            return i;
+    return -1;
+}
+
+bool k9batch::encode(k9DVD &dvd, k9ExecCopy &execCopy)
+{
+    k9VideoCodecs vcodecs(nullptr);
+    k9AudioCodecs acodecs(nullptr);
+    int vc = args.contains("video-codec") ? findPreset(vcodecs, args["video-codec"]) : 0;
+    int ac = args.contains("audio-codec") ? findPreset(acodecs, args["audio-codec"]) : 0;
+    if (vc < 0 || ac < 0) {
+        k9log::writeln(QString("unknown %1 preset").arg(vc < 0 ? "video" : "audio"));
+        k9log::writeln("video presets:");
+        for (int i = 0; i < vcodecs.count(); i++) k9log::writeln("  " + vcodecs.getCodecName(i));
+        k9log::writeln("audio presets:");
+        for (int i = 0; i < acodecs.count(); i++) k9log::writeln("  " + acodecs.getCodecName(i));
+        return false;
+    }
+    for (int i = 0; i < dvd.gettitleCount(); i++) {
+        k9DVDTitle *t = dvd.gettitle(i);
+        if (!t->isSelected())
+            continue;
+        k9TitleEncOpt *opt = t->getEncOpt();
+        opt->setEncoder(vcodecs.getEncoder(vc));
+        opt->setCodec(vc);
+        opt->setAudioCodec(ac);
+        opt->setNumParts(1);
+        opt->set2Passes(args.contains("2pass"));
+        opt->setAudioBr(args.value("audio-bitrate", "128"));
+        opt->setVideoBr(args.value("video-bitrate", ""));
+        if (args.contains("size"))
+            opt->setMaxSize(args["size"].toInt());
+        if (args.contains("width")) {
+            opt->setWidth(args["width"]);
+            opt->setHeight("");
+        }
+    }
+    execCopy.setPath(args["encode"]);
+    execCopy.CreateMP4();
+    return true;
 }
 
 bool k9batch::exec(int argc, char** argv)
@@ -63,6 +124,10 @@ bool k9batch::exec(int argc, char** argv)
 	execCopy.setDvdSize(qMin(size,8500));
     }
     doSelect(dvd);
+    if (args.contains("encode")) {
+        encode(dvd, execCopy);
+        return true;
+    }
     //execCopy.setSpeed ( Ui_MainDlg.cbBurnSpeed->currentText() );
     bool bFolder,bISO;
     bISO=args["output"].endsWith(".iso");

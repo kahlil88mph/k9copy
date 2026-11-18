@@ -69,7 +69,7 @@ void k9VideoCodecs::reset() {
     // ffmpeg presets. Placeholders are filled by k9MP4Enc::replaceParams().
     // Filter order: deinterlace (only frames flagged interlaced), resize,
     // crop (coordinates already scaled to the resized frame), display aspect.
-    const QString vf = QStringLiteral("-vf bwdif=deint=interlaced,scale=$WIDTH:$HEIGHT,crop=$CROPWIDTH:$CROPHEIGHT:$CROPLEFT:$CROPTOP,setdar=$ASPECT");
+    const QString vf = QStringLiteral("-vf bwdif=mode=send_frame:deint=interlaced,scale=$WIDTH:$HEIGHT,crop=$CROPWIDTH:$CROPHEIGHT:$CROPLEFT:$CROPTOP,setdar=$ASPECT");
     const QString p1 = QStringLiteral(" -pass 1 -passlogfile $PASSLOGFILE");
     const QString p2 = QStringLiteral(" -pass 2 -passlogfile $PASSLOGFILE");
     auto add = [this](const QString &name, const QString &fourcc, const QString &one,
@@ -82,10 +82,12 @@ void k9VideoCodecs::reset() {
 
     m_codecs.clear();
     std3("H.264 (x264)", "", "-c:v libx264 -preset medium -profile:v high -b:v $VIDBRk");
-    add("H.265 / HEVC (x265)", "hvc1",
-        "-c:v libx265 -preset medium -b:v $VIDBRk " + vf,
-        "-c:v libx265 -preset medium -b:v $VIDBRk -x265-params pass=1:stats=$PASSLOGFILE " + vf,
-        "-c:v libx265 -preset medium -b:v $VIDBRk -x265-params pass=2:stats=$PASSLOGFILE " + vf);
+    // x265 multi-pass through ffmpeg fails on some inputs ("Incomplete
+    // CU-tree stats"), so HEVC is single-pass ABR; a 2-pass run encodes twice.
+    {
+        const QString hevc = "-c:v libx265 -preset medium -b:v $VIDBRk " + vf;
+        add("H.265 / HEVC (x265)", "hvc1", hevc, hevc, hevc);
+    }
     // SVT-AV1 is single pass here; a "2-pass" run just encodes twice.
     {
         const QString av1 = "-c:v libsvtav1 -preset 8 -b:v $VIDBRk " + vf;

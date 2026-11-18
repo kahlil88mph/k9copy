@@ -10,6 +10,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include "k9dvdnav.h"
 #include "k9play.h"
 #include "k9dvdread.h"
 #include "k9cell.h"
@@ -350,7 +351,7 @@ void k9play::play() {
 
     /* open dvdnav handle */
 //PM DVDNAV    if (dvdnav_open(&dvdnav, m_device.toUtf8(),NULL) != DVDNAV_STATUS_OK) {
-    if (dvdnav_open(&dvdnav, m_device.toUtf8()) != DVDNAV_STATUS_OK) {
+    if (k9dvdnav_open(&dvdnav, m_device.toUtf8().constData()) != DVDNAV_STATUS_OK) {
         writeOutput("ERR:Error on dvdnav_open\n");
         emit sigError(i18n("Error opening the DVD"));
         end();

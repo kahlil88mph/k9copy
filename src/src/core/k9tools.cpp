@@ -42,11 +42,11 @@ void k9Tools::setMainThread(){
 static bool isMainThread();
 
 const QString  k9Tools::getTempPath() {
-QString sPath;
-
-sPath=QString("%1/%2/").arg(QDir::tempPath() + '/' + "k9copy/");
-
-return sPath;
+    // (The Qt5 port left an unfilled "%2" in this path, so temp files could
+    // never be created and the disk-backed fifo returned garbage.)
+    const QString sPath = QDir::tempPath() + "/k9copy/";
+    QDir().mkpath(sPath);
+    return sPath;
 }
 
 void k9Tools::addTemporaryDir(const QString & dir) {

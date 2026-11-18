@@ -41,6 +41,7 @@ public:
     void setPalette(uint _index,uint value);
 
     void setLangCod(const QString& theValue);
+    void setFrameSize(int w, int h) { m_frameW = w; m_frameH = h; }
 
     void setTrackCod(int theValue);
 
@@ -49,6 +50,7 @@ public:
 private:
     double last_pts;
     QString  m_langCod;
+    int m_frameW = 720, m_frameH = 576;   // DVD picture size (NTSC: 720x480)
     int m_trackCod;
     int last_pts_set;
     QString m_baseName;

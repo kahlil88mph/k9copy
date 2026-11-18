@@ -34,9 +34,9 @@ k9ConvertAudio::k9ConvertAudio(const QString &_output,const QStringList &_cmd):Q
 }
 
 void k9ConvertAudio::finished ( int exitCode, QProcess::ExitStatus exitStatus ) {
-    Q_UNUSED(exitCode);
-    Q_UNUSED(exitStatus);
-    if (!m_nodata)
+    m_exitCode = (exitStatus==QProcess::NormalExit) ? exitCode : -1;
+    // Exiting before the input was closed, or with an error code, is a failure.
+    if (!m_nodata || m_exitCode!=0)
 	m_error=true;
 }
 
@@ -50,10 +50,11 @@ _k9ConvertOutput::_k9ConvertOutput(k9ConvertAudio *parent):QObject(){
 }
 
 void _k9ConvertOutput::getStdout( char *buffer, int buflen) {
+    m_parent->touch();
     QString tmp( QByteArray(buffer,buflen));
     if (! tmp.isEmpty()) {
 	m_parent->getOutput() << tmp;
-	if (m_parent->getOutput().count() > 10)
+	if (m_parent->getOutput().count() > 40)
 	   m_parent->getOutput().removeAt(0);
     }
     if (m_parent->getCmd().at(0).contains("mencoder")) {
@@ -93,6 +94,7 @@ void k9ConvertAudio::run() {
     _k9ConvertOutput *output=new _k9ConvertOutput(this);
     m_nodata=false;
     m_error=false;
+    m_exitCode=0;
     m_process=new k9Process(0,0);
     connect(m_process, SIGNAL(finished ( int , QProcess::ExitStatus )),output,SLOT(finished(int, QProcess::ExitStatus)));
     connect(m_process, SIGNAL(receivedStdout( char *, int)),output, SLOT(getStdout(char *, int) ));
@@ -109,6 +111,7 @@ void k9ConvertAudio::run() {
         m_process->setShellCommand(m_cmd.join(" "));
     }
     qDebug() << m_process->debug();
+    m_activity.start();
     m_process->start();
 
 
@@ -121,9 +124,20 @@ void k9ConvertAudio::run() {
         if (size >0 ) {
             m_mutex.lock();
             while (m_process->isRunning()) {
-                if (m_process->bytesToWrite() >size)
-                    m_process->waitForBytesWritten(-1);
-                else
+                if (m_process->bytesToWrite() >size) {
+                    m_process->waitForBytesWritten(1000);
+                    // ffmpeg prints progress about twice a second. If it has
+                    // gone silent and stopped reading, it is wedged (e.g. after
+                    // an encoder error): kill it instead of blocking forever.
+                    if (m_activity.isValid() && m_activity.elapsed() > 60000) {
+                        m_output << QStringLiteral("k9copy: ffmpeg stopped responding; killed\n");
+                        m_process->kill();
+                        m_process->waitForFinished(5000);
+                        m_error=true;
+                        m_exitCode=-1;
+                        break;
+                    }
+                } else
                     break;
             }
             m_mutex.unlock();
@@ -139,6 +153,11 @@ void k9ConvertAudio::run() {
                 m_process->waitForBytesWritten();
             m_process->closeWriteChannel();
             m_process->wait();
+            // finished() is queued to a thread without an event loop, so read
+            // the result directly.
+            m_exitCode = (m_process->exitStatus()==QProcess::NormalExit) ? m_process->exitCode() : -1;
+            if (m_exitCode!=0)
+                m_error=true;
         } else {
           //  m_process->waitForFinished(10);
         }

@@ -12,6 +12,7 @@
 #ifndef K9CONVERTAUDIO_H
 #define K9CONVERTAUDIO_H
 
+#include <QElapsedTimer>
 #include "k9common.h"
 #include <QThread>
 #include "k9fifo.h"
@@ -23,6 +24,8 @@
 class k9ConvertAudio: public QThread {
     Q_OBJECT
 public:
+    void touch() { m_activity.restart(); }
+    int exitCode() const { return m_exitCode; }   // ffmpeg exit status (0 = ok)
     k9ConvertAudio(const QString &_output,const QStringList &_cmd) ;
     ~k9ConvertAudio();
     void addData(uchar *_buffer,int _size);
@@ -56,6 +59,8 @@ private:
     QString m_fps;
     bool m_debug;
     bool m_error;
+    int m_exitCode = 0;
+    QElapsedTimer m_activity;   // restarted whenever ffmpeg prints something
 };
 
 class _k9ConvertOutput: public QObject {

@@ -145,7 +145,9 @@ void k9DVDAuthor::addMenus(QDomElement &titleSet) {
 
     k9DVDTitle * l_track= DVD->getstart();
     if (l_track==NULL) {
-        start="call vmgm menu;";
+        // No start title chosen: play the first titleset. ("call vmgm menu"
+        // from inside the VMGM is rejected by dvdauthor >= 0.7.)
+        start="jump titleset 1 menu;";
     } else {
         if ( DVD->getnewTitleNum(l_track)==-1) {
             error=true;

@@ -168,7 +168,8 @@ void k9FileFifo::dequeue(uchar *_buffer,uint32_t _size) {
     uint32_t size2=0;
     m_mutex.lock();
     m_rfile->seek(m_fend);
-    uint32_t size=m_rfile->read((char*)_buffer,_size);
+    qint64 rd=m_rfile->read((char*)_buffer,_size);
+    uint32_t size= rd>0 ? (uint32_t)rd : 0;
     m_start+=size;
     size2+=size;
 
@@ -177,7 +178,8 @@ void k9FileFifo::dequeue(uchar *_buffer,uint32_t _size) {
 	delete m_rfile;
 	m_rfile=m_queue.dequeue();
 	m_rfile->seek(0);
-	size=m_rfile->read((char*)_buffer+size2,_size-size2);
+	rd=m_rfile->read((char*)_buffer+size2,_size-size2);
+	size= rd>0 ? (uint32_t)rd : 0;
 	m_start+=size;
 	size2+=size;
         m_wait.wakeAll();
@@ -187,15 +189,19 @@ void k9FileFifo::dequeue(uchar *_buffer,uint32_t _size) {
 }
 
 void k9FileFifo::clear() {
+	// m_wfile is either m_rfile or the last queued file; both are deleted
+	// here, so the writer must be re-pointed at the new file below.
 	if (m_rfile) {
           m_rfile->close();
           delete m_rfile;
         }
 	qDeleteAll(m_queue);
+	m_queue.clear();
 
 	m_fstart=m_fend=0;
         m_rfile=new QTemporaryFile(QDir::cleanPath(m_output +"/k9b"));
         m_rfile->setAutoRemove(true);
 	m_rfile->open();
+	m_wfile=m_rfile;
 	m_start=m_end=0;
 }

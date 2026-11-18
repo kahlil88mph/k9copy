@@ -9,6 +9,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include "k9dvdnav.h"
 #include "k9plaympeg2.h"
 #include "kdecmpeg2.h"
 #include "dvdnav/dvdnav.h" //PM DVDNAV
@@ -51,7 +52,7 @@ void k9PlayMPEG2::playTitle() {
 
     /* open dvdnav handle */
 //PM DVDNAV    if (dvdnav_open(&dvdnav, m_device.toUtf8(),m_dvd) != DVDNAV_STATUS_OK) {
-   if (dvdnav_open(&dvdnav, m_device.toUtf8()) != DVDNAV_STATUS_OK) {
+   if (k9dvdnav_open(&dvdnav, m_device.toUtf8().constData()) != DVDNAV_STATUS_OK) {
         setError("ERR:Error on dvdnav_open\n");
         return ;
     }

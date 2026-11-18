@@ -157,7 +157,9 @@ void k9ExecCopy::CreateMP4() {
                 break;
             }
   	    QString path=filename;
-            bool matroska=filename.endsWith(".mkv");
+            // With mkvmerge, MKV output keeps subtitles as separate (soft) tracks;
+            // without it ffmpeg writes the .mkv directly (subtitle burned in).
+            bool matroska=filename.endsWith(".mkv") && k9Tools::checkProgram("mkvmerge");
             k9MP4Enc *mp4=new k9MP4Enc();
             if (cpt >0) {
                 QString ext=filename.section(".",-1);
@@ -186,11 +188,6 @@ void k9ExecCopy::CreateMP4() {
             mp4->setUseCache(opt->getUseCache());
 
             if (matroska) {
-                if ( ! k9Tools::checkProgram("mkvmerge") ) {
-                    k9Dialogs::error (i18n("Unable to run %1").arg("mkvmerge") , i18n("Encoding error"));
-		    delete mp4;
-                    return ;
-                }
                 mp4->setExtractAudio(false);
                 mp4->setExtractMkv(true);
                 mp4->setExtractSubtitle(true);

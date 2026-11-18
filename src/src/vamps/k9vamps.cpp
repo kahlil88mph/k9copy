@@ -242,11 +242,12 @@ int k9vamps::lock (int size) {
     if (avail >= size)
         return 0;
 
-    if (avail) {
-        memcpy (rbuf, rptr, avail);
-        rptr = rbuf;
-        rhwp = rptr + avail;
-    }
+    // Move the unread tail to the start of the buffer. This must also happen
+    // when avail==0, or rptr/rhwp keep advancing past the end of rbuf.
+    if (avail)
+        memmove (rbuf, rptr, avail);
+    rptr = rbuf;
+    rhwp = rptr + avail;
 
     if (rbuf_size -avail <=0) {
 	uchar *buffer =new uchar[rbuf_size+20480];

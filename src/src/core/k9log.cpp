@@ -1,4 +1,6 @@
 #include "k9log.h"
+#include "k9tools.h"
+#include <cstdio>
 #include <QDebug>
 #include <QMutex>
 
@@ -29,6 +31,9 @@ void k9log::writeln(QString s) {
 }
 
 void k9log::add(QString s,k9logLevel::type level) {
+   // Batch (headless) runs have no log window: mirror entries to stderr.
+   if (k9Tools::getBatchCopy())
+       fprintf(stderr, "k9copy: %s\n", s.toUtf8().constData());
    k9logEntry *entry=new k9logEntry();
    entry->level=level;
    entry->text=s;

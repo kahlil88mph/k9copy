@@ -195,6 +195,13 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
     if (m_error)
         return;
 
+    // ffmpeg's DVD-subtitle overlay doesn't yield an identical frame sequence on
+    // every run, which two-pass encoders require. Burn-in therefore runs one pass.
+    if (m_2pass && !m_mpeg2 && !m_extractAudio && !m_extractMkv && getselectedSubp(_title)!=-1) {
+        k9log::add(i18n("Burning in a subtitle: encoding in a single pass"),k9logLevel::INFO);
+        m_2pass=false;
+    }
+
     time = new QElapsedTimer();
     m_percent=m_totalBytes=m_offset=0;
     m_remain="--:--:--";
@@ -345,8 +352,11 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
 
                 if (streams.count() >0)
                     m_player->setaudioFilter(streams.join(","));
-
-
+            }
+            // Subtitles are filtered in every pass: a burned-in subtitle must be
+            // part of pass 1 too, or two-pass stats won't match pass 2's frames.
+            {
+                QStringList streams;
                 if (getselectedSubp( _title) !=-1) {
                     streams.clear();
                     for (int i=0; i<_title->getsubPictureCount();i++) {
@@ -418,6 +428,12 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
             foreach (k9ConvertAudio *c,m_converters) {
                 if (c) {
                     c->end(true);
+                    if (c->exitCode()!=0 && !m_canceled && m_msgError.isEmpty()) {
+                        m_error=true;
+                        m_msgError=i18n("ffmpeg failed (exit code %1)",c->exitCode());
+                        m_ErrorDetail=c->getOutput();
+                        k9log::add(m_msgError+"\n"+m_ErrorDetail.join(""),k9logLevel::ERROR);
+                    }
                 }
             }
             foreach(k9Subtitle2Pgm *s,m_subtitles) {
@@ -470,9 +486,10 @@ void k9MP4Enc::buildSubtitleCmd(k9DVDTitle *title) {
             for (int ipalette=0;ipalette<16;ipalette++) {
                 QString s;
                 title->getpalette(ipalette,s);
-                subtitle2pgm->setPalette(ipalette,s.toUInt());
+                subtitle2pgm->setPalette(ipalette,s.toUInt(nullptr,16));   // stored as %08x hex
             }
             subtitle2pgm->setLangCod(title->getsubtitle(i)->getlangCod());
+            subtitle2pgm->setFrameSize(title->getwidth().toInt(), title->getheight().toInt());
             subtitle2pgm->setTrackCod(0x20+title->getsubtitle(i)->getID().first()-1);
 
             k9ResultingFile *rf=new k9ResultingFile(this);
@@ -587,7 +604,7 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
         for (int i=0;i<title->getaudioStreamCount();i++)
             if (title->getaudioStream(i)->getselected())
                 hasAudio=true;
-    const bool burnSubtitle = pass!=1 && !m_extractMkv && getselectedSubp(title)!=-1;
+    const bool burnSubtitle = !m_extractMkv && getselectedSubp(title)!=-1;
 
     cmd << m_ffmpegPath << "-hide_banner" << "-y"
         << "-fflags" << "+genpts" << "-analyzeduration" << "30M" << "-probesize" << "100M";
@@ -596,7 +613,7 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
         for (int i=0;i<16;i++) {
             QString v;
             title->getpalette(i,v);
-            pal << dvdPaletteToRgb(v.toUInt());
+            pal << dvdPaletteToRgb(v.toUInt(nullptr,16));
         }
         cmd << "-palette" << pal.join(",");
     }
@@ -832,6 +849,8 @@ int k9MP4Enc::getBitRate(k9DVDTitle *_title) {
         m_progress->setsize(QString::number(m_parts)+" * " +QString::number(size) +i18n("MB") );
         QTime t1(0,0);
         int sec=t1.secsTo(_title->getSelectedLength());
+        if (sec==0)   // no individual chapters selected (e.g. batch mode): whole title
+            sec=t1.secsTo(_title->gettotallength());
         if (sec==0) return 0;
         int nbAudioStreams=0;
         for (int i=0;i<_title->getaudioStreamCount();i++)
@@ -870,7 +889,8 @@ void k9MP4Enc::timerDone() {
         m_percent*=100;
         m_progress->setProgress((int)m_percent);
         m_progress->setremain(time2.toString("hh:mm:ss") +" / " +m_remain);
-        m_progress->setImage(m_player->getSaveImage()->getFileName());
+        if (m_player->getSaveImage())   // not created in batch mode
+            m_progress->setImage(m_player->getSaveImage()->getFileName());
        // m_progress->Update();
     }
 }
