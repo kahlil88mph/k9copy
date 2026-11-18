@@ -55,7 +55,7 @@ protected slots:
   void ItemExpanded(QTreeWidgetItem*);
   void selectAll(bool);
 private:
-  bool m_useXine,m_usePhonon,m_useMplayer;
+  bool m_useMpv;
   Ui::astTitles Ui_astTitles;
   k9DVD *m_dvd;
   QTreeWidget *m_src;

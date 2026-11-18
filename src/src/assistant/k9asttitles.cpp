@@ -95,22 +95,15 @@ k9astTitles::k9astTitles(QWidget* parent,k9DVD *_dvd)
 
 void k9astTitles::loadPlayer() {
     k9Config config;
-    m_useXine=config.getUseXine();
-    m_usePhonon=config.getUsePhonon();
-    m_useMplayer=config.getUseMplayer();
+    m_useMpv=config.getUseMpv();
 
     if (m_preview) {
         delete m_preview;
         delete m_layout;
     }
 
-    if (m_useXine) {
-        m_preview=new k9xine(Ui_astTitles.wPreview);
-
-    } else if (m_usePhonon) {
-        m_preview=new k9Phonon(Ui_astTitles.wPreview);
-    } else if (m_useMplayer)
-        m_preview=new K9Mplayer(Ui_astTitles.wPreview);
+    if (m_useMpv)
+        m_preview=new k9Mpv(Ui_astTitles.wPreview);
     else
         m_preview=new kViewMPEG2(Ui_astTitles.wPreview);
 

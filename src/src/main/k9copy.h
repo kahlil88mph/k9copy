@@ -116,9 +116,7 @@ private:
     k9NewTitle *m_newTitle;
     k9ChapterEdit *m_chapterEdit;
     k9ImportFiles *m_import;
-    bool m_useXine;
-    bool m_usePhonon;
-    bool m_useMplayer;
+    bool m_useMpv;
     bool m_useDvdAuthor;
 
     QMap  <QString,QAction*> m_actions;

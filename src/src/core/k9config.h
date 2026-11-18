@@ -92,7 +92,7 @@ private:
     int  m_XineVout;
     int m_XineAout;
 
-    bool m_usePhonon;
+    bool m_useMpv;
 
 public:
     k9Config();
@@ -477,12 +477,12 @@ public:
         return m_useXine;
     }
 
-    void setUsePhonon ( bool _value ) {
-        m_usePhonon=_value;
+    void setUseMpv ( bool _value ) {
+        m_useMpv=_value;
     }
 
-    bool getUsePhonon() const {
-        return m_usePhonon;
+    bool getUseMpv() const {
+        return m_useMpv;
     }
 
     void setUseGL ( bool _value ) {

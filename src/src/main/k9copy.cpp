@@ -130,9 +130,7 @@ void k9Copy::createCopyWindows() {
 
 
     k9Config config;
-    m_useXine=config.getUseXine();
-    m_usePhonon=config.getUsePhonon();
-    m_useMplayer=config.getUseMplayer();
+    m_useMpv=config.getUseMpv();
 
     m_useDvdAuthor=config.getUseDvdAuthor();
 
@@ -193,15 +191,8 @@ void k9Copy::createCopyWindows() {
     doc->setWindowTitle(i18n("Selection"));
     addDockWidget(Qt::RightDockWidgetArea, doc);
     tabifyDockWidget(firstDock,doc);
-    if (m_useXine) {
-
-  	m_mp2=new k9xine(this);
-
-    }
-    else if (m_usePhonon) {
-	m_mp2=new k9Phonon(this);
-    }else if (m_useMplayer)
-	m_mp2=new K9Mplayer(this);
+    if (m_useMpv)
+        m_mp2=new k9Mpv(this);
     else
         m_mp2=new kViewMPEG2(this);
 
@@ -357,23 +348,15 @@ void k9Copy::preferences() {
     k9Settings settings(this,i18n("Settings"));
     settings.exec();
     k9Config config;
-    m_useXine=config.getUseXine();
-    m_usePhonon=config.getUsePhonon();
-    m_useMplayer=config.getUseMplayer();
+    m_useMpv=config.getUseMpv();
 
 //    if (m_k9MainView) {
         m_k9Main->readSettings();
         m_mp2->close();
-        if (m_useMplayer)
-            m_mp2=new K9Mplayer(this);
-
-	else if (m_useXine)
-	    m_mp2=new k9xine(this);
-
- 	else if (m_usePhonon)
-	    m_mp2=new k9Phonon(this);
+        if (m_useMpv)
+            m_mp2=new k9Mpv(this);
         else
-             m_mp2=new kViewMPEG2(this);
+            m_mp2=new kViewMPEG2(this);
 	m_dockPreview->setWidget(m_mp2);
 
         connect(m_k9Main,SIGNAL(showPreview( k9DVD*, k9DVDTitle*,int )),m_mp2,SLOT(open( k9DVD*, k9DVDTitle*,int )));
@@ -384,16 +367,7 @@ void k9Copy::preferences() {
 
 
 void k9Copy::ActionCopy() {
-    if (m_useMplayer)
-        ((K9Mplayer*)m_mp2)->bStopClick();
-
-    else if (m_useXine)
-	((k9xine*)m_mp2)->bStopClick();
-
-    else if (m_usePhonon)
-	((k9Phonon*)m_mp2)->bStopClick();
-    else
-        ((kViewMPEG2*)m_mp2)->bStopClick();
+    QMetaObject::invokeMethod(m_mp2, "bStopClick");
     m_k9Main->Copy();
 }
 

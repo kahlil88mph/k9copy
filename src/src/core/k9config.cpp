@@ -114,7 +114,7 @@ void k9Config::read() {
     m_useXine=group.readEntry("useXine",false);
     m_XineVout=group.readEntry("XineVout",0);
     m_XineAout=group.readEntry("XineAout",0);
-    m_usePhonon=group.readEntry("usePhonon",false);
+    m_useMpv=group.readEntry("useMpv",true);
 
     group=m_config->group("authoring");
     m_prefAudioFormat=group.readEntry("audioFormat","AC3");
@@ -200,7 +200,7 @@ void k9Config::save() {
     group.writeEntry("useXine",m_useXine);
     group.writeEntry("XineVout",m_XineVout);
     group.writeEntry("XineAout",m_XineAout);
-    group.writeEntry("usePhonon",m_usePhonon);
+    group.writeEntry("useMpv",m_useMpv);
 
     group=m_config->group("authoring");
     group.writeEntry("audioFormat",m_prefAudioFormat);

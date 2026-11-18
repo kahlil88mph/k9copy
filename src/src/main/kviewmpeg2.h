@@ -33,11 +33,7 @@
 #include <qmutex.h>
 #include <QTimer>
 #include "k9plaympeg2.h"
-#include "k9mplayer.h"
-
-#include "k9xine.h"
-
-#include "k9phonon.h"
+#include "k9mpv.h"
 #include "k9internalplayer.h"
 #include <QWaitCondition>
 /**
