@@ -1,0 +1,34 @@
+# Maintainer: kahlil88mph <https://github.com/kahlil88mph>
+# Contributor: twa022 <twa022 at gmail dot com> (k9copy 3.0.3 AUR package)
+
+pkgname=k9copy
+pkgver=3.1.0
+pkgrel=1
+pkgdesc="DVD backup and encoding tool (Qt 6, libmpv and ffmpeg; no KDE Frameworks)"
+arch=('x86_64')
+url="https://github.com/kahlil88mph/k9copy"
+license=('GPL-2.0-or-later')
+depends=('qt6-base' 'mpv' 'libdvdread' 'libdvdnav' 'libmpeg2' 'ffmpeg'
+         'systemd-libs' 'libglvnd' 'gcc-libs' 'glibc' 'hicolor-icon-theme'
+         'dvdauthor' 'dvd+rw-tools')
+makedepends=('cmake' 'gettext')
+optdepends=('libdvdcss: reading encrypted DVDs'
+            'cdrtools: creating ISO images and burning'
+            'mkvtoolnix-cli: MKV output with soft subtitles'
+            'polkit: running privileged commands via pkexec')
+provides=('k9copy-reloaded')
+conflicts=('k9copy-frameworks' 'k9copy-kde4')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('f795e411fc10e23ed5f2ffce545ab84526ede2c7c927761d611ed54c89ea0919')
+
+build() {
+  cmake -S "$pkgname-$pkgver/src" -B build \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -Wno-dev
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
