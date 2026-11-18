@@ -1,9 +1,10 @@
+cmake_minimum_required(VERSION 3.1)
 project(k9copy)
 set (VERSION 3.0.3)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 
-option(QT5_BUILD "Build with Qt5/KF5" OFF) 
+option(QT5_BUILD "Build with Qt5/KF5" ON) 
 #Options ON or OFF OFF=QT4
 
 if(QT5_BUILD)			#With above Setting this corresponds to my check of:     #if QT_VERSION >= 0x050000 
@@ -59,10 +60,12 @@ INCLUDE(CheckIncludeFiles)
 INCLUDE(FindLibMpeg2)
 INCLUDE(FindXine)
 #INCLUDE(FindAvcodec)
-INCLUDE(FindAvformat)
+#INCLUDE(FindAvformat)
 #INCLUDE(FindAvutil)
-INCLUDE(FindFFmpegScale)
-#INCLUDE(FindLibDvdread)
+#INCLUDE(FindFFmpegScale)
+INCLUDE(FindLibDvdread)
+find_package(FFmpeg REQUIRED COMPONENTS AVCODEC AVFORMAT AVUTIL SWSCALE)
+
 
 # usage: CHECK_INCLUDE_FILES (<header> <RESULT_VARIABLE> )
 CHECK_INCLUDE_FILES(inttypes.h      HAVE_INTTYPES_H)                    # inttypes.h
@@ -75,7 +78,7 @@ CHECK_INCLUDE_FILES(sys/types.h     HAVE_SYS_TYPES_H)                   # types.
 CHECK_INCLUDE_FILES(unistd.h        HAVE_UNISTD_H)                      # unistd.h
 CHECK_INCLUDE_FILES(malloc.h        HAVE_MALLOC_H)                      # malloc.h
 
-FINDFFMPEGSCALE("swscale")
+#FINDFFMPEGSCALE("swscale")
 
 
 CONFIGURE_FILE(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
@@ -102,7 +105,7 @@ ELSE (LIBDL_LIBRARY)
   FIND_LIBRARY(LIBDL_LIBRARY NAMES "c" PATHS )
   MESSAGE(STATUS "Found library libc: ${LIBDL_LIBRARY}")
 ENDIF (LIBDL_LIBRARY)
-#FINDLIBDVDREAD("dvdread/ifo_types.h" "dvdread")
+FINDLIBDVDREAD("dvdread/ifo_types.h" "dvdread")
 
 
 #FINDAVFORMAT("avformat")
@@ -110,9 +113,9 @@ ENDIF (LIBDL_LIBRARY)
 #FINDAVUTIL("avutil")
 
 add_definitions( -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS)
-add_subdirectory( src/libdvdnav-NOW) #from dvdnav
-add_subdirectory( src/libdvdnav-NOW/dvdnav)
-add_subdirectory( src/libdvdnav-NOW/vm)
+#add_subdirectory( src/libdvdnav-NOW) #from dvdnav
+#add_subdirectory( src/libdvdnav-NOW/dvdnav)
+#add_subdirectory( src/libdvdnav-NOW/vm)
 add_subdirectory( src/core )
 add_subdirectory( src/mpeg2)
 add_subdirectory(src/vamps)
@@ -127,7 +130,7 @@ add_subdirectory(po)
 add_subdirectory(doc)
 
 include_directories(
- ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdnav-NOW #from dvdnav
+ #${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdnav-NOW #from dvdnav
  ${CMAKE_CURRENT_SOURCE_DIR}/src/devices
  ${CMAKE_CURRENT_SOURCE_DIR}/src/core
  ${CMAKE_CURRENT_SOURCE_DIR}/src/vamps
@@ -139,15 +142,15 @@ include_directories(
  ${CMAKE_CURRENT_SOURCE_DIR}/src/import
  ${CMAKE_CURRENT_SOURCE_DIR}/src/player
  ${CMAKE_CURRENT_SOURCE_DIR}/src/subtitles
- ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdread-NOW #from dvdread
+# ${CMAKE_CURRENT_SOURCE_DIR}/src/libdvdread-NOW #from dvdread
  ${CMAKE_CURRENT_SOURCE_DIR}/src/batch
 ${KDE4_INCLUDES} ${QT_INCLUDES}
-#${LIBDVDREAD_INCLUDE_DIR}/dvdread
- ${AVCODEC_INCLUDE_DIR}
- ${AVFORMAT_INCLUDE_DIR}
- ${AVUTIL_INCLUDE_DIR}
- ${FFMPEGSCALE_INCLUDE_DIR}
- ${FFMPEG_INCLUDE_DIR}
+${LIBDVDREAD_INCLUDE_DIR}/dvdread
+# ${AVCODEC_INCLUDE_DIR}
+# ${AVFORMAT_INCLUDE_DIR}
+# ${AVUTIL_INCLUDE_DIR}
+# ${FFMPEGSCALE_INCLUDE_DIR}
+ ${FFmpeg_INCLUDE_DIRS}
 )
 
 
@@ -490,9 +493,9 @@ set (k9xineplayer_SRCS
 )
 
 
-add_library(dvdread STATIC ${dvdread_SRCS})
-add_library(dvdnav STATIC ${libdvdnav_SRCS})
-target_link_libraries(dvdnav dvdread) 
+#add_library(dvdread STATIC ${dvdread_SRCS})
+#add_library(dvdnav STATIC ${libdvdnav_SRCS})
+#target_link_libraries(dvdnav dvdread) 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 if(QT5_BUILD)
 message("Qt5 Version")
@@ -568,7 +571,7 @@ install(TARGETS k9xineplayer DESTINATION ${BIN_INSTALL_DIR} )
 
 install( FILES k9copy.desktop k9copy_assistant.desktop DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 #install( FILES k9copy.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
-install( FILES k9copyui.rc  DESTINATION  ${DATA_INSTALL_DIR}/k9copy )
+install( FILES k9copyui.rc  DESTINATION  ${KXMLGUI_INSTALL_DIR}/k9copy )
 
 install(FILES k9copy_open.desktop DESTINATION ${DATA_INSTALL_DIR}/solid/actions)
 install(FILES k9copy_assistant_open.desktop DESTINATION ${DATA_INSTALL_DIR}/solid/actions)
