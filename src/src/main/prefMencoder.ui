@@ -191,11 +191,6 @@ crop height</string>
            </property>
            <item>
             <property name="text">
-             <string>mencoder</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>ffmpeg</string>
             </property>
            </item>
@@ -459,11 +454,6 @@ crop height</string>
            <property name="editable">
             <bool>false</bool>
            </property>
-           <item>
-            <property name="text">
-             <string>mencoder</string>
-            </property>
-           </item>
            <item>
             <property name="text">
              <string>ffmpeg</string>

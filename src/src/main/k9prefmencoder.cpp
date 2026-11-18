@@ -165,7 +165,7 @@ void k9prefMencoder::btnAddVClicked() {
    item->setData(Qt::UserRole,i);
    QString option;
    if (getSelectedEncoderV()==FFMPEG)
-      option="-vcodec copy";
+      option="-c:v copy";
    else
        option="-ovc copy";
    m_codecs.setOptions0(i,option);
@@ -195,7 +195,7 @@ void k9prefMencoder::btnAddAClicked() {
    item->setData(Qt::UserRole,i);
    QString option;
    if (getSelectedEncoderA()==FFMPEG)
-      option="-acodec copy";
+      option="-c:a copy";
    else
        option="-oac copy";
    m_audioCodecs.setOptions (i,option);

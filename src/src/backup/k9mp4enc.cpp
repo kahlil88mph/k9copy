@@ -273,8 +273,7 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
 	    else
 		m_aspect=_title->getaspectRatio();
 
-	    if (videoCodecs.getEncoder(m_codec)=="mencoder") 
-		m_aspect=m_aspect.replace(":","/");	
+	    m_aspect=m_aspect.replace(":","/");
 
             if (m_height=="" || m_height=="0") {
                 double height=h*ratio;
@@ -512,7 +511,8 @@ void k9MP4Enc::buildAudioCmd(k9DVDTitle *title) {
             QFile::remove(path);
 
 
-            cmd  << m_ffmpegPath << "-i" << "/dev/stdin" <<sAOption.split(" ") <<  KShell::quoteArg(path) ;
+            cmd  << m_ffmpegPath << "-hide_banner" << "-y" << "-analyzeduration" << "30M" << "-probesize" << "100M"
+                 << "-f" << "mpeg" << "-i" << "pipe:0" << "-map" << "0:a:0" << "-vn" << sAOption.simplified().split(" ") <<  KShell::quoteArg(path) ;
 
             k9log::add(i18n("starting thread : %1").arg(cmd.join(" ")),k9logLevel::INFO);
             k9ConvertAudio *converter=new k9ConvertAudio("",cmd);
@@ -536,69 +536,105 @@ void k9MP4Enc::buildVideoCmd(int pass,int part,k9DVDTitle *title,const QString &
 }
 
 
-void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
+// DVD subpicture palettes are stored as 0x00YYCrCb; ffmpeg wants RRGGBB.
+static QString dvdPaletteToRgb(uint32_t ycrcb)
+{
+    const double y = (ycrcb >> 16) & 0xff, cr = (ycrcb >> 8) & 0xff, cb = ycrcb & 0xff;
+    auto clamp = [](double v) { return qBound(0, int(v + 0.5), 255); };
+    const int r = clamp(y + 1.402 * (cr - 128));
+    const int g = clamp(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));
+    const int b = clamp(y + 1.772 * (cb - 128));
+    return QString::asprintf("%02x%02x%02x", r, g, b);
+}
 
-    QString sPass="";
-    QString sCodec="";
-
-    k9VideoCodecs *videoCodecs=new k9VideoCodecs(0);
-    k9AudioCodecs *audioCodecs=new k9AudioCodecs(0);
-    m_encoder=FFMPEG;
-    QString sVOption;
-    m_pass=pass;
-    switch (pass) {
-    case 1:
-        sVOption=replaceParams(videoCodecs->getOptions1(m_codec));
-        break;
-    case 2:
-        sVOption=replaceParams(videoCodecs->getOptions2(m_codec));
-        break;
-    default:
-        sVOption=replaceParams(videoCodecs->getOptions0(m_codec));
-        break;
+// Removes "-vf X" / "-filter:v X" from an option list and returns X.
+static QString takeVideoFilter(QStringList &opts)
+{
+    for (int i = 0; i + 1 < opts.size(); ++i) {
+        if (opts[i] == "-vf" || opts[i] == "-filter:v") {
+            QString f = opts[i + 1];
+            opts.removeAt(i);
+            opts.removeAt(i);
+            return f;
+        }
     }
+    return QString();
+}
 
-
-    sCodec=videoCodecs->getCodecName(m_codec);
-    sVOption=sVOption.trimmed();
-    cmd << m_ffmpegPath << "-i" << "/dev/stdin";
-
-    cmd << sVOption.split(" ");
+void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
+    // k9play feeds an MPEG program stream on stdin that holds only the
+    // selected audio/subpicture streams (none in pass 1).
+    k9VideoCodecs videoCodecs;
+    k9AudioCodecs audioCodecs;
+    m_encoder=FFMPEG;
+    m_pass=pass;
+    QString sVOption;
+    switch (pass) {
+    case 1:  sVOption=replaceParams(videoCodecs.getOptions1(m_codec)); break;
+    case 2:  sVOption=replaceParams(videoCodecs.getOptions2(m_codec)); break;
+    default: sVOption=replaceParams(videoCodecs.getOptions0(m_codec)); break;
+    }
+    QStringList vopts=sVOption.simplified().split(' ', Qt::SkipEmptyParts);
+    const QString sCodec=videoCodecs.getCodecName(m_codec);
 
     if (pass >0)
         m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec)+" - "+i18n("pass %1").arg(pass));
     else
         m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec));
 
-    if (m_fourcc !="")
-        cmd << "-vtag" << m_fourcc;
-    else if (videoCodecs->getFourcc(m_codec)!="")
-        cmd << "-vtag" << videoCodecs->getFourcc(m_codec);
+    bool hasAudio=false;
+    if (pass!=1)
+        for (int i=0;i<title->getaudioStreamCount();i++)
+            if (title->getaudioStream(i)->getselected())
+                hasAudio=true;
+    const bool burnSubtitle = pass!=1 && !m_extractMkv && getselectedSubp(title)!=-1;
 
-    QString sAOption="";
-    sAOption=replaceParams(audioCodecs->getOptions(m_audioCodec)).trimmed();
-
-    QStringList slNewAudio;
-    delete audioCodecs;
-    delete videoCodecs;
-    bool audio=false;
-    //looking for first audio selected
-    int nbAudio=0;
-    if (m_pass != 1 ) {
-        for (int i=0;i<title->getaudioStreamCount();i++) {
-            if (title->getaudioStream(i)->getselected()) {
-                if (nbAudio>0)
-                    slNewAudio << "-newaudio";
-                else
-                    cmd << sAOption.split(" ");
-                audio=true;
-                nbAudio++;
-            }
+    cmd << m_ffmpegPath << "-hide_banner" << "-y"
+        << "-fflags" << "+genpts" << "-analyzeduration" << "30M" << "-probesize" << "100M";
+    if (burnSubtitle) {
+        QStringList pal;
+        for (int i=0;i<16;i++) {
+            QString v;
+            title->getpalette(i,v);
+            pal << dvdPaletteToRgb(v.toUInt());
         }
+        cmd << "-palette" << pal.join(",");
     }
+    cmd << "-f" << "mpeg" << "-i" << "pipe:0";
+
+    // Video: optional subtitle overlay, then the preset's filter chain.
+    QString vf=takeVideoFilter(vopts);
+    if (burnSubtitle) {
+        QString graph="[0:v:0][0:s:0]overlay";
+        if (!vf.isEmpty())
+            graph+=","+vf;
+        cmd << "-filter_complex" << KShell::quoteArg(graph+"[vout]") << "-map" << "[vout]";
+    } else {
+        cmd << "-map" << "0:v:0";
+        if (!vf.isEmpty())
+            cmd << "-vf" << KShell::quoteArg(vf);
+    }
+    cmd << vopts;
+
+    if (m_fourcc !="")
+        cmd << "-tag:v" << m_fourcc;
+    else if (videoCodecs.getFourcc(m_codec)!="")
+        cmd << "-tag:v" << videoCodecs.getFourcc(m_codec);
+
+    // Audio: every selected stream (k9play already filtered them).
+    if (hasAudio) {
+        QStringList aopts=replaceParams(audioCodecs.getOptions(m_audioCodec)).simplified().split(' ', Qt::SkipEmptyParts);
+        cmd << "-map" << "0:a?" << aopts;
+        const bool copyAudio=aopts.contains("copy");
+        const double gain=m_audioGain.toDouble();
+        if (!copyAudio && gain!=0 && !aopts.contains("-af") && !aopts.contains("-filter:a"))
+            cmd << "-filter:a" << QString("volume=%1dB,alimiter=limit=0.98:level=false").arg(gain);
+    } else {
+        cmd << "-an";
+    }
+    cmd << "-sn" << "-dn";
 
     QString path=m_filename;
-
     if (m_pass==1) {
         path="/dev/null";
     } else if (m_extractMkv) {
@@ -612,41 +648,32 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
         rf->filename=path;
         rf->video=true;
         m_resultingFiles.insert(rf->title,rf);
-    }else {
-	if (m_parts>1) {
-		QString ext=m_filename.section(".",-1);
-		if (ext!="")
-		ext="."+ext;
-		path=m_filename.left(m_filename.length()-ext.length());
-		path=path+QString::number(m_part)+ext;
-	}
+    } else if (m_parts>1) {
+        QString ext=m_filename.section(".",-1);
+        if (ext!="")
+            ext="."+ext;
+        path=m_filename.left(m_filename.length()-ext.length());
+        path=path+QString::number(m_part)+ext;
     }
 
-    if (path.toUpper().endsWith("MPEG") || path.toUpper().endsWith("MPG"))
+    if (m_pass==1)
+        cmd << "-f" << "null";
+    else if (path.toUpper().endsWith("MPEG") || path.toUpper().endsWith("MPG"))
         cmd << "-f" << "mpeg";
-    else if (path.toUpper().endsWith("AVI") || m_pass==1)
+    else if (path.toUpper().endsWith("AVI"))
         cmd << "-f" << "avi";
-    else {
-        //      cmd << "-of" << "lavf";
-        //      cmd << "-lavfopts" << "i_certify_that_my_video_stream_does_not_use_b_frames";
-    }
-    //synchronize audio
-    cmd << "-async" << "44100" ;
-    cmd << "-y"  << KShell::quoteArg(path);
-    cmd << slNewAudio;
-//    if (m_extractMkv) {
+    // other extensions (mkv, mp4, webm, ...): ffmpeg picks the muxer
+    cmd << KShell::quoteArg(path);
+
     k9log::add(i18n("starting thread : %1").arg(cmd.join(" ")),k9logLevel::INFO);
     k9ConvertAudio *converter=new k9ConvertAudio("",cmd);
-    //converter->setDebug(true);
     m_converters[BASE_CONV_VIDEO]=converter;
     m_convertersToDelete << converter;
     if (m_extractMkv && m_pass!=1)
         for (int i=0;i<title->getaudioStreamCount();i++)
             if (title->getaudioStream(i)->getselected())
                 m_converters[BASE_CONV_AUDIO+i]=converter;
-//   }
 }
-
 
 
 void k9MP4Enc::buildMEncoderCmd(int pass,int part,k9DVDTitle *title,const QString &passLogFileName,QStringList &cmd) {
@@ -783,8 +810,8 @@ QString k9MP4Enc::replaceParams(QString _value) {
     c=m_width.toInt()-m_crop.right()-1;
     if (c%2 !=0) c++;
     str.replace("$CROPRIGHT",QString::number(c));
-    str.replace("$CROPWIDTH",QString::number(m_crop.width()));
-    str.replace("$CROPHEIGHT",QString::number(m_crop.height()));
+    str.replace("$CROPWIDTH",QString::number(m_crop.width() & ~1));
+    str.replace("$CROPHEIGHT",QString::number(m_crop.height() & ~1));
     //str.replace("$ASPECT",QString::number((double)m_crop.width()/(double)m_crop.height()));
     str.replace("$ASPECT",m_aspect);
     return str;

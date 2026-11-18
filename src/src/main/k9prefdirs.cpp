@@ -32,6 +32,9 @@ k9prefDirs::k9prefDirs(QWidget* parent)
     Ui_prefDirs.urFFmpeg->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urGenisoimage->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urMencoder->setMode(KFile::ExistingOnly | KFile::File);
+    // mencoder is no longer used (all encoding goes through ffmpeg)
+    Ui_prefDirs.urMencoder->hide();
+    Ui_prefDirs.lblworkDir_5->hide();
     Ui_prefDirs.urMplayer->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urWodim->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urK3b->setMode(KFile::ExistingOnly | KFile::File);

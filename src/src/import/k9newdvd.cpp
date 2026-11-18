@@ -200,7 +200,7 @@ void k9NewDVD::addTitles (QDomElement &_root) {
         foreach (k9AviFile *aviFile,*l) {
             if ( aviFile->getPrevious()==NULL || aviFile->getBreakPrevious()) {
                 QString cmd="",chapters="";
-                createMencoderCmd(cmd,chapters,aviFile);
+                createEncodeCmd(cmd,chapters,aviFile);
 		//if no reencoding, mpeg files are splitted into cells to avoid 
 		// the SCR move backwards error in dvdauthor
                 if (!aviFile->getReencode()) {
@@ -233,7 +233,7 @@ void k9NewDVD::setWorkDir ( const QString& _value ) {
         m_workDir +="/";
 }
 
-void k9NewDVD::createMencoderCmd(QString &_cmd,QString &_chapters, k9AviFile *_aviFile) {
+void k9NewDVD::createEncodeCmd(QString &_cmd,QString &_chapters, k9AviFile *_aviFile) {
 //   m_aviDecode.open(_aviFile->getFileName());
     m_timer.start();
     m_timer2.start();
@@ -285,10 +285,26 @@ void k9NewDVD::createMencoderCmd(QString &_cmd,QString &_chapters, k9AviFile *_a
         m_timers[process]=t;
         connect(process, SIGNAL(receivedStdout(k9Process*, char *, int)),this, SLOT(getStdout(k9Process*,char *, int) ));
 
-        *process <<  m_config->getPrefMencoderPath(true) << "-oac" << "lavc" << "-ovc" << "lavc" << "-of" << "mpeg" << "-afm" << "libmad";
-        *process << "-mpegopts" << "format=dvd" << "-vf" << "scale="+scale+",harddup" << "-srate" << "48000" << "-af" << "lavcresample=48000";
-        *process << "-lavcopts" << QString("vcodec=mpeg2video:vrc_buf_size=1835:vrc_maxrate=9800:vbitrate=%1:keyint=15:acodec=%3:abitrate=%2:aspect=16/9").arg(m_videoBitrate).arg(m_config->getPrefAudioBitrate()).arg(m_config->getPrefAudioFormat().toLower());
-        *process << "-ofps" << fps << "-o" << fileName << "-ss" << t1 << "-endpos" << t2 << _aviFile->getFileName();
+        // DVD-compliant MPEG-2 via ffmpeg. The picture is fitted (letterboxed or
+        // pillarboxed, never stretched) into a 16:9 anamorphic DVD frame.
+        const QString dvdW = (m_format==PAL) ? "720" : "720";
+        const QString dvdH = (m_format==PAL) ? "576" : "480";
+        const QString boxW = (m_format==PAL) ? "1024" : "854";   // square-pixel 16:9 box
+        const QString vf = QString("scale='trunc(iw*sar/2)*2':ih,setsar=1,"
+                                   "scale=%1:%2:force_original_aspect_ratio=decrease,"
+                                   "pad=%1:%2:(ow-iw)/2:(oh-ih)/2,scale=%3:%2,setdar=16/9")
+                               .arg(boxW, dvdH, dvdW);
+        const QString acodec = m_config->getPrefAudioFormat().toLower()=="mp2" ? "mp2" : "ac3";
+        m_lengths[process] = length;
+        *process << m_config->getPrefFFmpegPath(false) << "-hide_banner" << "-nostats" << "-progress" << "pipe:1" << "-y"
+                 << "-ss" << t1 << "-t" << t2 << "-i" << _aviFile->getFileName()
+                 << "-map" << "0:v:0" << "-map" << "0:a:0?"
+                 << "-vf" << vf << "-r" << fps
+                 << "-c:v" << "mpeg2video" << "-b:v" << QString("%1k").arg(m_videoBitrate)
+                 << "-maxrate" << "9800k" << "-bufsize" << "1835k" << "-g" << (m_format==PAL ? "15" : "18")
+                 << "-c:a" << acodec << "-b:a" << QString("%1k").arg(m_config->getPrefAudioBitrate())
+                 << "-ar" << "48000" << "-ac" << "2"
+                 << "-f" << "dvd" << fileName;
         _cmd=fileName;
 
     } else {
@@ -411,54 +427,37 @@ void k9NewDVD::getStderr(k9Process *_process,char *_buffer, int _length) {
     }
 }
 
+// Parses ffmpeg "-progress pipe:1" key=value output.
 void k9NewDVD::getStdout(k9Process *_process,char *_buffer, int _length) {
-    k9Process *process=(k9Process*) _process;
-    if (m_timers[process].elapsed() >500) {
-        QString tmp=QString::fromLatin1(_buffer,_length);
-        int pos=tmp.indexOf("Pos:");
-        if (pos!=-1) {
-            QString tmp2=tmp.mid(pos);
-            tmp2=tmp2.replace(":",": ").replace("(","").replace(")","").simplified();
-            QStringList sl=tmp2.split(" ");
-            float position;
-//	    qDebug() << "position : " << sl[1] << "  frame : " << sl[2] << "  percent : " << sl[3] << "  fps :" << sl[4];
-            sscanf(sl[1].toUtf8().data(),"%fs",&position);
-            int frame;
-            sscanf(sl[2].toUtf8().data(),"%df",&frame);
-            int percent;
-            sscanf(sl[3].toUtf8().data(),"%d",&percent);
-            int fps;
-            sscanf(sl[4].toUtf8().data(),"%d",&fps);
-            m_processList->setProgress(process,percent,100);
-            m_processList->setPos(process,position);
-            //m_progress->setProgress(percent,100);
-            //        if (percent>0 &&m_timer3.elapsed() >1000 ) {
-            if (percent>0 ) {
-                int elapsed=process->getElapsed();
-                QTime time2(0,0);
-                time2=time2.addMSecs(elapsed);
-                QTime time3(0,0);
-                float fprc=percent/100.0;
-                time3=time3.addMSecs((uint32_t)(elapsed*(1.0/fprc)));
-                m_processList->setText(process,time2.toString("hh:mm:ss") +" / " + time3.toString("hh:mm:ss"),1);
-                m_timer3.restart();
-            }
-
-            QString text;//=i18n("filename") + " : " + m_aviDecode.getFileName();
-            text=i18n("fps")+ " : "+QString::number(fps);
-            m_processList->setText(process,text,2);
-            /*
-                    m_progress->setLabelText(text);
-                    if (m_timer.elapsed() > 5000) {
-                        m_timer.restart();
-                        if (m_aviDecode.opened()) {
-                            m_aviDecode.readFrame(position);
-                        }
-                    }
-            */
-        }
-        m_timers[process].restart();
+    k9Process *process=_process;
+    const QStringList lines=QString::fromLatin1(_buffer,_length).split('\n', Qt::SkipEmptyParts);
+    double fps=-1;
+    qint64 outUs=-1;
+    for (const QString &l : lines) {
+        if (l.startsWith("out_time_us="))
+            outUs=l.mid(12).toLongLong();
+        else if (l.startsWith("fps="))
+            fps=l.mid(4).toDouble();
     }
+    if (outUs<0 || m_timers[process].elapsed()<500)
+        return;
+    m_timers[process].restart();
+
+    const int lengthMs=qMax(1,m_lengths.value(process,1));
+    const float position=outUs/1e6f;
+    const int percent=qBound(0,int(outUs/1000*100/lengthMs),100);
+    m_processList->setProgress(process,percent,100);
+    m_processList->setPos(process,position);
+    if (percent>0) {
+        const int elapsed=process->getElapsed();
+        QTime time2(0,0);
+        time2=time2.addMSecs(elapsed);
+        QTime time3(0,0);
+        time3=time3.addMSecs((uint32_t)(elapsed*(100.0/percent)));
+        m_processList->setText(process,time2.toString("hh:mm:ss") +" / " + time3.toString("hh:mm:ss"),1);
+    }
+    if (fps>=0)
+        m_processList->setText(process,i18n("fps")+" : "+QString::number(fps,'f',1),2);
 }
 
 void k9NewDVD::appendTitle(k9Title *_title) {

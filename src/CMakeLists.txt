@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(k9copy VERSION 3.0.3 LANGUAGES C CXX)
+project(k9copy VERSION 3.1.0 LANGUAGES C CXX)
 set(VERSION ${PROJECT_VERSION})
 
 # Plain Qt6 build: no KDE Frameworks. Video preview via libmpv (or the

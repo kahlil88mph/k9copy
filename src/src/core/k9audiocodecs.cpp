@@ -49,7 +49,7 @@ k9AudioCodecs::k9AudioCodecs(QObject *parent)
 
     for (int cpt=0;cpt <nbAudio;cpt++) {
 	group=config->group(QString("audiocodec%1").arg(cpt));
-	m_codecs[cpt] = _k9AudioCodec(group.readEntry("name"),group.readEntry("opt",""),group.readEntry("encoder","mencoder"),group.readEntry("extension"));
+	m_codecs[cpt] = _k9AudioCodec(group.readEntry("name"),group.readEntry("opt",""),group.readEntry("encoder","ffmpeg"),group.readEntry("extension"));
 
     }
 
@@ -58,17 +58,16 @@ k9AudioCodecs::k9AudioCodecs(QObject *parent)
 }
 
 void k9AudioCodecs::reset() {
-    m_codecs[0]=_k9AudioCodec("copy","-oac copy","mencoder");
-    m_codecs[1]=_k9AudioCodec("mp2","-oac lavc -lavcopts acodec=mp2:abitrate=$AUDBR","mencoder");
-    m_codecs[2]=_k9AudioCodec("ac3","-oac lavc -lavcopts acodec=ac3:abitrate=$AUDBR","mencoder");
-    m_codecs[3]=_k9AudioCodec("IMA Adaptive PCM","-oac lavc -lavcopts acodec=adpcm_ima_wav:abitrate=$AUDBR","mencoder");
-    m_codecs[4]=_k9AudioCodec("sonic","-oac lavc -lavcopts acodec=sonic:abitrate=$AUDBR","mencoder");
-    m_codecs[5]=_k9AudioCodec("aac","-oac faac -faacopts br=$AUDBR","mencoder");
-    m_codecs[6]=_k9AudioCodec("mp3 (lame)","-oac mp3lame -lameopts abr:br=$AUDBR","mencoder");
-    m_codecs[7]=_k9AudioCodec("copy","-codec:a copy","ffmpeg","");
-    m_codecs[8]=_k9AudioCodec("mp3","-codec:a libmp3lame -ab $AUDBRk -ac 2 -ar 44100","ffmpeg",".mp3");
-    m_codecs[9]=_k9AudioCodec("vorbis","-codec:a vorbis -ab $AUDBRk -ac 2 -ar 44100","ffmpeg",".ogg");
-    m_codecs[10]=_k9AudioCodec("aac","-codec:a libfaac -ab $AUDBRk -ac 2 -ar 44100","ffmpeg",".aac");
+    // ffmpeg presets; the extension is used when extracting audio only.
+    m_codecs.clear();
+    m_codecs[0]=_k9AudioCodec("AAC","-c:a aac -b:a $AUDBRk","ffmpeg",".m4a");
+    m_codecs[1]=_k9AudioCodec("MP3 (LAME)","-c:a libmp3lame -b:a $AUDBRk","ffmpeg",".mp3");
+    m_codecs[2]=_k9AudioCodec("Opus","-c:a libopus -b:a $AUDBRk","ffmpeg",".opus");
+    m_codecs[3]=_k9AudioCodec("Vorbis","-c:a libvorbis -b:a $AUDBRk","ffmpeg",".ogg");
+    m_codecs[4]=_k9AudioCodec("AC-3","-c:a ac3 -b:a $AUDBRk","ffmpeg",".ac3");
+    m_codecs[5]=_k9AudioCodec("MP2","-c:a mp2 -b:a $AUDBRk","ffmpeg",".mp2");
+    m_codecs[6]=_k9AudioCodec("FLAC (lossless)","-c:a flac","ffmpeg",".flac");
+    m_codecs[7]=_k9AudioCodec("copy (no re-encode)","-c:a copy","ffmpeg",".mka");
 
     save();
 }
@@ -148,7 +147,7 @@ int k9AudioCodecs::getAbsCodecNum(int _num,const QString &_encoder) {
 
 
 QString k9AudioCodecs::getEncoder(int _num) {
-    return m_codecs[_num].encoder=="" ? QString("mencoder"): m_codecs[_num].encoder;
+    return m_codecs[_num].encoder=="" ? QString("ffmpeg"): m_codecs[_num].encoder;
 
 }
 

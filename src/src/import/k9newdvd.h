@@ -80,8 +80,9 @@ private:
     int m_offset;
     int m_lastvalue;
     QMap <k9Process*,QElapsedTimer> m_timers;
+    QMap <k9Process*,int> m_lengths;   // clip length in ms, for progress
     void calcVideoBitrate();
-    void createMencoderCmd ( QString &_cmd,QString &_chapters, k9AviFile *_aviFile );
+    void createEncodeCmd ( QString &_cmd,QString &_chapters, k9AviFile *_aviFile );
     void splitFile(k9AviFile *_aviFile);
     k9Config *m_config;
     QStringList m_splitCells;

@@ -86,7 +86,7 @@ void k9Config::read() {
 
     group=m_config->group("mp4");
     m_prefMp4Codec=group.readEntry("codec",0);
-    m_prefMp4Encoder=group.readEntry("encoder","mencoder");
+    m_prefMp4Encoder=group.readEntry("encoder","ffmpeg");
     m_prefMp4Size=group.readEntry("size",700);
     m_prefMp4NumberCD=group.readEntry("numberCD",1);
     m_prefMp4Width=group.readEntry("width","720");
