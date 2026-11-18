@@ -22,13 +22,9 @@
 #include <qpixmap.h>
 #include <qapplication.h>
 #include <qeventloop.h>
-#if QT_VERSION >= 0x050000
 #include <qpushbutton.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
-#else
-#include <kpushbutton.h>
-#endif
 
 class _k9ProcessListItem : public QTreeWidgetItem {
 public:
@@ -78,11 +74,7 @@ k9ProcessList::k9ProcessList(QWidget* parent) : QDialog(parent) {
     connect(&m_timer,SIGNAL(timeout()),this,SLOT(timeout()));
     Ui_processList.bCancel->setEnabled(false);
 
-    #if QT_VERSION >=0x050000
     KGuiItem::assign(Ui_processList.bCancel, KStandardGuiItem::stop() );
-    #else
-    Ui_processList.bCancel->setGuiItem(KStandardGuiItem::Stop);
-    #endif
 
 
 }

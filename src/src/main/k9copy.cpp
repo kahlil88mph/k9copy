@@ -39,7 +39,6 @@
 #include "k9audiocodecs.h"
 #include "k9importfiles.h"
 
-#if QT_VERSION >= 0x050000
 #include <QIcon>
 #include <KIconLoader>
 	#ifndef FALSE
@@ -50,12 +49,6 @@
 	#endif
 #include <QAction>
 #include <qstatusbar.h>
-#else
-#include <KAction>
-#include <kdeversion.h>
-#include <kstatusbar.h>
-
-#endif
 
 k9Copy::k9Copy()
         : KXmlGuiWindow( ) {
@@ -78,7 +71,6 @@ k9Copy::k9Copy()
     statusBar()->show();
     m_drives=new k9CdDrives(this);
     k9Config config;
-#if QT_VERSION >= 0x050000
     createCopyWindows();
 
     sbFactorQt=new QLabel(this);
@@ -88,19 +80,6 @@ k9Copy::k9Copy()
     statusBar()->addPermanentWidget(sbSelSizeQt,0);
     setupGUI();
 
-#else
-    createCopyWindows();
-
-    statusBar()->insertItem(i18n("Ready"),sbMessage,1);
-    statusBar()->setItemAlignment(sbMessage,Qt::AlignLeft | Qt::AlignVCenter);
-
-    statusBar()->insertFixedItem("",sbFactor);
-    statusBar()->setItemFixed(sbFactor,100);
-
-    statusBar()->insertFixedItem("",sbSelSize);
-    statusBar()->setItemFixed(sbSelSize,100);
-    setupGUI();
-#endif
 
 
 
@@ -276,35 +255,19 @@ bool k9Copy::queryClose   (    ) {
 }
 
 void k9Copy::setupActions() {
-#if QT_VERSION >= 0x050000
     CopyAction = new QAction(QIcon("dvdcopy"),i18n("Copy"),this);
-#else
-    CopyAction = new KAction(KIcon("dvdcopy"),i18n("Copy"),this);
-#endif
     connect(CopyAction, SIGNAL(triggered(bool)), SLOT(ActionCopy()));
     m_actions["copy"]=CopyAction;
 
-#if QT_VERSION >= 0x050000
     ejectAction = new QAction(QIcon("media-eject"),i18n("Eject"),this);
-#else
-    ejectAction = new KAction(KIcon("media-eject"),i18n("Eject"),this);
-#endif
     connect(ejectAction, SIGNAL(triggered(bool)), SLOT(ActionEject()));
     m_actions["eject"]=ejectAction;
 
-#if QT_VERSION >= 0x050000
     wizardAction = new QAction(QIcon("tools-wizard"),i18n("Wizard"),this);
-#else
-    wizardAction = new KAction(KIcon("tools-wizard"),i18n("Wizard"),this);
-#endif
     connect(wizardAction, SIGNAL(triggered(bool)), SLOT(ActionWizard()));
     m_actions["wizard"]=wizardAction;
 
-#if QT_VERSION >= 0x050000
     authorAction = new QAction(QIcon("author"),i18n("DVD Author"),this );
-#else
-    authorAction = new KAction(KIcon("author"),i18n("DVD Author"),this );
-#endif
     connect(authorAction, SIGNAL(triggered(bool)), SLOT(ActionAuthor()));
     m_actions["author"]=authorAction;
 
@@ -324,11 +287,7 @@ void k9Copy::setupActions() {
             bGtk=false;
     }
     if (bGtk && foundGtkStyle()) {
-#if QT_VERSION >= 0x050000
         m_actions["gtk-style"]=new QAction(QIcon("configure"),i18n("Use Gtk Style"),this);
-#else
-        m_actions["gtk-style"]=new KAction(KIcon("configure"),i18n("Use Gtk Style"),this);
-#endif
         m_actions["gtk-style"]->setCheckable(true);
         connect(m_actions["gtk-style"],SIGNAL(triggered(bool)),this,SLOT(setGtkStyle(bool)));
         k9Config config;
@@ -492,7 +451,6 @@ void k9Copy::removeToolWindow(KMdiToolViewAccessor *toolWin) {
 void k9Copy::changeStatusbar(const QString& text,int id) {
     // display the text on the statusbar
 
-#if QT_VERSION >= 0x050000
     switch(id) {
         case sbMessage:
             statusBar()->showMessage(text,0);
@@ -505,9 +463,6 @@ void k9Copy::changeStatusbar(const QString& text,int id) {
             break;
     }
 
-#else
-    statusBar()->changeItem(text,id);
-#endif
 }
 
 void k9Copy::changeCaption(const QString& text) {

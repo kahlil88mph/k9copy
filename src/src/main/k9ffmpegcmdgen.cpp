@@ -13,11 +13,7 @@
 
 #include "k9ffmpegcmdgen.h"
 #include <QLineEdit>
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 
 k9ffmpegCmdGen::k9ffmpegCmdGen(QWidget* parent)
         : QWidget(parent) {
@@ -126,21 +122,13 @@ void k9ffmpegCmdGen::show (FFMpegCmdType _type) {
 }
 
 bool k9ffmpegCmdGen::getFFMpegCmd(FFMpegCmdType _type,QString &_cmd) {
-#if QT_VERSION >= 0x050000
     QDialog *dlg= new QDialog();
-#else
-    KDialog *dlg= new KDialog();
-#endif
     k9ffmpegCmdGen *cmdGen=new k9ffmpegCmdGen(dlg);
     dlg->resize(cmdGen->width(),cmdGen->height());
     cmdGen->setCmd(_cmd);
     cmdGen->show(_type);
-#if QT_VERSION >= 0x050000
     QVBoxLayout * layoutFFmpeg = new QVBoxLayout(dlg);
     layoutFFmpeg->addWidget(cmdGen);
-#else
-    dlg->setMainWidget(cmdGen);
-#endif
     dlg->setWindowTitle(i18n("ffmpeg command generator"));
 
     if (dlg->exec())

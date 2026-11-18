@@ -26,7 +26,6 @@
 #include "ui_phonon.h"
 #include "k9dvd.h"
 
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #include <phonon/MediaObject>
 #include <phonon/MediaController>
@@ -35,16 +34,6 @@
 #include <phonon/Global>
 #include <phonon/VideoWidget>
 #include <phonon/MediaSource>
-#else
-// Qt 4 Code
-#include <Phonon/MediaObject>
-#include <Phonon/MediaController>
-#include <Phonon/Path>
-#include <Phonon/AudioOutput>
-#include <Phonon/Global>
-#include <Phonon/VideoWidget>
-#include <Phonon/MediaSource>
-#endif 
 
 
 #include <QLayout>

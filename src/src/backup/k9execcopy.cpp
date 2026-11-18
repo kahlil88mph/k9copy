@@ -225,11 +225,7 @@ void k9ExecCopy::MkvStdout(char *buffer, int size) {
  	     if (p!=-1) {
             	QString pos=s.mid(p-3,3).trimmed();
 		m_mkvPos=pos.toInt();
-#if QT_VERSION >= 0x050000
                 m_progressDialog->setValue(m_mkvPos);
-#else
-                m_progressDialog->progressBar()->setValue(m_mkvPos);
-#endif
 	     }
         }
     }
@@ -304,20 +300,10 @@ void k9ExecCopy::createMkv(k9DVDTitle *_title,const QString &_filename,QMultiMap
     	process << "--split"<< QString("size:%1m").arg((int)(totalSize/_nbParts));
     qDebug() << process.debug();
 
-#if QT_VERSION >= 0x050000
     m_progressDialog=new QProgressDialog(k9Dialogs::getMainWidget() );
     m_progressDialog->setCancelButton(NULL);
 
-#else
-    m_progressDialog=new KProgressDialog(k9Dialogs::getMainWidget() );
-
-    m_progressDialog->showCancelButton(false);
-#endif
-#if QT_VERSION >= 0x050000
     m_progressDialog->setMaximum(100);
-#else
-    m_progressDialog->progressBar()->setMaximum(100);
-#endif
     m_progressDialog->setAutoClose(true);
     m_progressDialog->setLabelText(i18n("Muxing Matroska file"));
     process.start();
@@ -454,11 +440,7 @@ void k9ExecCopy::extractAudio() {
 
 void k9ExecCopy::finished(int, QProcess::ExitStatus _status) {
     Q_UNUSED(_status);
-#if QT_VERSION >= 0x050000
     m_progressDialog->setValue(100);
-#else
-    m_progressDialog->progressBar()->setValue(100);
-#endif
 }
 
 

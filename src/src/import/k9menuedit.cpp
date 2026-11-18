@@ -25,14 +25,9 @@
 #include <qlabel.h>
 
 #include <KIconLoader>
-#if QT_VERSION >= 0x050000
 #include <QFileDialog>
 #include <KGuiItem>
 #include <KStandardGuiItem>
-#else // Qt4 Code
-#include <KFileDialog>
-
-#endif
 #include <QGraphicsView>
 #include <QResizeEvent>
 #include <QFontDialog>
@@ -58,11 +53,7 @@ k9MenuEdit::k9MenuEdit(QWidget* parent, const char* ,k9MenuScene *scene)
     gridLayout->setMargin(0);
     m_graphicsView = new k9GraphicsView(Ui_menuEdit.widget);
     gridLayout->addWidget(m_graphicsView, 0, 0, 1, 1);
-     #if QT_VERSION >= 0x050000
      KGuiItem::assign(Ui_menuEdit.bAddText, KStandardGuiItem::add() );
-     #else
-     Ui_menuEdit.bAddText->setGuiItem(KStandardGuiItem::Add);
-     #endif
      Ui_menuEdit.bAddText->setText("");
 
     m_noUpdate=false;
@@ -79,12 +70,8 @@ k9MenuEdit::k9MenuEdit(QWidget* parent, const char* ,k9MenuScene *scene)
 
         Ui_menuEdit.urBackground->setFilter("*.jpg|jpeg (*.jpg)\n*.png|png (*.png)\n*.*|All (*.*)");
         Ui_menuEdit.urBackground->setMode(KFile::File) ;
-        #if QT_VERSION >= 0x050000
 	//Qt5 Code
         Ui_menuEdit.urBackground->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
-	#else //Qt4 Code
-        Ui_menuEdit.urBackground->fileDialog()->setOperationMode(KFileDialog::Opening);
-	#endif 
 
 
 }
@@ -156,11 +143,7 @@ void k9MenuEdit::bFontClick() {
 }
 
 
-#if QT_VERSION >= 0x050000
 void k9MenuEdit::urBackgroundSelected(const QUrl &_url) {
-#else
-void k9MenuEdit::urBackgroundSelected(const KUrl &_url) {
-#endif
       QImage img;
       img.load(_url.toLocalFile());
       if ( m_scene->selectedItems().count()>0 ) {

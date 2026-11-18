@@ -85,11 +85,7 @@ QString k9Tools::findExe(const QString _program) {
 }
 
 bool k9Tools::checkProgram(QString _progName,bool _msg) {
-    #if QT_VERSION >= 0x050000
     bool res=QStandardPaths::findExecutable( _progName) !=NULL ;
-    #else // Qt4 Code
-    bool res= KStandardDirs::findExe( _progName,NULL,0) !=NULL ;
-    #endif
     if (_msg && !res)
         k9Dialogs::error(i18n("Error starting program %1").arg(_progName),i18n("Running program"));
     return res;
@@ -169,11 +165,7 @@ void k9Tools::setComboText(QComboBox *_cb,const QString &_text) {
 
 long k9Tools::getFreeSpace(const QString &_path) {
     struct statfs sfs;
-#if QT_VERSION >= 0x050000
     if (statfs(_path.toLatin1(),&sfs) !=-1) {
-#else
-    if (statfs(_path.toAscii(),&sfs) !=-1) {
-#endif
         uint64_t fs=((uint64_t)sfs.f_bavail*(uint64_t)sfs.f_bsize);
         fs/=(1024*1024);
         return fs;

@@ -15,10 +15,8 @@
 #include "k9dvd.h"
 #include "k9dvdtitle.h"
 #include <QDebug>
-#if QT_VERSION >= 0x050000
 #include <QIcon>
 #include <KIconLoader>
-#endif
 
 class _k9TitleWidget : public QTreeWidgetItem {
 public:

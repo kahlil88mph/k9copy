@@ -26,11 +26,7 @@
 #include "k9videocodecs.h"
 #include "k9tools.h"
 #include "k9cropselect.h"
-#if QT_VERSION >=0x050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 
 k9MP4Title::k9MP4Title(QWidget* parent,eOptTitle options)
 : QWidget(parent),m_options(options)
@@ -71,25 +67,16 @@ k9MP4Title::~k9MP4Title()
 }
 
 void k9MP4Title::bCropClicked() {
-#if QT_VERSION >= 0x050000
    QDialog dialog(this);
    dialog.setWindowTitle((i18n("Crop detection")));
-#else
-   KDialog dialog(this);
-   dialog.setWindowTitle(KDialog::makeStandardCaption(i18n("Crop detection")));
-#endif
    k9CropSelect cropSelect(&dialog);
    QRect r;
    r.setCoords(Ui_prefMPEG4.sbLeft->value(),Ui_prefMPEG4.sbTop->value(),Ui_prefMPEG4.sbRight->value(),Ui_prefMPEG4.sbBottom->value());
    cropSelect.setRect(r);
    cropSelect.setMinimumWidth(600);
    cropSelect.setMinimumHeight(400);
-#if QT_VERSION >= 0x050000
    QVBoxLayout * layoutCrop = new QVBoxLayout(this);
    layoutCrop->addWidget(&cropSelect);
-#else
-   dialog.setMainWidget(&cropSelect);
-#endif
    cropSelect.open(m_dvd,m_titleEncOpt->getTitle(),1);
    if (dialog.exec()== QDialog::Accepted) {
 	QRect r= cropSelect.getRect();

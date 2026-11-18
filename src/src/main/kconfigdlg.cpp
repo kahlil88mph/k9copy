@@ -24,32 +24,19 @@
 
 #include "kmessagebox.h"
 #include <kiconloader.h>
-#if QT_VERSION >= 0X050000
 #include <kstandardguiitem.h>
 #include <qpushbutton.h>
-#else // Qt4
-#include <kstdguiitem.h>
-#include <kpushbutton.h>
-#endif
 #include <kguiitem.h>
 
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
 #include <KStandardGuiItem>
-#else
-#include <kdialog.h>
-#endif
 
 
 kConfigDlg::kConfigDlg(QWidget *parent)
     : QWidget(parent)
 {
   Ui_configDlg.setupUi(this);
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("Devices")));
-#else
-  setWindowTitle(KDialog::makeStandardCaption(i18n("Devices"),this));
-#endif
   QStringList ldev;
   QStringList llabels;
   QStringList lIO;
@@ -102,13 +89,8 @@ kConfigDlg::kConfigDlg(QWidget *parent)
      connect(Ui_configDlg.bAdd,SIGNAL(clicked()),this,SLOT(bAddClick()));
      connect(Ui_configDlg.bRemove,SIGNAL(clicked()),this,SLOT(bRemoveClick()));
 
-    #if QT_VERSION >= 0x050000
     KGuiItem::assign(Ui_configDlg.bAdd, KStandardGuiItem::add() );
     KGuiItem::assign(Ui_configDlg.bRemove, KStandardGuiItem::remove() );
-    #else
-     Ui_configDlg.bAdd->setGuiItem(KStandardGuiItem::Add);
-     Ui_configDlg.bRemove->setGuiItem(KStandardGuiItem::Remove);
-    #endif
 
 
 }

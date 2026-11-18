@@ -25,13 +25,8 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <QSpinBox>
-#if QT_VERSION >=0x050000
 #include <qdialog.h>
 #include <QStandardPaths>
-#else
-#include <kdialog.h>
-#include <kstandarddirs.h>
-#endif
 
 #include <QHeaderView>
 class _k9CheckListItem: public QTreeWidgetItem {
@@ -61,11 +56,7 @@ k9MencoderCmdGen::k9MencoderCmdGen(QWidget* parent,const QString &_cmd,const QSt
 : QWidget(parent),m_encoder(_encoder)
 {
     Ui_mencoderCmdGen.setupUi(this);
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("MEncoder options")));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(i18n("MEncoder options")));
-#endif
     listView=Ui_mencoderCmdGen.listView;
     wsOptions=Ui_mencoderCmdGen.wsOptions;
 
@@ -162,11 +153,7 @@ void k9MencoderCmdGen::listViewCurrentChanged(QTreeWidgetItem *_item,QTreeWidget
 }
 
 void k9MencoderCmdGen::loadXml() {
-    #if QT_VERSION >= 0x050000 //Qt5 Code
     QFile file(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString("k9copy/%1.xml")).arg(m_encoder));
-    #else // Qt4 Code
-    QFile file(KGlobal::dirs()->findResource( "data", QString("k9copy/%1.xml").arg(m_encoder)));
-    #endif
 
     if ( !file.open( QIODevice::ReadOnly ) )
         return;
@@ -596,7 +583,6 @@ const QString & k9MencoderCmdGen::getCmd(const QString &_root) {
 }
 
 bool k9MencoderCmdGen::getMencoderOptions(QString &_cmd,const QString &_encoder) {
-#if QT_VERSION >= 0x050000
     QDialog *dlg= new QDialog();
     dlg->setWindowTitle(("MEncoder options"));
     k9MencoderCmdGen * m_cmdGen=new k9MencoderCmdGen(NULL,_cmd,_encoder);
@@ -604,13 +590,6 @@ bool k9MencoderCmdGen::getMencoderOptions(QString &_cmd,const QString &_encoder)
     QVBoxLayout * layoutMenCoder = new QVBoxLayout(dlg);
     layoutMenCoder->addWidget(m_cmdGen);
 
-#else
-    KDialog *dlg= new KDialog();
-    dlg->setWindowTitle(dlg->makeStandardCaption("MEncoder options"));
-    k9MencoderCmdGen * m_cmdGen=new k9MencoderCmdGen(NULL,_cmd,_encoder);
-    m_cmdGen->m_cmd=_cmd;
-    dlg->setMainWidget(m_cmdGen);
-#endif
     dlg->resize(800,600);
     bool res=dlg->exec();
     if (res) {

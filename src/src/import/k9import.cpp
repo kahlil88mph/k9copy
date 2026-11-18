@@ -30,21 +30,13 @@
 #include <QDockWidget>
 #include <QAction>
 #include <QMenu>
-#if QT_VERSION >= 050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 #include "k9menu.h"
 k9Import::k9Import(QWidget* parent, const char* ,k9CdDrives *_drives)
         : QWidget(parent) {
     Ui_import.setupUi(this);
     Ui_import.lvDVD->setIconSize(QSize(48,48));
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("import")));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(i18n("import"),this));
-#endif
     m_parent=(k9ImportFiles*) parent;
     drives=_drives;
     m_newDVD=new k9NewDVD();

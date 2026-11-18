@@ -21,22 +21,15 @@
 #include <kurlrequester.h>
 #include <qcheckbox.h>
 #include "k9title.h"
-#if QT_VERSION >= 0X050000
 #include <qpushbutton.h>
-#else
-#include <kpushbutton.h>
-#endif
 
 #include <kiconloader.h>
 
 #include <QPalette>
 
 
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #include <QUrl>
-#else //Qt4 Code
-#endif
 
 
 k9ChapterEdit::k9ChapterEdit(QWidget* parent)
@@ -74,11 +67,7 @@ void k9ChapterEdit::sliderChanged(int _value) {
         Ui_chapterEdit.lPosition->setText(t.toString("hh:mm:ss"));
     }
 }
-#if QT_VERSION >= 0x050000
 void k9ChapterEdit::urlSelected(const QUrl& _url) {
-#else
-void k9ChapterEdit::urlSelected(const KUrl& _url) {
-#endif
   bool fileChanged=_url.toLocalFile() !=m_aviFile->getFileName();
   if (!m_aviDecode) {
      m_aviDecode =new k9AviDecode(0,0);

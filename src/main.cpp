@@ -24,13 +24,7 @@
 #include "k9copy.h"
 #include "k9common.h"
 
-#if QT_VERSION >= 0x050000
 
-#else
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#endif
 
 #include "k9assistant.h"
 #include "k9dialogs.h"
@@ -40,15 +34,11 @@
 #include <QDBusConnection>
 #include <QDBusError>
 #include <QTimer>
-#if QT_VERSION >= 0x050000
 #include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
-#else 
-#include <KLocale>
-#endif
 #include "k9batch.h"
 
 static const char description[] =
@@ -60,7 +50,6 @@ int main(int argc, char **argv) {
     k9batch batch;
     if (batch.exec(argc,argv)) 
       return 1;
-#if QT_VERSION >= 0x050000
 	KAboutData about("k9copy", i18n("K9copy"), version,
 	i18n(description),
 	KAboutLicense::GPL,
@@ -75,30 +64,12 @@ int main(int argc, char **argv) {
 
 
 
-#else
-    KAboutData about("k9copy", 0, ki18n("k9copy"), version, ki18n(description),
-                     KAboutData::License_GPL, 
-
-		     ki18n("<p>(C) 2014 Pauline123</p>" 
-			  "<p>(C) 2004-2011 Jean-Michel PETIT</p>"), 
-		     KLocalizedString(), 0, 
-		     "pauline123@users.sourceforge.net");
-    about.addAuthor( ki18n("Pauline123"), KLocalizedString(), "pauline123@users.sourceforge.net" );
-    about.addAuthor( ki18n("Jean-Michel PETIT"), KLocalizedString(), "k9copy@free.fr" );
-    about.setTranslator(ki18n("_: NAME OF TRANSLATORS\\nYour names")
-                        ,ki18n("_: EMAIL OF TRANSLATORS\\nYour emails"));
-#endif
-#if QT_VERSION >= 0x050000
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(about);
     parser.addVersionOption();
     parser.addHelpOption();
-#else
-    KCmdLineArgs::init(argc, argv, &about);
-#endif
 
-#if QT_VERSION >= 0x050000
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("input"), i18n("input device"), QLatin1String("device")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("output"), i18n("output device"), QLatin1String("device")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("assistant"), i18n("the k9copy backup assistant")));
@@ -106,48 +77,22 @@ int main(int argc, char **argv) {
     parser.process(app);
     about.processCommandLine(&parser);
 
-#else
-
-    KCmdLineOptions options;
-    options.add( "input <device>", ki18n("input device"));
-    options.add("output <device>", ki18n("output device"));
-    options.add("dvdtitle <number>", ki18n("title to play"));
-    options.add("assistant", ki18n("the k9copy backup assistant"));
-
-
-    KCmdLineArgs::addCmdLineOptions( options );
-    
-#endif
 
 
     //    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("+[URL]"), i18n( "Document to open" )));
 
 
-#if QT_VERSION >= 0x050000
 //    QApplication app(argc, argv);
-#else
-     KApplication app;
-#endif
     k9Tools::setMainThread();
 
     if (app.isSessionRestored()) {
         RESTORE(k9Copy);
     } else {
         // no session.. just start up normally
-#if QT_VERSION >= 0x050000
         QString InputOptionArg( parser.value("input"));
         QString OutputOptionArg( parser.value("output"));
-#else
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-        QString InputOptionArg( args->getOption("input"));
-        QString OutputOptionArg( args->getOption("output"));
-#endif
         k9Config::checkCodecs();
-#if QT_VERSION >= 0x050000
         if (!parser.isSet("assistant")) {
-#else
-        if (!args->isSet("assistant")) {
-#endif
             k9Copy  *widget = new k9Copy;
             if (InputOptionArg !="") {
 		widget->setInput( InputOptionArg);

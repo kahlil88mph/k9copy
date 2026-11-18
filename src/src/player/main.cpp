@@ -24,15 +24,8 @@
 #include "dvdread/dvd_reader.h"
 #include "k9copy.h"
 #include "k9play.h"
-#if QT_VERSION >= 0x050000
 #include <kaboutdata.h>
 #include <KLocalizedString>
-#else
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <KLocale>
-#endif
 
 
 #include <QDBusAbstractAdaptor>
@@ -40,10 +33,8 @@
 #include <QDBusConnection>
 #include <QDBusError>
 #include <QTimer>
-#if QT_VERSION >= 0x050000
 #include <QCommandLineParser>
 #include <QCommandLineOption>
-#endif
 
 static const char description[] =
     I18N_NOOP("A KDE 4 Application");
@@ -51,7 +42,6 @@ static const char description[] =
 static const char version[] = VERSION ;
 
 int main(int argc, char **argv) {
-#if QT_VERSION >= 0x050000
 
     KAboutData about("k9player", i18n("k9copy"), version, i18n(description),
                      KAboutLicense::GPL,
@@ -63,17 +53,7 @@ int main(int argc, char **argv) {
         about.addAuthor(i18n("Jean-Michel PETIT"), i18n("developer"), "k9copy@free.fr", 0);
 	QList<KAboutPerson> people = about.authors();
 	about.addCredit(people[0].name(), people[0].task());
-#else
-    KAboutData about("k9copy", 0, ki18n("k9copy"), version, ki18n(description),
-                     KAboutData::License_GPL, ki18n("<p> (C) 2014 Pauline123 </p>" "<p>(C) 2007 Jean-Michel</p>"), KLocalizedString(), 0, "k9copy@free.fr");
 
-    about.addAuthor( ki18n("Pauline123"), KLocalizedString(), "pauline123@users.sourceforge.net" );
-    about.addAuthor( ki18n("Jean-Michel"), KLocalizedString(), "k9copy@free.fr" );
-    about.setTranslator(ki18n("_: NAME OF TRANSLATORS\\nYour names")
-                        ,ki18n("_: EMAIL OF TRANSLATORS\\nYour emails"));
-#endif
-
-#if QT_VERSION >= 0x050000
      QApplication app(argc, argv);  
     QCommandLineParser parser;
     KAboutData::setApplicationData(about);
@@ -83,12 +63,7 @@ int main(int argc, char **argv) {
     about.setupCommandLine(&parser);
     parser.process(app);
     about.processCommandLine(&parser);
-#else
-    KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineOptions options;
-#endif
 
-#if QT_VERSION >= 0x050000
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("gui"), i18n("no gui")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("input"), i18n("input device"), QLatin1String("device")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("output"), i18n("output device"), QLatin1String("device")));
@@ -112,42 +87,7 @@ int main(int argc, char **argv) {
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("continue"), i18n("continue playing from last sector")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("firstpass"), i18n("don't save status at end")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("usecache"), i18n("save cell in a temporary file before encoding")));
-#else
-    options.add("gui",ki18n("no gui"));
-    options.add( "input <device>", ki18n("input device"));
-    options.add("output <device>", ki18n("output device"));
-    options.add("dvdtitle <number>", ki18n("title to play"));
-    options.add("play", ki18n("play title to stdout"));
-    options.add("startsector <number>", ki18n("start sector"));
-    options.add("endsector <number>", ki18n("end sector"));
-    options.add("audiofilter <number,number>", ki18n("list of audio streams"));
-    options.add("subpicturefilter <number,number>", ki18n("list of spu streams"));
-    options.add("vampsfactor <number>", ki18n("shrink factor"));
-    options.add("ffactor", ki18n("shrink factor forced"));
-    options.add("inputsize <number>", ki18n("size of the cell to be copied"));
-    options.add("totalsize <number>", ki18n("total size of selected titles"));
-    options.add("chaptersize <number>", ki18n("size of the chapters being copied"));
-    options.add("chapterlist <list>",ki18n("selected chapters"));
-    options.add( "dvdsize <number>", ki18n("new dvd size"));
-    options.add("chapter <number>", ki18n("selected chapter"));
-    options.add("cell <number>", ki18n("cell number in selected chapter"));
-    options.add("inject <filename>", ki18n("status file name"));
-    options.add("initstatus" ,ki18n("initialize status file"));
-    options.add("continue" ,ki18n("continue playing from last sector"));
-    options.add("firstpass" ,ki18n("don't save status at end"));
-    options.add( "usecache" ,ki18n("save cell in a temporary file before encoding"));
-#endif
 
-#if QT_VERSION >= 0x050000
-#else
-    KCmdLineArgs::addCmdLineOptions( options );
-    // no session.. just start up normally
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-
-    QApplication app(argc, argv,false);
-#endif 
-#if QT_VERSION >= 0x050000
     QString TitleNumber(parser.value("dvdtitle"));
     QString InputOptionArg( parser.value("input"));
     QString OutputOptionArg( parser.value("output"));
@@ -169,46 +109,13 @@ int main(int argc, char **argv) {
     k9Tools::setBatchCopy(!gui);
     bool ffactor=parser.isSet("ffactor");
     bool play= parser.isSet("play");
-#else
-    QString TitleNumber(args->getOption("dvdtitle"));
-    QString InputOptionArg( args->getOption("input"));
-    QString OutputOptionArg( args->getOption("output"));
-    QString startSectorArg(args->getOption("startsector"));
-    QString endSectorArg(args->getOption("endsector"));
-    QString audioFilterArg(args->getOption("audiofilter"));
-    QString subpictureFilterArg(args->getOption("subpicturefilter"));
-    QString vampsFactorArg(args->getOption("vampsfactor"));
-    QString inputSizeArg(args->getOption("inputsize"));
-    QString chapterArg(args->getOption("chapter"));
-    QString cellArg(args->getOption("cell"));
-    QString injectArg(args->getOption("inject"));
-    QString totalSizeArg(args->getOption("totalsize"));
-    QString dvdSizeArg(args->getOption("dvdsize"));
-    QString chapterSizeArg(args->getOption("chaptersize"));
-    QString chapterListArg(args->getOption("chapterlist"));
-
-    bool gui=args->isSet("gui");
-    k9Tools::setBatchCopy(!gui);
-    bool ffactor=args->isSet("ffactor");
-    bool play= args->isSet("play");
-
-
-
-#endif
     if (play) {
         QObject obj;
         k9play player(&obj);
-#if QT_VERSION >= 0x050000
         player.setinitStatus( parser.isSet("initstatus"));
         player.setcontinue( parser.isSet("continue"));
         player.setfirstPass(parser.isSet("firstpass"));
         player.setuseCache(parser.isSet("usecache"));
-#else
-        player.setinitStatus( args->isSet("initstatus"));
-        player.setcontinue( args->isSet("continue"));
-        player.setfirstPass(args->isSet("firstpass"));
-        player.setuseCache(args->isSet("usecache"));
-#endif
         player.setDevice(InputOptionArg);
         player.setTitle(TitleNumber.toInt());
         player.setstartSector(startSectorArg);

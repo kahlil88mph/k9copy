@@ -27,39 +27,24 @@
 #include <qprogressbar.h>
 #include <qlabel.h>
 
-#if QT_VERSION >= 0x050000
 // Qt 5 Code
 #include <kstandardguiitem.h>
 #include <qpushbutton.h>
-#else
-// Qt 4 Code
-#include <kiconloader.h>
-#include <kstdguiitem.h>
-#include <kpushbutton.h>
-#endif
 #include <kguiitem.h>
 
 #include <qlabel.h>
 #include <qpainter.h>
 #include <qlayout.h>
 #include "k9drawimage.h"
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
-#else
-#include <kdialog.h>
-#endif
 
 k9BackupDlg::k9BackupDlg(QWidget* parent)
         : QDialog(parent),k9InternalPlayer() {
     ui_backupDlg.setupUi(this);
     setModal(true);
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("Backup progression")));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(i18n("Backup progression"),this));
-#endif
     Abort=false;
     timer = new QTimer( this );
     time.start();
@@ -79,20 +64,10 @@ k9BackupDlg::k9BackupDlg(QWidget* parent)
     QGridLayout *l=new QGridLayout(ui_backupDlg.image);
     l->addWidget(m_wimage,0,0);
 
-#if QT_VERSION >= 0x050000
     KGuiItem::assign(ui_backupDlg.bAbort, KStandardGuiItem::stop() );
-#else
-    ui_backupDlg.bAbort->setGuiItem(KStandardGuiItem::Stop);
-#endif
-    #if QT_VERSION >= 0x050000
     // Qt5 code
     QString aright=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "k9copy/aright.png");
     QString adown=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "k9copy/adown.png");
-    #else
-    // Qt4 code
-    QString aright=KGlobal::dirs()->findResource( "data", QString("k9copy/aright.png"));
-    QString adown=KGlobal::dirs()->findResource( "data", QString("k9copy/adown.png"));
-    #endif
     ui_backupDlg.gbOutput->setStyleSheet("*::indicator:unchecked {image:url("+aright+"); } *::indicator:checked {image:url("+adown+"); } ");
 
 

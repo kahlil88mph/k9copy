@@ -20,19 +20,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "k9xineplayer.h"
-#if QT_VERSION >= 0x050000
 #include <QApplication>
-#else
-#include <KApplication>
-#endif
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <sys/time.h>
 #include <QTimer>
-#if QT_VERSION >= 0x050000
 #include <QX11Info>
-#endif
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/X.h>
@@ -133,21 +127,12 @@ void k9xinePlayer::setHeight(int _value) {
 bool k9xinePlayer::updateConfigEntry (const QString & name, const QString & value) {
     bool changed = false;
     xine_cfg_entry_t cfg_entry;
-#if QT_VERSION >= 0x050000
     if (!xine_config_lookup_entry (xine, name.toLatin1 (), &cfg_entry))
-#else
-    if (!xine_config_lookup_entry (xine, name.toAscii (), &cfg_entry))
-#endif
         return false;
     if (cfg_entry.type == XINE_CONFIG_TYPE_STRING ||
             cfg_entry.type == XINE_CONFIG_TYPE_UNKNOWN) {
-#if QT_VERSION >= 0x050000
         changed = strcmp (cfg_entry.str_value, value.toLatin1 ());
         cfg_entry.str_value = (char *) value.toLatin1 ().data();
-#else
-        changed = strcmp (cfg_entry.str_value, value.toAscii ());
-        cfg_entry.str_value = (char *) value.toAscii ().data();
-#endif
     } else {
         changed = cfg_entry.num_value != value.toInt ();
         cfg_entry.num_value = value.toInt ();
@@ -268,19 +253,11 @@ void k9xinePlayer::init(WId _wid) {
         m_pixelAspect = 1.0;
 
     if ((vo_port = xine_open_video_driver(xine,
-#if QT_VERSION >= 0x050000
                                           m_vo.toLatin1(), XINE_VISUAL_TYPE_X11, (void *) &vis)) == NULL) {
-#else
-                                          m_vo.toAscii(), XINE_VISUAL_TYPE_X11, (void *) &vis)) == NULL) {
-#endif
       //  printf("I'm unable to initialize '%s' video driver. Giving up.\n", m_vo.toAscii());
       //  return ;
     }
-#if QT_VERSION >= 0x050000
     ao_port     = xine_open_audio_driver(xine , m_ao.toLatin1(), NULL);
-#else
-    ao_port     = xine_open_audio_driver(xine , m_ao.toAscii(), NULL);
-#endif
     stream      = xine_stream_new(xine, ao_port, vo_port);
     event_queue = xine_event_new_queue(stream);
     xine_event_create_listener_thread(event_queue, event_listener, this);
@@ -309,11 +286,7 @@ void k9xinePlayer::quit() {
 void k9xinePlayer::update() {
     if (stream && !running ) {
         if (m_mutex.tryLock()) {
-#if QT_VERSION >= 0x050000
 	    QApplication::sync();
-#else
-            QApplication::syncX();
-#endif
            xine_port_send_gui_data(vo_port , XINE_GUI_SEND_DRAWABLE_CHANGED, (void *) m_wid);
            m_mutex.unlock();
         }
@@ -381,11 +354,7 @@ void k9xinePlayer::end() {
     XCloseDisplay (display);
     m_mutex.unlock();
     delete m_thread;
-#if QT_VERSION >= 0x050000
 QApplication::quit();
-#else
-    kapp->exit();
-#endif
 }
 
 

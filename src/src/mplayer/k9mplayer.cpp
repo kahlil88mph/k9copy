@@ -8,11 +8,7 @@
 #include "k9mplayer.h"
 #include <qcombobox.h>
 #include <kiconloader.h>
-#if QT_VERSION >= 0x050000
 #include <qpushbutton.h>
-#else
-#include <kpushbutton.h>
-#endif
 #include "k9dvd.h"
 #include "k9dvdtitle.h"
 #include <qlabel.h>
@@ -21,16 +17,12 @@
 #include <qevent.h>
 
 
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #ifndef FALSE
 #define FALSE (0)
 #endif
 #ifndef TRUE
 #define TRUE (!FALSE)
-#endif
-#else
-// Qt 4 Code
 #endif
 
 

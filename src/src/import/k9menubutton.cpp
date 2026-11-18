@@ -67,11 +67,7 @@ QRectF k9CanvasSprite::boundingRect() const {
     if (m_text) {
         QRectF r2=m_text->boundingRect();
         r2.moveTopLeft(m_text->pos());
-#if QT_VERSION >= 0x050000
 	r=r.united(r2); 	// Qt5 Code Should also be a drop in for the Qt4 Code aka should work in both, but for now.
-#else
-        r=r.unite(r2);
-#endif
     }
     r.adjust(-m_selsize,-m_selsize,m_selsize,m_selsize);
 

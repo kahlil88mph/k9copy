@@ -40,20 +40,12 @@
 
 #include "k9cropselect.h"
 #include "kviewmpeg2.h"
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 #include <math.h>
 
 k9CropSelect::k9CropSelect(QWidget *parent):QWidget(parent) {
     Ui_viewMPEG2.setupUi(this);
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("Crop selection")));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(i18n("Crop selection"),this));
-#endif
     Ui_viewMPEG2.bPlay->setIcon(SmallIcon("media-playback-start"));
     Ui_viewMPEG2.bStop->setIcon(SmallIcon("media-playback-stop"));
 

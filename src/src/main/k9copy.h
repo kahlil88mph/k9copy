@@ -19,15 +19,9 @@
 #include <kxmlguiwindow.h>
 #include "k9common.h"
 #include "k9cddrive.h"
-#if QT_VERSION >= 0x050000
 #include <qapplication.h>
 #include <QAction>
 #include <QLabel>
-#else
-#include <kapplication.h>
-#include <KAction>
-#include <QLabel>
-#endif
 #include <KToggleAction>
 #include <QObject>
 
@@ -103,21 +97,12 @@ private:
     void removeToolWindows();
     void saveDock();
     bool foundGtkStyle();
-#if QT_VERSION >= 0x050000
     QAction *CopyAction;
     QAction *PlayTitleAction;
     QAction *ejectAction;
     QAction *backupAction;
     QAction *authorAction;
     QAction *wizardAction;
-#else
-    KAction *CopyAction;
-    KAction *PlayTitleAction;
-    KAction *ejectAction;
-    KAction *backupAction;
-    KAction *authorAction;
-    KAction *wizardAction;
-#endif
 private:
     k9Main  *m_k9Main;
 //    KMdiChildView *m_k9MainView,*m_k9ImportView;

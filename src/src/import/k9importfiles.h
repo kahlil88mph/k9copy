@@ -22,13 +22,8 @@
 #include "k9copy.h"
 
 #include <KToggleAction>
-#if QT_VERSION >= 0x050000
 #include <qapplication.h>
 #include <QAction>
-#else
-#include <kapplication.h>
-#include <kaction.h>
-#endif
 
 #include <QObject>
 
@@ -78,19 +73,11 @@ private:
     void setupActions();
     void createWindows();
     void removeToolWindows();
-#if QT_VERSION >= 0x050000
     QAction *CopyAction;
     QAction *PlayTitleAction;
     QAction *mkMP4Action;
     QAction *ejectAction;
     QAction *backupAction;
-#else
-    KAction *CopyAction;
-    KAction *PlayTitleAction;
-    KAction *mkMP4Action;
-    KAction *ejectAction;
-    KAction *backupAction;
-#endif
     QDockWidget *m_firstBottom;
     k9Copy *m_parent;
 private:

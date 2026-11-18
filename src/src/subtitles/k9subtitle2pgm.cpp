@@ -183,11 +183,7 @@ void k9Subtitle2Pgm::pes_ac3_loop (void) {
 
 
     uint index=0;
-#if QT_VERSION >= 0x050000
     void *vobsub_h=vobsub_out_open(m_baseName.toUtf8(), m_palette,720,576,m_langCod.toLatin1(), index);
-#else
-    void *vobsub_h=vobsub_out_open(m_baseName.toUtf8(), m_palette,720,576,m_langCod.toAscii(), index);
-#endif
 
 
     do {

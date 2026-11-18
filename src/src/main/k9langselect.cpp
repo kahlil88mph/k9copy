@@ -15,14 +15,12 @@
 #include "k9langselect.h"
 #include "k9dvd.h"
 #include "k9dvdtitle.h"
-#if QT_VERSION >= 0x050000 // Qt5 Code
 	#ifndef FALSE
 	#define FALSE (0)
 	#endif
 	#ifndef TRUE
 	#define TRUE (!FALSE)
 	#endif
-#endif // Qt5 Code
 
 k9LangSelect::k9LangSelect(k9Main *mainWindow,QWidget* parent)
 : QWidget(parent)

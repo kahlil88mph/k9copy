@@ -17,11 +17,7 @@
 
 
 
-#if QT_VERSION >= 0x050000
 #include <QProgressDialog>
-#else
-#include <KProgressDialog>
-#endif
 
 
 
@@ -68,11 +64,7 @@ private:
     QString m_path;
     eOutput m_output;
     bool m_copyMenus;
-#if QT_VERSION >= 0x050000
     QProgressDialog *m_progressDialog;
-#else
-    KProgressDialog *m_progressDialog;
-#endif
     void createMkv(k9DVDTitle *_title,const QString &_filename,QMultiMap< int, k9ResultingFile* > _files,int _nbParts, const QString &_aspect) ;
     QStringList m_outputMsg;
     int m_mkvPos;

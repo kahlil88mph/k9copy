@@ -21,10 +21,8 @@
 #include <QPainter>
 #include <QMovie>
 #include <QLayout>
-#if QT_VERSION >= 0x050000
 #include <KGuiItem>
 #include <KStandardGuiItem>
-#endif
 
 
 k9Progress::k9Progress(QWidget* parent)
@@ -36,17 +34,10 @@ k9Progress::k9Progress(QWidget* parent)
     QGridLayout *l=new QGridLayout(Ui_Progress.image);
     l->addWidget(m_wimage,0,0);
 
-    #if QT_VERSION >= 0x050000
     // Qt5 code
     KGuiItem::assign(Ui_Progress.bCancel, KStandardGuiItem::stop() );
     QString aright=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kmyapp/aright.png");
     QString adown=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kmyapp/adown.png");
-    #else
-    // Qt4 code
-    Ui_Progress.bCancel->setGuiItem(KStandardGuiItem::Stop);
-    QString adown=KGlobal::dirs()->findResource( "data", QString("k9copy/adown.png"));
-    QString aright=KGlobal::dirs()->findResource( "data", QString("k9copy/aright.png"));
-    #endif
 
     Ui_Progress.gbOutput->setStyleSheet("*::indicator:unchecked {image:url("+aright+"); } *::indicator:checked {image:url("+adown+"); } ");
     m_movie=NULL;

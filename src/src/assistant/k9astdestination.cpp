@@ -18,12 +18,8 @@
 #include "QDebug"
 
 
-#if QT_VERSION >= 0x050000
 #include <QUrl>
 #include <QFileDialog>
-#else
-#include <KFileDialog>
-#endif
 
 
 k9astDestination::k9astDestination(k9Assistant* parent,k9CdDrives *_drives,k9DVD *_dvd)
@@ -44,25 +40,13 @@ k9astDestination::k9astDestination(k9Assistant* parent,k9CdDrives *_drives,k9DVD
     Ui_astDestination.urAudio->setVisible(false);
     Ui_astDestination.urAvi->setFilter("*.avi|Audio Video Interleave (*.avi)\n*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)\n*.mp4|MPEG-4 format (*.mp4)\n*.asf|Advanced Streaming Format (*.asf)\n*.swf|Adobe Flash (*.swf)\n*.flv|Adobe Flash video files (*.flv)\n*.rm|RealVideo (*.rm)\n*.mov|QuickTime (*.mov)\n*.mkv|Matroska (*.mkv)");
     Ui_astDestination.urAvi->setMode(KFile::File) ;
-	#if QT_VERSION >= 0x050000 //Qt5 Code
     Ui_astDestination.urAvi->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-	#else //Qt4 Code
-    Ui_astDestination.urAvi->fileDialog()->setOperationMode(KFileDialog::Saving);
-	#endif
     Ui_astDestination.urIso->setFilter("*.iso|Iso Image (*.iso)");
     Ui_astDestination.urIso->setMode(KFile::File) ;
-       #if QT_VERSION >= 0x050000
         Ui_astDestination.urIso->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-	#else 
-    Ui_astDestination.urIso->fileDialog()->setOperationMode(KFileDialog::Saving);
-	#endif
     Ui_astDestination.urMpeg->setFilter("*.mpg|Mpeg video file (*.mpg)");
     Ui_astDestination.urMpeg->setMode(KFile::File);
-	#if QT_VERSION >= 0x050000
     Ui_astDestination.urMpeg->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-	#else 
-    Ui_astDestination.urMpeg->fileDialog()->setOperationMode(KFileDialog::Saving);
-	#endif
     Ui_astDestination.urAudio->setMode(KFile::Directory | KFile::ExistingOnly);
 
 
@@ -81,20 +65,11 @@ void k9astDestination::updatePaths() {
   k9Config config;
    QString title=m_parent->getDvd()->getDVDTitle();
    title= title.isEmpty() ? i18n("unknown"):title;
-#if QT_VERSION >= 0x050000
    Ui_astDestination.urFolder->setUrl(QUrl(QDir::cleanPath(config.getPrefOutput())));
    Ui_astDestination.urIso->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputIso()+"/"+title+".iso") ));
    Ui_astDestination.urAudio->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputAudio())));
    Ui_astDestination.urAvi->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputMpeg4()+"/"+title+".avi") ));
    Ui_astDestination.urMpeg->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputMpeg2()+"/"+title+".mpg") ));
-#else
-   Ui_astDestination.urFolder->setUrl(KUrl(QDir::cleanPath(config.getPrefOutput())));
-   Ui_astDestination.urIso->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputIso()+"/"+title+".iso") ));
-   Ui_astDestination.urAudio->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputAudio())));
-   Ui_astDestination.urAvi->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputMpeg4()+"/"+title+".avi") ));
-   Ui_astDestination.urMpeg->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputMpeg2()+"/"+title+".mpg") ));  
-
-#endif
 }
 
 void k9astDestination::deviceAdded(k9CdDrive *_drive) {

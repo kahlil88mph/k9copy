@@ -25,11 +25,7 @@
 #include "k9xine.h"
 #include <qcombobox.h>
 #include <kiconloader.h>
-#if QT_VERSION >= 0x050000
 #include <qpushbutton.h>
-#else
-#include <kpushbutton.h>
-#endif
 #include "k9dvd.h"
 #include "k9dvdtitle.h"
 #include <qlabel.h>
@@ -38,7 +34,6 @@
 #include <qevent.h>
 #include <kmessagebox.h>
 
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #ifndef FALSE
 #define FALSE (0)
@@ -47,10 +42,6 @@
 #define TRUE (!FALSE)
 #endif
 #include <KLocalizedString>
-#else
-// Qt 4 Code
-#include <klocale.h>
-#endif
 
 
 

@@ -25,30 +25,19 @@
 #include <QString>
 #include <KMessageBox>
 
-#if QT_VERSION >= 0x050000
 #include <QFontDialog>
 #include <QFileDialog>
 #include <QDialog>
 #include <QMessageBox>
-#else
-#include <KFontDialog>
-#include <KFileDialog>
-#include <KDialog>
-#include <KNotification>
-#endif
 
 
 
 #include <QApplication>
 #include "k9tools.h"
     
-#if QT_VERSION >= 0x050000
 // Qt5 code
 #include <QIcon>
 #include <QDebug>
-#else
-// Qt4 code
-#endif
 
 
 
@@ -64,30 +53,16 @@ QWidget* k9Dialogs::getMainWidget() {
 
 
 QString k9Dialogs::getOpenFileName (const QString &_initialDir,const QString &_filter,QWidget *_parent,const QString &_title) {
-#if QT_VERSION >= 0x050000
         return QFileDialog::getOpenFileName ( _parent,_title,_initialDir,_filter);
-#else // Qt4 Code
-        return KFileDialog::getOpenFileName (_initialDir,_filter, _parent,_title);
-#endif 
 
 }
 
 QString k9Dialogs::getSaveFileName (const QString &_initialDir,const QString &_filter,QWidget *_parent,const QString &_title) {
-#if QT_VERSION >= 0x050000
         return QFileDialog::getSaveFileName ( _parent,_title,_initialDir,_filter);
-#else // Qt4 Code
-        return KFileDialog::getSaveFileName (_initialDir,_filter, _parent,_title);
-
-#endif
 }
 
 QString k9Dialogs::getExistingDirectory (const QString &_initialDir) {
-#if QT_VERSION >= 0x050000
         return QFileDialog::getExistingDirectory(0,i18n("select a directory"),_initialDir);
-#else // Qt4 KDE4 Code
-        return KFileDialog::getExistingDirectory (_initialDir);
-
-#endif
 }
 
 void k9Dialogs::error(const QString &_message,const QString &_title,const QStringList &_detail) {
@@ -105,18 +80,8 @@ void k9Dialogs::error(const QString &_message,const QString &_title,const QStrin
     body << _detail;
 
 
-#if QT_VERSION >= 0x050000
     QMessageBox message(QMessageBox::Critical,_title,_message,QMessageBox::Ok,activeWindow) ;
     message.exec();
-#else
-    KNotification *notify=KNotification::event(KNotification::Error,_title,body.join("<br>"),KIcon("k9copy").pixmap(48));
-
-    notify->setText(body.join("<br>"));
-    notify->setTitle(_title);
-    notify->sendEvent();
-    KMessageBox::errorList(activeWindow,_message,_detail,_title);
-
-#endif
 }
 
 void k9Dialogs::information(const QString &_message, const QString &_title) {
@@ -128,16 +93,8 @@ void k9Dialogs::information(const QString &_message, const QString &_title) {
     QWidget *activeWindow=QApplication::activeWindow();
     if (activeWindow==0)
 	activeWindow=k9MainWidget;
-#if QT_VERSION >= 0x050000
     QMessageBox message(QMessageBox::Information,_title, _message, 0, activeWindow);
     message.exec();
-#else
-    KNotification *notify=KNotification::event(KNotification::Notification ,_title,_message,KIcon("k9copy").pixmap(48));
-    notify->sendEvent();
-    notify->activate();
-
-    KMessageBox::information(activeWindow,_message,_title);
-#endif
 
 }
 int k9Dialogs::warningContinueCancel(const QString &  _message,const QString & _title,const QStringList &_detail) {
@@ -145,7 +102,6 @@ int k9Dialogs::warningContinueCancel(const QString &  _message,const QString & _
     if (activeWindow==0)
 	activeWindow=k9MainWidget;
 
-#if QT_VERSION >= 0x050000
     	
     QMessageBox message(QMessageBox::Warning,_title,_message,QMessageBox::Ignore | QMessageBox::Cancel,activeWindow);
     message.setButtonText(QMessageBox::Ignore, i18n("Continue"));
@@ -158,15 +114,11 @@ int k9Dialogs::warningContinueCancel(const QString &  _message,const QString & _
     {qDebug() << "Cancel Clicked";
     qDebug() << ret;
     return 2;}
-#else
-    return KMessageBox::warningContinueCancelList(activeWindow,_message,_detail,_title);
-#endif
 
 
 }
 
 bool k9Dialogs::getFont(QFont &font) {
-    #if QT_VERSION >= 0x050000
     bool ok;
     QFont res=QFontDialog::getFont ( &ok,font,k9MainWidget);
     if (ok) {
@@ -174,12 +126,5 @@ bool k9Dialogs::getFont(QFont &font) {
         return true;
     } else
 	return false;
-    #else
-    int result= KFontDialog::getFont( font );
-    if (result==KFontDialog::Accepted)
-        return true;
-    else
-        return false;
-    #endif
 
 }

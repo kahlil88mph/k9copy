@@ -37,16 +37,9 @@
 #include <qdir.h>
 
 #include <kmessagebox.h>
-#if QT_VERSION >= 0x050000
 #include <qapplication.h>
 #include <qstandardpaths.h>
 #include <KLocalizedString>
-#else
-#include <kapplication.h>
-#include <kstandarddirs.h>
-#include <klocale.h>
-
-#endif
 
 #include "k9backupdlg.h"
 //PM DVDNAV #include "dvdread.h"

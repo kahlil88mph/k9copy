@@ -16,13 +16,9 @@
 #include <qtextedit.h>
 #include "k9mencodercmdgen.h"
 #include "k9ffmpegcmdgen.h"
-#if QT_VERSION >= 0x050000
 #include <qpushbutton.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
-#else
-#include <kpushbutton.h>
-#endif
 
 #include <kiconloader.h>
 
@@ -34,19 +30,11 @@ k9prefMencoder::k9prefMencoder(QWidget* parent)
    m_update=false;
    load();
 
-   #if QT_VERSION >= 0x050000
     KGuiItem::assign(Ui_prefMencoder.btnAddA, KStandardGuiItem::add() );
     KGuiItem::assign(Ui_prefMencoder.btnAddV, KStandardGuiItem::add() );
     KGuiItem::assign(Ui_prefMencoder.btnDeleteA, KStandardGuiItem::remove() );
     KGuiItem::assign(Ui_prefMencoder.btnDeleteV, KStandardGuiItem::remove() );
     KGuiItem::assign(Ui_prefMencoder.bReset, KStandardGuiItem::reset() );
-   #else
-   Ui_prefMencoder.btnAddA->setGuiItem(KStandardGuiItem::Add);
-   Ui_prefMencoder.btnAddV->setGuiItem(KStandardGuiItem::Add);
-   Ui_prefMencoder.btnDeleteA->setGuiItem(KStandardGuiItem::Remove);
-   Ui_prefMencoder.btnDeleteV->setGuiItem(KStandardGuiItem::Remove);
-   Ui_prefMencoder.bReset->setGuiItem(KStandardGuiItem::Reset );
-   #endif
 
    Ui_prefMencoder.btnOpt1->setIcon(SmallIcon("configure"));
    Ui_prefMencoder.btnOpt2->setIcon(SmallIcon("configure"));

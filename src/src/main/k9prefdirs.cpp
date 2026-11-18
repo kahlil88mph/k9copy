@@ -17,9 +17,7 @@
 #include <kurlrequester.h>
 #include "k9tools.h"
 #include "k9dvd.h"
-#if QT_VERSION >= 0x050000
 #include <QUrl>
-#endif
 k9prefDirs::k9prefDirs(QWidget* parent)
 : QWidget(parent)
 {
@@ -38,7 +36,6 @@ k9prefDirs::k9prefDirs(QWidget* parent)
     Ui_prefDirs.urWodim->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urK3b->setMode(KFile::ExistingOnly | KFile::File);
 
-#if QT_VERSION >= 0x050000
     //Ui_prefDirs.urDirDVD->setUrl(QUrl(config.getPrefOutput()));
     Ui_prefDirs.urDirISO->setUrl(QUrl(config.getPrefOutputIso()));
     Ui_prefDirs.urDirMPEG4->setUrl(QUrl(config.getPrefOutputMpeg4()));
@@ -52,20 +49,6 @@ k9prefDirs::k9prefDirs(QWidget* parent)
     Ui_prefDirs.urWodim->setUrl(QUrl(config.getPrefWodimPath(false)));
     Ui_prefDirs.urK3b->setUrl(QUrl(config.getPrefk3bPath(false)));
 
-#else
-    //Ui_prefDirs.urDirDVD->setUrl(KUrl(config.getPrefOutput()));
-    Ui_prefDirs.urDirISO->setUrl(KUrl(config.getPrefOutputIso()));
-    Ui_prefDirs.urDirMPEG4->setUrl(KUrl(config.getPrefOutputMpeg4()));
-    Ui_prefDirs.urDirMPEG2->setUrl(KUrl(config.getPrefOutputMpeg2()));
-    Ui_prefDirs.urDirAudio->setUrl(KUrl(config.getPrefOutputAudio()));
-    Ui_prefDirs.urDvdauthor->setUrl(KUrl(config.getPrefDvdauthorPath(false)));
-    Ui_prefDirs.urFFmpeg->setUrl(KUrl(config.getPrefFFmpegPath(false)));
-    Ui_prefDirs.urGenisoimage->setUrl(KUrl(config.getPrefGenisoimagePath(false)));
-    Ui_prefDirs.urMencoder->setUrl(KUrl(config.getPrefMencoderPath(false)));
-    Ui_prefDirs.urMplayer->setUrl(KUrl(config.getPrefMplayerPath(false)));
-    Ui_prefDirs.urWodim->setUrl(KUrl(config.getPrefWodimPath(false)));
-    Ui_prefDirs.urK3b->setUrl(KUrl(config.getPrefk3bPath(false)));
-#endif
     
 }
 

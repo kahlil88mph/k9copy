@@ -19,11 +19,8 @@
 #include "k9avidecode.h"
 #include "k9avifile.h"
 #include <QObject>
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #include <QUrl>
-#else //Qt4 Code
-#endif
 
 
 class k9DrawImage;
@@ -54,11 +51,7 @@ protected slots:
   virtual void bEndClick();
   virtual void ckBreakStartClick();
   virtual void ckBreakEndClick();
-#if QT_VERSION >= 0x050000
   virtual void urlSelected(const QUrl&);
-#else
-  virtual void urlSelected(const KUrl&);
-#endif
   virtual void startChanged(const QTime&);
   virtual void endChanged(const QTime&);
   virtual void bTitleButtonClick();

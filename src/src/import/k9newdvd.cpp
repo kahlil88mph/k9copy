@@ -31,16 +31,9 @@
 #include "dvdread/dvd_reader.h"
 #include <QDir>
 
-#if QT_VERSION >= 0x050000
 #include <qapplication.h>
 #include <QStandardPaths>
 #include <QTemporaryFile>
-#else
-#include <kapplication.h>
-#include <kstandarddirs.h>
-#include <ktemporaryfile.h>
-
-#endif
 
 k9NewDVD::k9NewDVD(QObject *parent, const char *)
         : QObject(parent) {
@@ -378,11 +371,7 @@ int64_t k9NewDVD::readscr(const unsigned char *buf)
 }
 
 void k9NewDVD::getStderr(k9Process *_process,char *_buffer, int _length) {
-#if QT_VERSION >= 0x050000
     QString tmp=QString::fromLatin1(_buffer,_length);
-#else
-    QString tmp=QString::fromAscii(_buffer,_length);
-#endif
     m_stdout=tmp;
     int pos;
     if (tmp.contains("STAT:")) {
@@ -401,11 +390,7 @@ void k9NewDVD::getStderr(k9Process *_process,char *_buffer, int _length) {
         } else {
             pos=tmp.indexOf("STAT: VOBU ");
             if (pos !=-1) {
-#if QT_VERSION >= 0x050000
                 QString tmp2=QString::fromLatin1(_buffer+pos,_length-pos);
-#else
-                QString tmp2=QString::fromAscii(_buffer+pos,_length-pos);
-#endif
                 int vobu,mb;
                 sscanf(_buffer+pos,"STAT: VOBU %d at %dMB",&vobu,&mb);
                 if (mb <m_lastvalue)
@@ -427,11 +412,7 @@ void k9NewDVD::getStderr(k9Process *_process,char *_buffer, int _length) {
 void k9NewDVD::getStdout(k9Process *_process,char *_buffer, int _length) {
     k9Process *process=(k9Process*) _process;
     if (m_timers[process].elapsed() >500) {
-#if QT_VERSION >= 0x050000
         QString tmp=QString::fromLatin1(_buffer,_length);
-#else
-        QString tmp=QString::fromAscii(_buffer,_length);
-#endif
         int pos=tmp.indexOf("Pos:");
         if (pos!=-1) {
             QString tmp2=tmp.mid(pos);

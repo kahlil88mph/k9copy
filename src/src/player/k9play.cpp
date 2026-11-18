@@ -27,12 +27,7 @@
 //PM DVDNAV #include "dvdread.h"
 
 
-#if QT_VERSION >= 0x050000
 #include <KLocalizedString>
-#else
-#include <KStandardDirs>
-#include <KLocale>
-#endif
 #include <KMessageBox>
 #include "k9config.h"
 
@@ -379,15 +374,9 @@ void k9play::play() {
     QString subtitleLang="";
     if (config.getPrefSubtitleLang().count()>0)
         config.getPrefSubtitleLang().first();
-#if QT_VERSION >= 0x050000
     if (dvdnav_menu_language_select(dvdnav, audioLang.toLatin1().data()) != DVDNAV_STATUS_OK ||
             dvdnav_audio_language_select(dvdnav, audioLang.toLatin1().data()) != DVDNAV_STATUS_OK ||
             dvdnav_spu_language_select(dvdnav, subtitleLang.toLatin1().data()) != DVDNAV_STATUS_OK) {
-#else
-    if (dvdnav_menu_language_select(dvdnav, audioLang.toAscii().data()) != DVDNAV_STATUS_OK ||
-            dvdnav_audio_language_select(dvdnav, audioLang.toAscii().data()) != DVDNAV_STATUS_OK ||
-            dvdnav_spu_language_select(dvdnav, subtitleLang.toAscii().data()) != DVDNAV_STATUS_OK) {
-#endif
         if (dvdnav_menu_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK ||
                 dvdnav_audio_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK ||
                 dvdnav_spu_language_select(dvdnav, DVD_LANGUAGE) != DVDNAV_STATUS_OK) {

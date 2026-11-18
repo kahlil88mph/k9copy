@@ -15,16 +15,12 @@
 #include "k9saveimage.h"
 
 #include <QFile>
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #ifndef FALSE
 #define FALSE (0)
 #endif
 #ifndef TRUE
 #define TRUE (!FALSE)
-#endif
-#else
-// Qt 4 Code
 #endif
 
 

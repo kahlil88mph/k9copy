@@ -18,22 +18,14 @@
 #include "k9avidecode.h"
 #include "k9menu.h"
 #include "k9menubutton.h"
-#if QT_VERSION >= 0x050000
 #include <qpushbutton.h>
-#else
-#include "kpushbutton.h"
-#endif
 #include <QFile>
 #include "k9cell.h"
-	#if QT_VERSION >= 0x050000
         //Qt5 Code
         #include <QUrl>
 	#include <QFileDialog>
 	#include <KGuiItem>
 	#include <KStandardGuiItem>
-        #else //Qt4 Code
-	#include <KFileDialog>
-        #endif
 
 
 
@@ -44,19 +36,11 @@ k9NewTitle::k9NewTitle(QWidget* parent)
     Ui_newTitle.setupUi(this);
         Ui_newTitle.urFile->setFilter("*.avi|Audio Video Interleave (*.avi)\n*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)\n*.mp4|MPEG-4 format (*.mp4)\n*.asf|Advanced Streaming Format (*.asf)\n*.swf|Adobe Flash (*.swf)\n*.flv|Adobe Flash video files (*.flv)\n*.rm|RealVideo (*.rm)\n*.mov|QuickTime (*.mov)\n*.mkv|Matroska (*.mkv)\n*.*|All (*.*)");
         Ui_newTitle.urFile->setMode(KFile::File) ;
-      	#if QT_VERSION >= 0x050000
         //Qt5 Code
         Ui_newTitle.urFile->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
-        #else //Qt4 Code
-        Ui_newTitle.urFile->fileDialog()->setOperationMode(KFileDialog::Opening);
-	#endif
 
 
-    #if QT_VERSION >= 0x050000
     KGuiItem::assign(Ui_newTitle.bAdd, KStandardGuiItem::add() );
-    #else
-    Ui_newTitle.bAdd->setGuiItem(KStandardGuiItem::Add);
-    #endif
 
     Ui_newTitle.ckReencode->setEnabled(false);
     Ui_newTitle.bAdd->setEnabled(false);
@@ -80,11 +64,7 @@ bool k9NewTitle::isMpeg2(const QString &_fileName) {
    else
 	return false;
 }
-#if QT_VERSION >= 0x050000
 void k9NewTitle::urlSelected(const QUrl &_url) {
-#else
-void k9NewTitle::urlSelected(const KUrl &_url) {
-#endif
     m_fileName=_url.toLocalFile();
     k9AviDecode fileInfo(0,0);
     fileInfo.open(m_fileName);

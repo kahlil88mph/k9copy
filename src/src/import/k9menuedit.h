@@ -20,11 +20,8 @@
 #include "k9menuscene.h"
 #include <QGraphicsSimpleTextItem>
 #include <QGraphicsView>
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #include <QUrl>
-#else //Qt4 Code
-#endif
 
 
 class k9MenuButton;
@@ -84,11 +81,7 @@ protected:
 protected slots:
     /*$PROTECTED_SLOTS$*/
     virtual void bFontClick();
-#if QT_VERSION >= 0x050000
     virtual void urBackgroundSelected(const QUrl &_url);
-#else
-    virtual void urBackgroundSelected(const KUrl &_url);
-#endif
     virtual void cbColorChanged(const QColor &_color);
     virtual void leTitleChanged(const QString &_value);
     virtual void cbPosTitleActivated(int _value);

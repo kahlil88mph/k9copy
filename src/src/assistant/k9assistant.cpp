@@ -26,10 +26,8 @@
 #include "dvdread/dvd_reader.h"
 #include "k9settings.h"
 #include "k9dvdtitle.h"
-#if QT_VERSION >= 0x050000
 #include <QIcon>
 #include <KIconLoader>
-#endif
 
 
 k9Assistant *k9Assistant::createAssistant() {
@@ -52,78 +50,49 @@ void k9Assistant::run() {
     k9astSource *source=new k9astSource(this,m_drives,m_dvd);
     m_sourceItem=new KPageWidgetItem(source,i18n("source"));
     m_sourceItem->setHeader( i18n( "Select the source of the backup" ) );
-#if QT_VERSION >= 0x050000
     m_sourceItem->setIcon(QIcon(loader->loadIconSet("media-optical",  KIconLoader::Desktop)));
-#else
-    m_sourceItem->setIcon(KIcon(loader->loadIconSet("media-optical",  KIconLoader::Desktop)));
-#endif
 
     m_pageWidget->addPage(m_sourceItem);
 
     k9astDestination *destination=new k9astDestination(this,m_drives,m_dvd);
     m_destinationItem=new KPageWidgetItem(destination,i18n("destination"));
     m_destinationItem->setHeader( i18n( "Select the destination of the backup" ) );
-#if QT_VERSION >= 0x050000
     m_destinationItem->setIcon(QIcon(loader->loadIconSet("media-optical-recordable",  KIconLoader::Toolbar)));
-#else
-    m_destinationItem->setIcon(KIcon(loader->loadIconSet("media-optical-recordable",  KIconLoader::Toolbar)));
-#endif
     m_pageWidget->addPage(m_destinationItem);
 
     k9astTitles *titles=new k9astTitles(this,m_dvd);
     m_titlesItem=new KPageWidgetItem(titles,i18n("titles"));
     m_titlesItem->setHeader(i18n("Select the titles you want to copy"));
-#if QT_VERSION >= 0x050000
     m_titlesItem->setIcon(QIcon("titles"));
     m_titlesItem->setIcon(QIcon(loader->loadIconSet("title",  KIconLoader::Toolbar)));
-#else
-    m_titlesItem->setIcon(KIcon("titles"));
-    m_titlesItem->setIcon(KIcon(loader->loadIconSet("title",  KIconLoader::Toolbar)));
-#endif
 
     m_pageWidget->addPage(m_titlesItem);
 
     k9astStreams *streams=new k9astStreams(this,m_dvd);
     m_streamsItem=new KPageWidgetItem(streams,i18n("streams"));
     m_streamsItem->setHeader(i18n("Select the streams you want to keep"));
-#if QT_VERSION >= 0x050000
     m_streamsItem->setIcon(QIcon(loader->loadIconSet("speaker",  KIconLoader::Toolbar)));
-#else
-    m_streamsItem->setIcon(KIcon(loader->loadIconSet("speaker",  KIconLoader::Toolbar)));
-#endif
 
     m_pageWidget->addPage(m_streamsItem);
 
     k9astMp4 *mp4=new k9astMp4(this,m_dvd);
     m_mp4Item=new KPageWidgetItem(mp4,i18n("mp4"));
     m_mp4Item->setHeader(i18n("Set mp4 options for each title"));
-#if QT_VERSION >= 0x050000
     m_mp4Item->setIcon(QIcon(loader->loadIconSet("mp4",  KIconLoader::Toolbar)));
-#else
-    m_mp4Item->setIcon(KIcon(loader->loadIconSet("mp4",  KIconLoader::Toolbar)));
-#endif
 
     m_pageWidget->addPage(m_mp4Item);
 
     k9astDVDOption *DVDOption=new k9astDVDOption(this,m_dvd);
     m_DVDOptionItem=new KPageWidgetItem(DVDOption,i18n("DVDOption"));
     m_DVDOptionItem->setHeader(i18n("Set DVD playback options"));
-#if QT_VERSION >= 0x050000
     m_DVDOptionItem->setIcon(QIcon(loader->loadIconSet("dvdcopy",  KIconLoader::Toolbar)));
-#else
-    m_DVDOptionItem->setIcon(KIcon(loader->loadIconSet("dvdcopy",  KIconLoader::Toolbar)));
-#endif
 
     m_pageWidget->addPage(m_DVDOptionItem);
 
     k9astMpeg *mpeg=new k9astMpeg(this,m_dvd);
     m_mpegItem=new KPageWidgetItem(mpeg,i18n("mpeg"));
     m_mpegItem->setHeader(i18n("Set mpeg options for each title"));
-#if QT_VERSION >= 0x050000
     m_mpegItem->setIcon(QIcon(loader->loadIconSet("mpeg",  KIconLoader::Toolbar)));
-#else
-    m_mpegItem->setIcon(KIcon(loader->loadIconSet("mpeg",  KIconLoader::Toolbar)));
-#endif
 
     m_pageWidget->addPage(m_mpegItem);
 
@@ -138,24 +107,14 @@ void k9Assistant::run() {
     connect(titles,SIGNAL(addTitle(k9DVDTitle*)),DVDOption,SLOT(addTitle(k9DVDTitle*)));
     connect(titles,SIGNAL(removeTitle(k9DVDTitle*)),DVDOption,SLOT(removeTitle(k9DVDTitle*)));
 
-#if QT_VERSION >= 0x050000 
         buttonBox()->addButton(QDialogButtonBox::Help);
         connect(button(QDialogButtonBox::Help),SIGNAL(clicked()), SLOT(helpClicked()));
-#else
-    connect(this,SIGNAL(helpClicked()),this,SLOT(helpClicked()));
-#endif
 
     m_drives->scanDrives();
 
-#if QT_VERSION >= 0x050000
     button(QDialogButtonBox::Help)->setText(i18n("Settings"));
     button(QDialogButtonBox::Help)->setToolTip(i18n("k9copy settings"));
     button(QDialogButtonBox::Help)->setIcon(QIcon(SmallIcon("configure")));
-#else
-    setButtonText(KDialog::Help,i18n("Settings"));
-    setButtonToolTip(KDialog::Help,i18n("k9copy settings"));
-    setButtonIcon(KDialog::Help,KIcon(SmallIcon("configure")));
-#endif
     if (m_path !="") {
 	source->setPath(m_path);
     }

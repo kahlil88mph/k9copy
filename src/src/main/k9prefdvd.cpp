@@ -19,9 +19,7 @@
 #include "k9tools.h"
 #include "k9dvd.h"
 #include <QListWidgetItem>
-#if QT_VERSION >= 0x050000
 #include <QUrl>
-#endif
 
 k9prefDVD::k9prefDVD(QWidget* parent)
 : QWidget(parent)
@@ -31,11 +29,7 @@ k9prefDVD::k9prefDVD(QWidget* parent)
     k9Config config;
     Ui_prefDVD.urOutput->setMode(KFile::Directory);
 
-#if QT_VERSION >= 0x050000
      Ui_prefDVD.urOutput->setUrl(QUrl(config.getPrefOutput()));
-#else
-    Ui_prefDVD.urOutput->setUrl(KUrl(config.getPrefOutput()));
-#endif
     Ui_prefDVD.ckK3b->setChecked(config.getPrefK3b());
 
     Ui_prefDVD.ckAutoBurn->setChecked(config.getPrefAutoBurn());

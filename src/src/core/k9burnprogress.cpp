@@ -23,10 +23,8 @@
 #include <QLayout>
 
 #include <QListWidget>
-#if QT_VERSION >= 0x050000
 #include <KGuiItem>
 #include <KStandardGuiItem>
-#endif
 
 k9BurnProgress::k9BurnProgress(QWidget* parent)
         : QDialog(parent) {
@@ -39,21 +37,11 @@ k9BurnProgress::k9BurnProgress(QWidget* parent)
     l->setMargin(0);
     l->addWidget(m_logView,0,0);
 
-#if QT_VERSION >= 0x050000
     KGuiItem::assign(Ui_Progress.bCancel, KStandardGuiItem::stop() );
-#else
-    Ui_Progress.bCancel->setGuiItem(KStandardGuiItem::Stop);
-#endif
 
-    #if QT_VERSION >= 0x050000
     // Qt5 code
     QString aright=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kmyapp/aright.png");
     QString adown=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kmyapp/adown.png");
-    #else
-    // Qt4 code
-    QString adown=KGlobal::dirs()->findResource( "data", QString("k9copy/adown.png"));
-    QString aright=KGlobal::dirs()->findResource( "data", QString("k9copy/aright.png"));
-    #endif
     Ui_Progress.gbOutput->setStyleSheet("*::indicator:unchecked {image:url("+aright+"); } *::indicator:checked {image:url("+adown+"); } ");
 
 

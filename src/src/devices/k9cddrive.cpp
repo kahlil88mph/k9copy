@@ -24,11 +24,7 @@
 #include <QDir>
 
 #include <solid/device.h>
-#if QT_VERSION >= 0x050000
 #include <KLocalizedString>
-#else
-#include <KLocale>
-#endif
 
 k9CdDrive::k9CdDrive() { 
     canReadDVD=false;

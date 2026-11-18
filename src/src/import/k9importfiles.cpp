@@ -25,13 +25,8 @@
 
 #include <KStandardAction>
 
-#if QT_VERSION >= 0x050000
 #include <qstatusbar.h>
 #include <QMenuBar>
-#else
-#include <kstatusbar.h>
-#include <KMenuBar>
-#endif
 
 #include <kstandardshortcut.h> 
 #include <KActionCollection>
@@ -46,15 +41,9 @@
 #include "k9menu.h"
 #include "k9dialogs.h"
 
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
 #include <QAction>
-#else
-#include "kdialog.h"
-#include <KAction>
-#endif
 
-#if QT_VERSION >= 0x050000
 // Qt5 Code
 	#ifndef FALSE
 	#define FALSE (0)
@@ -66,10 +55,6 @@
 #include <KIconLoader>
 #include <QIcon>
 
-#else()
-// Qt4 Code
-#include <kdeversion.h>
-#endif
 
 
 
@@ -183,14 +168,9 @@ bool k9ImportFiles::queryClose   (    ) {
 }
 
 void k9ImportFiles::setupActions() {
-#if QT_VERSION >= 0x050000
     m_actions["create"] = new QAction(QIcon("author"),i18n("Create DVD"),this); 
     backupAction = new QAction(QIcon("dvdcopy"),i18n("DVD Backup"),this );
 
-#else
-    m_actions["create"] = new QAction(KIcon("author"),i18n("Create DVD"),this); 
-    backupAction = new KAction(KIcon("dvdcopy"),i18n("DVD Backup"),this );
-#endif
     m_actions["backup"]=backupAction;
     m_actions["quit"]=KStandardAction::quit(this, SLOT(quit()),(QObject*) actionCollection());
     m_actions["preferences"]=KStandardAction::preferences(this,SLOT(preferences()),(QObject*)actionCollection());
@@ -267,20 +247,12 @@ void k9ImportFiles::ActionBackup() {
 void k9ImportFiles::changeStatusbar(const QString& text,int id) {
     // display the text on the statusbar
 
-#if QT_VERSION >= 0x050000
-#else
-    statusBar()->changeItem(text,id);
-#endif
 
 }
 
 void k9ImportFiles::changeCaption(const QString& text) {
     // display the text on the caption
-#if QT_VERSION >= 0x050000
     setWindowTitle((text));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(text));
-#endif
 }
 
 

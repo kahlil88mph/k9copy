@@ -26,9 +26,7 @@
 #include <xine.h>
 #include <xine/xineutils.h>
 #include <QMutex>
-#if QT_VERSION >= 0x050000
 #include <QX11Info>
-#endif
 
 
 /**

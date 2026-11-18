@@ -23,13 +23,8 @@
 #include "k9burndvd.h"
 #include <QDir>
 #include <KMessageBox>
-#if QT_VERSION >= 0x050000
 #include <QFileDialog>
 #include <qdialog.h>
-#else
-#include <KFileDialog>
-#include <kdialog.h>
-#endif
 #include "k9cddrive.h"
 
 #include <QApplication>
@@ -44,13 +39,8 @@ k9BurnDVD::k9BurnDVD()
     iso=false;
     m_filename="";
     progress=new k9BurnProgress(NULL);
-    #if QT_VERSION >= 0x050000
     // Qt5 code
     QString s=QStandardPaths::locate(QStandardPaths::GenericDataLocation, "k9copy/anim.mng");
-    #else
-    // Qt4 code
-    QString s= KGlobal::dirs()->findResource( "data", "k9copy/anim.mng");
-    #endif
     progress->setMovie(s);
 
     m_cdrkit=k9Tools::checkProgram("genisoimage") && k9Tools::checkProgram("wodim");
@@ -200,11 +190,7 @@ void k9BurnDVD::getWodimCmd(QStringList &_cmd) {
 void k9BurnDVD::burnWithGenisoimage() {
     time = new QTime(0,0);
     time->start();
-#if QT_VERSION >= 0x050000
     progress->setWindowTitle((i18n("Burning DVD")));
-#else
-    progress->setWindowTitle(KDialog::makeStandardCaption(i18n("Burning DVD"),progress));
-#endif
     progress->setTitle(i18n("Burning DVD"));
     proc=progress->getProcess();
 
@@ -242,11 +228,7 @@ void k9BurnDVD::burnWithGenisoimage() {
  	        eject(burnDevice);
 
             if (!autoBurn) {
-#if QT_VERSION >= 0x050000
                	if ( k9Dialogs::warningContinueCancel ( i18n("Insert a recordable DVD"), i18n("DVD burning"))!=QMessageBox::Ignore)
-#else
-                if ( k9Dialogs::warningContinueCancel ( i18n("Insert a recordable DVD"), i18n("DVD burning"))!=KMessageBox::Continue)
-#endif
 
                     cancelled=true;
             }
@@ -277,13 +259,8 @@ void k9BurnDVD::burnWithGenisoimage() {
 			eject(burnDevice);
 
                     c=i18n("An error occured while Burning DVD") +"\n" +i18n("Insert an other DVD");
-#if QT_VERSION >= 0x050000
                     if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"),lastMsg)!=QMessageBox::Ignore) {
 
-#else
-                    if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"),lastMsg)!=KMessageBox::Continue) {
-
-#endif
                         cancelled=true;
                     }
                 }
@@ -295,11 +272,7 @@ void k9BurnDVD::burnWithGenisoimage() {
 void k9BurnDVD::burnWithGrowisofs() {
     time = new QTime(0,0);
     time->start();
-#if QT_VERSION >= 0x050000
     progress->setWindowTitle((i18n("Burning DVD")));
-#else
-    progress->setWindowTitle(KDialog::makeStandardCaption(i18n("Burning DVD"),progress));
-#endif
     progress->setTitle(i18n("Burning DVD"));
     bool bok=false;
 

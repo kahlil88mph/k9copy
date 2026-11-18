@@ -23,11 +23,7 @@
 #include "k9copy.h"
 #include <qmutex.h>
 
-#if QT_VERSION >= 0x050000
 #include <qfiledialog.h>
-#else
-#include <kfiledialog.h>
-#endif
 #include <kmessagebox.h>
 #include <kmainwindow.h>
 #include <kaboutdata.h>

@@ -25,19 +25,11 @@
 #include <QProgressBar>
 #include <QLabel>
 #include <QCloseEvent>
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 k9DVDProgress::k9DVDProgress(QWidget* )
 {
 	Ui_DVDProgress.setupUi(this);
-#if QT_VERSION >= 0x050000
         setWindowTitle((i18n("DVD Analyze")));
-#else
-        setWindowTitle(KDialog::makeStandardCaption(i18n("DVD Analyze"),this));
-#endif
 }
 
 k9DVDProgress::~k9DVDProgress(){

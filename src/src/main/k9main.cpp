@@ -46,17 +46,8 @@
 #include <kmountpoint.h>
 #include <kiconloader.h>
 
-#if QT_VERSION >= 0x050000
 #include <QStandardPaths>
 #include <KDiskFreeSpaceInfo>
-#else
-#include <kdeversion.h>
-#include <kdirselectdialog.h>
-#include <kstandarddirs.h>
-#include <KDiskFreeSpace>
-
-
-#endif
 #include <qbitmap.h>
 #include "images.h"
 #include "k9execcopy.h"
@@ -65,7 +56,6 @@
 
 
 
-#if QT_VERSION >= 0x050000
 // Qt5 Code
 #ifndef FALSE
 #define FALSE (0)
@@ -75,9 +65,6 @@
 #endif
 
 #include <QUrl>
-#else
-// Qt4 Code
-#endif
 
 
 ckLvItem::ckLvItem ( QTreeWidgetItem *parent,k9Main *dlg,eObjectType _objectType )
@@ -1371,18 +1358,8 @@ void k9Main::cbOutputDevActivated ( int _index ) {
         }
 
 
-#if QT_VERSION >= 0x050000
         Ui_MainDlg.urOutput->setMode(KFile::Directory);
-#else
-        Ui_MainDlg.urOutput->setMode(KFile::Directory);
-
-
-#endif
-#if QT_VERSION >= 0x050000
       	Ui_MainDlg.urOutput->setUrl(QUrl(drive->device));
-#else
-        Ui_MainDlg.urOutput->setUrl(KUrl(drive->device));
-#endif
 
     }
 }
@@ -1429,11 +1406,7 @@ void k9Main::setInput ( QString _input ) {
         }
     }
     if ( !found ) {
-#if QT_VERSION >= 0x050000
         Ui_MainDlg.urInput->setUrl(_input );
-#else
-        Ui_MainDlg.urInput->setUrl(KUrl(_input) );
-#endif
 	Ui_MainDlg.cbInput->setCurrentIndex(iFolder);
     }
 }
@@ -1510,13 +1483,8 @@ void k9Main::cbInputChanged(int _index)
         Ui_MainDlg.urInput->show();
         Ui_MainDlg.urInput->setMode(KFile::ExistingOnly | KFile::File);
 
-    #if QT_VERSION >= 0x050000
     // Qt5 code
 	Ui_MainDlg.urInput->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
-    #else()
-    // Qt4 Code
-	Ui_MainDlg.urInput->fileDialog()->setOperationMode(KFileDialog::Opening);
-    #endif()
         Ui_MainDlg.urInput->setFilter("*.iso|Iso Image (*.iso)");
 
 
@@ -1525,11 +1493,7 @@ void k9Main::cbInputChanged(int _index)
 	Ui_MainDlg.cbInputDev->hide();
         Ui_MainDlg.urInput->show();
         Ui_MainDlg.urInput->setMode(KFile::ExistingOnly | KFile::Directory);
-    #if QT_VERSION >= 0x050000  // Qt5 Code
         Ui_MainDlg.urInput->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
-    #else // Qt4 Code
-        Ui_MainDlg.urInput->fileDialog()->setOperationMode(KFileDialog::Opening);
-    #endif
 
       break;
    }
@@ -1551,70 +1515,38 @@ void k9Main::cbOutputChanged(int _index)
 	Ui_MainDlg.wOutput->hide();
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setMode( KFile::File);
-     #if QT_VERSION >= 0x050000 // Qt5 Code
         Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-     #else // Qt4 Code
-        Ui_MainDlg.urOutput->fileDialog()->setOperationMode(KFileDialog::Saving);
-     #endif
         Ui_MainDlg.urOutput->setFilter("*.iso|Iso Image (*.iso)");
 
 
-	#if QT_VERSION >= 0x050000
         Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputIso()+"/"+title+".iso") ));
-	#else
-        Ui_MainDlg.urOutput->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputIso()+"/"+title+".iso") ));
-	#endif
       break;
      case oFolder:
      case oAudio:
 	Ui_MainDlg.wOutput->hide();
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setMode( KFile::Directory);
-	#if QT_VERSION >= 0x050000 //Qt5 Code
         Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-	#else
-        Ui_MainDlg.urOutput->fileDialog()->setOperationMode(KFileDialog::Saving);
-	#endif
 
-	#if QT_VERSION >= 0x050000
         Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(_index==oAudio?config.getPrefOutputAudio():config.getPrefOutput())));
-	#else
-	Ui_MainDlg.urOutput->setUrl(KUrl(QDir::cleanPath(_index==oAudio?config.getPrefOutputAudio():config.getPrefOutput())));
-	#endif
       break;
      case oMP4:
 	Ui_MainDlg.wOutput->hide();
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setFilter("*.avi|Audio Video Interleave (*.avi)\n*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)\n*.mp4|MPEG-4 format (*.mp4)\n*.asf|Advanced Streaming Format (*.asf)\n*.swf|Adobe Flash (*.swf)\n*.flv|Adobe Flash video files (*.flv)\n*.rm|RealVideo (*.rm)\n*.mov|QuickTime (*.mov)\n*.mkv|Matroska (*.mkv)");
         Ui_MainDlg.urOutput->setMode(KFile::File) ;
-	#if QT_VERSION >= 0x050000 // Qt5 Code
        	Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-	#else
-        Ui_MainDlg.urOutput->fileDialog()->setOperationMode(KFileDialog::Saving);
-	#endif
 
-	#if QT_VERSION >= 0x050000
       	Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputMpeg4()+"/"+title+".avi") ));
-	#else
-	Ui_MainDlg.urOutput->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputMpeg4()+"/"+title+".avi") ));
-	#endif
 	break;
      case oMPEG2:
 	Ui_MainDlg.wOutput->hide();
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setFilter("*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)");
         Ui_MainDlg.urOutput->setMode(KFile::File) ;
-	#if QT_VERSION >= 0x050000 // Qt5 Code
         Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
-	#else // Qt4 Code
-        Ui_MainDlg.urOutput->fileDialog()->setOperationMode(KFileDialog::Saving);
-	#endif
 
-	#if QT_VERSION >= 0x050000
       	Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputMpeg2()+"/"+title+".mpg") ));
-	#else
-	Ui_MainDlg.urOutput->setUrl(KUrl(QDir::cleanPath(config.getPrefOutputMpeg2()+"/"+title+".mpg") ));
-	#endif
       break;
 
    }

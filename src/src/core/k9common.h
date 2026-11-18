@@ -50,11 +50,7 @@
 
 
 
-#if QT_VERSION >= 0x050000
 #include <KLocalizedString>
-#else //Qt4 Code
-#include <KLocale>
-#endif
 
 
 #include "k9config.h"

@@ -20,13 +20,8 @@
 #include <qstringlist.h>
 #include <QList>
 
-#if QT_VERSION >= 0x050000
 #include <Solid/Device>
 #include <solid/devicenotifier.h>
-#else
-#include <solid/device.h>
-#include <solid/devicenotifier.h>
-#endif
 
 /**
   *@author

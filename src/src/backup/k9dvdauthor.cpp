@@ -36,17 +36,12 @@
 #include <qfile.h>
 #include <qlabel.h>
 #include <qprogressdialog.h>
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 #include "kmessagebox.h"
 #include <KShell>
 
 #include <qapplication.h>
 #include <QTextStream>
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #ifndef FALSE
 #define FALSE (0)
@@ -55,10 +50,6 @@
 #define TRUE (!FALSE)
 #endif
 #include <KLocalizedString>
-#else
-// Qt 4 Code
-#include <klocale.h>
-#endif
 
 
 
@@ -458,11 +449,7 @@ void k9DVDAuthor::author() {
     dir.mkpath(m_tempPath);
     if (progress) {
         progress->setTitle(i18n("Authoring"));
-#if QT_VERSION >= 0x050000
         progress->setWindowTitle((i18n("Backup progression")));
-#else
-        progress->setWindowTitle(KDialog::makeStandardCaption(i18n("Backup progression")));
-#endif
     }
      setProgress(0,100);
     //progress->show();

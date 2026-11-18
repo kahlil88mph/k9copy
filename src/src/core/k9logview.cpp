@@ -4,11 +4,7 @@
 #include "k9common.h"
 #include "ui_k9logview.h"
 #include <QDebug>
-#if QT_VERSION >= 0x050000
 // Qt 5 Code
-#else
-// Qt 4 Code
-#endif
 
 k9LogView::k9LogView(QWidget *parent) :
     QWidget(parent),
@@ -50,28 +46,16 @@ void k9LogView::timerDone() {
         QIcon *icon;
         switch(logItem->level) {
             case k9logLevel::ERROR :
-#if QT_VERSION >= 0x050000
 	       icon=new QIcon("dialog-error");
 	       icon->pixmap(24);
-#else
-               icon=new QIcon(SmallIcon("dialog-error"));
-#endif
                break;
             case k9logLevel::WARNING :
-#if QT_VERSION >= 0x050000
                icon=new QIcon("dialog-warning");
                icon->pixmap(24);
-#else
-               icon=new QIcon(SmallIcon("dialog-warning"));
-#endif
                break;
             default:
-#if QT_VERSION >= 0x050000
                icon=new QIcon("dialog-information");
                icon->pixmap(24);
-#else
-               icon=new QIcon(SmallIcon("dialog-information"));
-#endif
                break;
         }
         m_ui->lwLogs->addItem(new QListWidgetItem(*icon,logItem->text,0));

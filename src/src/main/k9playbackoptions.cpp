@@ -13,11 +13,7 @@
 
 
 #include "k9playbackoptions.h"
-#if QT_VERSION >= 0x050000
 #include <qpushbutton.h>
-#else
-#include <kpushbutton.h>
-#endif
 
 #include <kiconloader.h>
 

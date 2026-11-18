@@ -12,12 +12,7 @@
 //
 #include "k9config.h"
 #include <KConfigGroup>
-#if QT_VERSION >= 0x050000
 #include <KLocalizedString>
-#else
-#include <KStandardDirs>
-#include <KLocale>
-#endif
 #include <QDir>
 
 #include "k9audiocodecs.h"
@@ -43,7 +38,6 @@ void k9Config::read() {
     m_prefOutputIso=group.readEntry("outputIso",QDir::homePath());
     m_prefOutputAudio=group.readEntry("outputAudio",QDir::homePath());
 
-#if QT_VERSION >= 0x050000
     group=m_config->group("programs");
     m_prefMencoderPath=group.readEntry("Mencoder","");
     if (m_prefMencoderPath.isEmpty()) m_prefMencoderPath=QStandardPaths::findExecutable("mencoder");
@@ -67,29 +61,6 @@ void k9Config::read() {
     if (m_prefGenisoimagePath.isEmpty()) m_prefGenisoimagePath=QStandardPaths::findExecutable("genisoimage");
 
 
-#else    
-    group=m_config->group("programs");
-    m_prefMencoderPath=group.readEntry("Mencoder","");
-    if (m_prefMencoderPath.isEmpty()) m_prefMencoderPath=KStandardDirs::findExe("mencoder");
-    
-    m_prefMplayerPath=group.readEntry("Mplayer","");
-    if (m_prefMplayerPath.isEmpty()) m_prefMplayerPath=KStandardDirs::findExe("mplayer");
-    
-    m_prefk3bPath=group.readEntry("k3b","");
-    if (m_prefk3bPath.isEmpty()) m_prefk3bPath=KStandardDirs::findExe("k3b");
-    
-    m_prefDvdauthorPath=group.readEntry("Dvdauthor","");
-    if (m_prefDvdauthorPath.isEmpty()) m_prefDvdauthorPath=KStandardDirs::findExe("dvdauthor");
-    
-    m_prefFFmpegPath=group.readEntry("FFMpeg","");
-    if (m_prefFFmpegPath.isEmpty()) m_prefFFmpegPath=KStandardDirs::findExe("ffmpeg");
-    
-    m_prefWodimPath=group.readEntry("Wodim","");
-    if (m_prefWodimPath.isEmpty()) m_prefWodimPath=KStandardDirs::findExe("wodim");
-    
-    m_prefGenisoimagePath=group.readEntry("Genisoimage","");
-    if (m_prefGenisoimagePath.isEmpty()) m_prefGenisoimagePath=KStandardDirs::findExe("genisoimage");
-#endif    
     group=m_config->group("devices");
     m_InputDev=group.readEntry("input",0);
     m_OutputDev=group.readEntry("output",0);

@@ -17,10 +17,6 @@
 
 #include <KConfig>
 
-#if QT_VERSION >= 0x050000
-#else // Qt4 Code
-#include <kstandarddirs.h>
-#endif
 
 #include <KShell>
 /**

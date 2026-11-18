@@ -17,9 +17,7 @@
 #include <QListWidget>
 #include "k9dialogs.h"
 #include "k9dvdtitle.h"
-#if QT_VERSION >= 0x050000
 #include <QUrl>
-#endif
 
 k9astSource::k9astSource(k9Assistant* parent,k9CdDrives *_drives,k9DVD *_dvd)
         : QWidget(parent) {
@@ -58,18 +56,10 @@ void k9astSource::setPath(const QString &_path) {
         QFileInfo inf(_path);
 	if (!inf.isFile()) {
             Ui_astSource.rbFolder->setChecked(true);
-#if QT_VERSION >= 0x050000
             Ui_astSource.urFolder->setUrl(QUrl(_path));
-#else
-            Ui_astSource.urFolder->setUrl(KUrl(_path));
-#endif
         }else {
             Ui_astSource.rbIso->setChecked(true);
-#if QT_VERSION >= 0x050000
             Ui_astSource.urIso->setUrl(QUrl(_path));
-#else
-            Ui_astSource.urIso->setUrl(KUrl(_path));
-#endif
 	}
    }
 

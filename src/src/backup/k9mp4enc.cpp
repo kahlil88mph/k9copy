@@ -37,7 +37,6 @@
 
 
 
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #ifndef FALSE
 #define FALSE (0)
@@ -46,10 +45,6 @@
 #define TRUE (!FALSE)
 #endif
 #include <QFileDialog>
-#else
-// Qt 4 Code
-#include <kfiledialog.h>
-#endif
 
 
 

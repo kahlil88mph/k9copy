@@ -22,17 +22,11 @@
 #include "k9phonon.h"
 #include "k9dvdtitle.h"
 
-#if QT_VERSION >= 0x050000
 //Qt 5 Code
 #include <phonon/VolumeSlider>
 #include <phonon/SeekSlider>
 
 #include <KIconLoader>
-#else
-//Qt4 Code
-#include <Phonon/VolumeSlider>
-#include <Phonon/SeekSlider>
-#endif //Qt4Code
 
 k9Phonon::k9Phonon(QWidget *parent)
  : QWidget(parent)

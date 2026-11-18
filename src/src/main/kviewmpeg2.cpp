@@ -28,11 +28,7 @@
 #include <qapplication.h>
 #include <qtoolbutton.h>
 #include <qlayout.h>
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
-#else
-#include <kdialog.h>
-#endif
 #include <string.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -84,11 +80,7 @@ kViewMPEG2::kViewMPEG2(QWidget *parent):QWidget(parent) {
     Ui_viewMPEG2.setupUi(this);
     Ui_viewMPEG2.bPlay->setIcon(SmallIcon("media-playback-start"));
     Ui_viewMPEG2.bStop->setIcon(SmallIcon("media-playback-stop"));
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("Title Preview")));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(i18n("Title Preview"),this));
-#endif
     m_widget=NULL;
     connect(&m_player  , SIGNAL(setPosition(uint)), this, SLOT(setPosition(uint)));
     connect(&m_player  , SIGNAL(setMax(uint)), this, SLOT(setMax(uint)));

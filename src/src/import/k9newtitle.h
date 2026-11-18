@@ -20,11 +20,8 @@
 #include <qstring.h>
 #include <QObject>
 
-      	#if QT_VERSION >= 0x050000
         //Qt5 Code
         #include <QUrl>
-        #else //Qt4 Code
-        #endif
 
 
 
@@ -57,11 +54,7 @@ protected:
 
 protected slots:
   /*$PROTECTED_SLOTS$*/
-#if QT_VERSION >= 0x050000
   virtual void urlSelected(const QUrl &);
-#else
-  virtual void urlSelected(const KUrl &);
-#endif
   virtual void bAddClicked();
   virtual void rbNumberClicked();
   virtual void rbLengthClicked();

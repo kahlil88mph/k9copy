@@ -19,26 +19,17 @@
 #include <qlayout.h>
 #include "k9drawimage.h"
 #include "k9logview.h"
-#if QT_VERSION >= 0x050000
 #include <qdialog.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
 #include <QStandardPaths>
-#else
-#include <kdialog.h>
-#include <kstandarddirs.h>
-#endif
 
 
 k9MP4Dlg::k9MP4Dlg(QWidget* parent)
         : QDialog(parent) {
     Ui_MP4Dlg.setupUi(this);
     setModal(true);
-#if QT_VERSION >= 0x050000
     setWindowTitle((i18n("Encoding")));
-#else
-    setWindowTitle(KDialog::makeStandardCaption(i18n("Encoding"),this));
-#endif
     m_wimage=new k9DrawImage(Ui_MP4Dlg.image);
     QGridLayout *l=new QGridLayout(Ui_MP4Dlg.image);
     l->addWidget(m_wimage,0,0);
@@ -54,11 +45,7 @@ k9MP4Dlg::k9MP4Dlg(QWidget* parent)
     connect(&m_timerUpdate,SIGNAL(timeout()),this,SLOT(Update()));
     m_timerUpdate.start();
 
-#if QT_VERSION >= 0x050000
     KGuiItem::assign(Ui_MP4Dlg.bCancel, KStandardGuiItem::stop() );
-#else
-    Ui_MP4Dlg.bCancel->setGuiItem(KStandardGuiItem::Stop);
-#endif
 
 }
 
