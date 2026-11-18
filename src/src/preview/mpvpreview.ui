@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>phonon</class>
- <widget class="QWidget" name="phonon" >
+ <class>mpvPreview</class>
+ <widget class="QWidget" name="mpvPreview" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -110,7 +110,7 @@
   <connection>
    <sender>cbSubtitle</sender>
    <signal>currentIndexChanged(int)</signal>
-   <receiver>phonon</receiver>
+   <receiver>mpvPreview</receiver>
    <slot>cbSubtitleChanged(int)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -126,7 +126,7 @@
   <connection>
    <sender>cbAudio</sender>
    <signal>currentIndexChanged(int)</signal>
-   <receiver>phonon</receiver>
+   <receiver>mpvPreview</receiver>
    <slot>cbAudioChanged(int)</slot>
    <hints>
     <hint type="sourcelabel" >

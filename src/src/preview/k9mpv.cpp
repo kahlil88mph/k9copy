@@ -103,10 +103,10 @@ k9Mpv::k9Mpv(QWidget *parent)
     mpv_observe_property(m_mpv, 0, "track-list/count", MPV_FORMAT_INT64);
     mpv_set_wakeup_callback(m_mpv, onWakeup, this);
 
-    Ui_phonon.setupUi(this);
-    auto *vl = new QVBoxLayout(Ui_phonon.wVideo);
+    Ui_preview.setupUi(this);
+    auto *vl = new QVBoxLayout(Ui_preview.wVideo);
     vl->setContentsMargins(0, 0, 0, 0);
-    m_view = new k9MpvView(m_mpv, Ui_phonon.wVideo);
+    m_view = new k9MpvView(m_mpv, Ui_preview.wVideo);
     vl->addWidget(m_view);
 
     m_seek = new QSlider(Qt::Horizontal, this);
@@ -116,17 +116,17 @@ k9Mpv::k9Mpv(QWidget *parent)
     m_volume->setValue(100);
     m_volume->setMaximumWidth(100);
 
-    Ui_phonon.bPlay->setIcon(QIcon::fromTheme("media-playback-start"));
-    Ui_phonon.bStop->setIcon(QIcon::fromTheme("media-playback-stop"));
+    Ui_preview.bPlay->setIcon(QIcon::fromTheme("media-playback-start"));
+    Ui_preview.bStop->setIcon(QIcon::fromTheme("media-playback-stop"));
 
-    auto *grid = new QGridLayout(Ui_phonon.frControl);
-    grid->addWidget(Ui_phonon.bStop, 0, 0);
-    grid->addWidget(Ui_phonon.bPlay, 0, 1);
+    auto *grid = new QGridLayout(Ui_preview.frControl);
+    grid->addWidget(Ui_preview.bStop, 0, 0);
+    grid->addWidget(Ui_preview.bPlay, 0, 1);
     grid->addWidget(m_seek, 0, 2);
     grid->addWidget(m_volume, 0, 3);
 
-    connect(Ui_phonon.bStop, &QAbstractButton::clicked, this, &k9Mpv::bStopClick);
-    connect(Ui_phonon.bPlay, &QAbstractButton::clicked, this, &k9Mpv::bPlayClick);
+    connect(Ui_preview.bStop, &QAbstractButton::clicked, this, &k9Mpv::bStopClick);
+    connect(Ui_preview.bPlay, &QAbstractButton::clicked, this, &k9Mpv::bPlayClick);
     connect(m_seek, &QSlider::sliderMoved, this, &k9Mpv::seekSliderMoved);
     connect(m_volume, &QSlider::valueChanged, this, [this](int v) {
         double vol = v;
@@ -180,9 +180,9 @@ void k9Mpv::handleEvents()
 void k9Mpv::refreshTracks()
 {
     m_updatingTracks = true;
-    Ui_phonon.cbAudio->clear();
-    Ui_phonon.cbSubtitle->clear();
-    Ui_phonon.cbSubtitle->addItem(tr("None"), QStringLiteral("no"));
+    Ui_preview.cbAudio->clear();
+    Ui_preview.cbSubtitle->clear();
+    Ui_preview.cbSubtitle->addItem(tr("None"), QStringLiteral("no"));
 
     mpv_node list;
     if (mpv_get_property(m_mpv, "track-list", MPV_FORMAT_NODE, &list) >= 0) {
@@ -204,7 +204,7 @@ void k9Mpv::refreshTracks()
                     else if (!qstrcmp(key, "selected") && v.format == MPV_FORMAT_FLAG) selected = v.u.flag;
                 }
                 QString label = QStringLiteral("%1: %2").arg(id).arg(lang.isEmpty() ? (title.isEmpty() ? tr("unknown") : title) : lang);
-                QComboBox *cb = (type == "audio") ? Ui_phonon.cbAudio : (type == "sub") ? Ui_phonon.cbSubtitle : nullptr;
+                QComboBox *cb = (type == "audio") ? Ui_preview.cbAudio : (type == "sub") ? Ui_preview.cbSubtitle : nullptr;
                 if (!cb)
                     continue;
                 cb->addItem(label, QString::number(id));
@@ -221,14 +221,14 @@ void k9Mpv::cbAudioChanged(int index)
 {
     if (m_updatingTracks || index < 0)
         return;
-    mpv_set_property_string(m_mpv, "aid", Ui_phonon.cbAudio->itemData(index).toString().toUtf8().constData());
+    mpv_set_property_string(m_mpv, "aid", Ui_preview.cbAudio->itemData(index).toString().toUtf8().constData());
 }
 
 void k9Mpv::cbSubtitleChanged(int index)
 {
     if (m_updatingTracks || index < 0)
         return;
-    mpv_set_property_string(m_mpv, "sid", Ui_phonon.cbSubtitle->itemData(index).toString().toUtf8().constData());
+    mpv_set_property_string(m_mpv, "sid", Ui_preview.cbSubtitle->itemData(index).toString().toUtf8().constData());
 }
 
 void k9Mpv::seekSliderMoved(int v)

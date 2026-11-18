@@ -31,11 +31,6 @@ k9prefDirs::k9prefDirs(QWidget* parent)
     Ui_prefDirs.urDvdauthor->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urFFmpeg->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urGenisoimage->setMode(KFile::ExistingOnly | KFile::File);
-    Ui_prefDirs.urMencoder->setMode(KFile::ExistingOnly | KFile::File);
-    // mencoder is no longer used (all encoding goes through ffmpeg)
-    Ui_prefDirs.urMencoder->hide();
-    Ui_prefDirs.lblworkDir_5->hide();
-    Ui_prefDirs.urMplayer->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urWodim->setMode(KFile::ExistingOnly | KFile::File);
     Ui_prefDirs.urK3b->setMode(KFile::ExistingOnly | KFile::File);
 
@@ -47,8 +42,6 @@ k9prefDirs::k9prefDirs(QWidget* parent)
     Ui_prefDirs.urDvdauthor->setUrl(QUrl(config.getPrefDvdauthorPath(false)));
     Ui_prefDirs.urFFmpeg->setUrl(QUrl(config.getPrefFFmpegPath(false)));
     Ui_prefDirs.urGenisoimage->setUrl(QUrl(config.getPrefGenisoimagePath(false)));
-    Ui_prefDirs.urMencoder->setUrl(QUrl(config.getPrefMencoderPath(false)));
-    Ui_prefDirs.urMplayer->setUrl(QUrl(config.getPrefMplayerPath(false)));
     Ui_prefDirs.urWodim->setUrl(QUrl(config.getPrefWodimPath(false)));
     Ui_prefDirs.urK3b->setUrl(QUrl(config.getPrefk3bPath(false)));
 
@@ -73,8 +66,6 @@ void k9prefDirs::save() {
     config.setPrefDvdauthorPath( Ui_prefDirs.urDvdauthor->url().path());
     config.setPrefFFmpegPath( Ui_prefDirs.urFFmpeg->url().path());
     config.setPrefGenisoimagePath( Ui_prefDirs.urGenisoimage->url().path());
-    config.setPrefMencoderPath( Ui_prefDirs.urMencoder->url().path());
-    config.setPrefMplayerPath( Ui_prefDirs.urMplayer->url().path());
     config.setPrefWodimPath( Ui_prefDirs.urWodim->url().path());
     config.setPrefk3bPath( Ui_prefDirs.urK3b->url().path());
    

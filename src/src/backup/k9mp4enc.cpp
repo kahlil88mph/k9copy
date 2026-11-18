@@ -72,7 +72,6 @@ k9MP4Enc::k9MP4Enc(QObject *parent)
     k9Config config;
     m_splitChapters=config.getMpegChapters();
     m_ffmpegPath=config.getPrefFFmpegPath(true);
-    m_mencoderPath=config.getPrefMencoderPath(true);
     timer = new QTimer( this );
     connect( timer, SIGNAL(timeout()), this, SLOT(timerDone()) );
     m_progress=new k9MP4Dlg(k9Dialogs::getMainWidget());
@@ -263,7 +262,6 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
 	    
 	    double ratio=( m_width.toDouble()/w);
 	    
-  	    k9VideoCodecs videoCodecs;
 
 	    // if a cropping zone has been defined, the aspect ratio is based on it else we keep
 	    // the original aspect ratio
@@ -285,18 +283,11 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
             if (m_height=="" || m_height=="0") {
                 double height=h*ratio;
                 m_height=QString::number((int)round(height+0.1));
-  	        //with mencoder, video is resized after the cropping has been applied
-		//=> height=height - (cropheight*aspectratio)
-  	        if (videoCodecs.getEncoder(m_codec)=="mencoder") 
-		   m_height= QString::number((int)(m_height.toInt() -(h-m_crop.height())*ratio));
             }
 
 	 
-	    if (videoCodecs.getEncoder(m_codec)=="ffmpeg") { 
-		//with ffmpeg, crop is applied on the resized video => crop size must be calculated according to ratio
-		QRect newrect(m_crop.left()*ratio,m_crop.top()*ratio,m_crop.width()*ratio,m_crop.height()*ratio);
-		m_crop=newrect;
- 	    }
+	    // the crop is applied after resizing, so scale its coordinates too
+	    m_crop=QRect(m_crop.left()*ratio,m_crop.top()*ratio,m_crop.width()*ratio,m_crop.height()*ratio);
 
             if (m_height.toInt()%2 !=0)
                 m_height=QString::number(m_height.toInt()+1);
@@ -506,7 +497,6 @@ void k9MP4Enc::buildSubtitleCmd(k9DVDTitle *title) {
 
 void k9MP4Enc::buildAudioCmd(k9DVDTitle *title) {
     k9AudioCodecs *audioCodecs=new k9AudioCodecs(0);
-    m_encoder=FFMPEG;
     for (int i=0;i<title->getaudioStreamCount();i++) {
         if (title->getaudioStream(i)->getselected()) {
 
@@ -544,12 +534,9 @@ void k9MP4Enc::buildAudioCmd(k9DVDTitle *title) {
 }
 
 void k9MP4Enc::buildVideoCmd(int pass,int part,k9DVDTitle *title,const QString &passLogFileName,QStringList &cmd) {
-    k9VideoCodecs videoCodecs;
-    if (videoCodecs.getEncoder(m_codec)=="ffmpeg")
-        buildFFMpegCmd(pass,title,cmd);
-    else
-        buildMEncoderCmd(pass,part,title,passLogFileName,cmd);
-
+    Q_UNUSED(part);
+    Q_UNUSED(passLogFileName);   // passed to ffmpeg through $PASSLOGFILE
+    buildFFMpegCmd(pass,title,cmd);
 }
 
 
@@ -583,7 +570,6 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
     // selected audio/subpicture streams (none in pass 1).
     k9VideoCodecs videoCodecs;
     k9AudioCodecs audioCodecs;
-    m_encoder=FFMPEG;
     m_pass=pass;
     QString sVOption;
     switch (pass) {
@@ -692,106 +678,6 @@ void k9MP4Enc::buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) {
                 m_converters[BASE_CONV_AUDIO+i]=converter;
 }
 
-
-void k9MP4Enc::buildMEncoderCmd(int pass,int part,k9DVDTitle *title,const QString &passLogFileName,QStringList &cmd) {
-    m_encoder=FFMPEG;
-    bool audio=false;
-    QString sPass="";
-    QString sCodec="";
-
-    k9AudioCodecs *audioCodecs=new k9AudioCodecs(0);
-    k9VideoCodecs *videoCodecs=new k9VideoCodecs(0);
-
-    QString sVOption;
-    m_pass=pass;
-    switch (pass) {
-    case 1:
-        sVOption=replaceParams(videoCodecs->getOptions1(m_codec));
-        break;
-    case 2:
-        sVOption=replaceParams(videoCodecs->getOptions2(m_codec));
-        break;
-    default:
-        sVOption=replaceParams(videoCodecs->getOptions0(m_codec));
-        break;
-    }
-    sCodec=videoCodecs->getCodecName(m_codec);
-    sVOption=sVOption.trimmed();
-    int pos;
-    cmd << m_mencoderPath << "/dev/stdin";
-    if (pass >0)
-        cmd << "-passlogfile" << passLogFileName;
-
-    cmd << sVOption.split(" ");
-
-    QString sAOption="";
-    sAOption=replaceParams(audioCodecs->getOptions(m_audioCodec)).trimmed();
-
-
-    if (pass >0)
-        m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec)+" - "+i18n("pass %1").arg(pass));
-    else
-        m_progress->setTitleLabel(i18n("Encoding %1").arg(sCodec));
-
-    if (m_fourcc !="")
-        cmd << "-ffourcc" << m_fourcc;
-    else if (videoCodecs->getFourcc(m_codec)!="")
-        cmd << "-ffourcc" << videoCodecs->getFourcc(m_codec);
-
-    delete audioCodecs;
-    delete videoCodecs;
-
-    //looking for first audio selected
-    for (int i=0;i<title->getaudioStreamCount();i++) {
-        if (title->getaudioStream(i)->getselected()) {
-            //cmd << "-oac" << sAOption;
-            pos=sAOption.indexOf("-af");
-            if (pos==-1)
-                cmd << "-af" <<QString("volume=%1").arg(m_audioGain);
-            else
-                sAOption=sAOption.insert(pos+4,QString("volume=%1,").arg(m_audioGain));
-            cmd << sAOption.split(" ");
-
-            audio=true;
-            break;
-        }
-    }
-
-    if (getselectedSubp( title) !=-1) {
-        cmd << "-sid" << QString::number(getselectedSubp( title));
-        cmd << "-ffactor" << "1" << "-spualign" << "2" << "-sub-bg-alpha" << "1";
-    }
-
-    if (!audio)
-        cmd << "-nosound";
-
-    QString path=m_filename;
-
-    if (m_parts>1) {
-        QString ext=m_filename.section(".",-1);
-        if (ext!="")
-            ext="."+ext;
-        path=m_filename.left(m_filename.length()-ext.length());
-        path=path+QString::number(part)+ext;
-    }
-    if (pass==1)
-        cmd << "-o" << "/dev/null";
-    else
-        cmd <<"-o" << KShell::quoteArg(path);
-    if (path.toUpper().endsWith("MPEG") || path.toUpper().endsWith("MPG"))
-        cmd << "-of" << "mpeg";
-    else if (path.toUpper().endsWith("AVI"))
-        cmd << "-of" << "avi";
-    else {
-        //      cmd << "-of" << "lavf";
-        //      cmd << "-lavfopts" << "i_certify_that_my_video_stream_does_not_use_b_frames";
-    }
-    k9log::add(i18n("starting thread : %1").arg(cmd.join(" ")),k9logLevel::INFO);
-    k9ConvertAudio *converter=new k9ConvertAudio("",cmd);
-    converter->setDebug(false);
-    m_converters[BASE_CONV_VIDEO]=converter;
-    m_convertersToDelete << converter;
-}
 
 void k9MP4Enc::slotCancel() {
     k9log::add(i18n("cancel requested"),k9logLevel::WARNING);
@@ -949,7 +835,6 @@ void k9MP4Enc::getOutput(eStreamType streamType,int streamNumber,uchar *buffer,u
 
     }
 
-    //bool copyNav=(m_encoder==FFMPEG ) && (streamType==NAV);
     bool copyNav=(streamType==NAV);
 
 
@@ -979,7 +864,7 @@ void k9MP4Enc::getOutput(eStreamType streamType,int streamNumber,uchar *buffer,u
 void k9MP4Enc::getOutput(uchar *buffer,uint32_t size) {
     m_totalBytes+= size/2048  ;
     if (m_mpeg2 ) {
-        //waiting for free space in the fifo buffer (readen by mencoder process)
+        //waiting for free space in the fifo buffer
         m_fifo.addData(buffer,size);
         //Exits the eventloop executed by flush when fifo buffer is empty
         m_eventLoop->exit();

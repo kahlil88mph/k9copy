@@ -49,7 +49,6 @@ class k9ConvertAudio;
 class k9MP4Enc : public k9DVDBackupInterface {
     Q_OBJECT
 private:
-    enum eEncoder {FFMPEG,MENCODER};
     k9MP4Dlg  *m_progress;
     k9DVDTitle *m_title;
     int getBitRate(k9DVDTitle *_title);
@@ -66,8 +65,6 @@ private:
     QString m_stderr;
     QString m_passLogFile;
     QString m_ffmpegPath;
-    QString m_mencoderPath;
-    eEncoder m_encoder;
     QRect m_crop;
     int m_parts,m_part;
     float m_percent;
@@ -98,7 +95,6 @@ private:
     QString replaceParams(QString _input);
     void Flush();
     bool check();
-    void buildMEncoderCmd(int pass,int part,k9DVDTitle *title,const QString &passLogFileName,QStringList &cmd) ;
     void buildVideoCmd(int pass,int part,k9DVDTitle *title,const QString &passLogFileName,QStringList &cmd) ;
     void buildFFMpegCmd(int pass,k9DVDTitle *title,QStringList &cmd) ;
     void buildAudioCmd(k9DVDTitle *title);

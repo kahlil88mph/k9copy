@@ -34,9 +34,6 @@ private:
     QString m_prefOutputMpeg4;
     QString m_prefOutputMpeg2;
     QString m_prefOutputAudio;
-    
-    QString m_prefMencoderPath;
-    QString m_prefMplayerPath;
     QString m_prefk3bPath;
     QString m_prefDvdauthorPath;
     QString m_prefFFmpegPath;
@@ -82,15 +79,7 @@ private:
     QColor  m_prefButtonHiliteColor;
     QColor  m_prefButtonTextColor;
     QFont   m_prefButtonFont;
-
-    bool m_useMplayer;
     bool m_useGL;
-    int  m_MplayerVout;
-    int m_MplayerAout;
-
-    bool m_useXine;
-    int  m_XineVout;
-    int m_XineAout;
 
     bool m_useMpv;
 
@@ -185,30 +174,7 @@ public:
 
     QString getPrefAudioFormat() const {
         return m_prefAudioFormat;
-    }
-
-    void setPrefMencoderPath( const QString& _value ) {
-        m_prefMencoderPath = _value;
-    }
-
-    QString getPrefMencoderPath(bool quoted) const {
-      if (quoted)
-        return KShell::quoteArg(m_prefMencoderPath);
-      else
-	return m_prefMencoderPath;
-    }    
-
-    
-    void setPrefMplayerPath( const QString& _value ) {
-        m_prefMplayerPath = _value;
-    }
-
-    QString getPrefMplayerPath(bool quoted) const {
-      if (quoted)
-        return KShell::quoteArg(m_prefMplayerPath);
-      else
-	return m_prefMplayerPath;
-    }    
+    }        
         
     void setPrefk3bPath( const QString& _value ) {
         m_prefk3bPath = _value;
@@ -459,24 +425,6 @@ public:
         return m_devicesIO;
     }
 
-    void setUseMplayer ( bool _value ) {
-        m_useMplayer = _value;
-    }
-
-
-    bool getUseMplayer() const {
-        return m_useMplayer;
-    }
-
-    void setUseXine ( bool _value ) {
-        m_useXine = _value;
-    }
-
-
-    bool getUseXine() const {
-        return m_useXine;
-    }
-
     void setUseMpv ( bool _value ) {
         m_useMpv=_value;
     }
@@ -510,42 +458,6 @@ public:
 
     bool getPrefMp42Passes() const {
         return m_prefMp42Passes;
-    }
-
-    void setMplayerVout ( const int& _value ) {
-        m_MplayerVout = _value;
-    }
-
-
-    int getMplayerVout() const {
-        return m_MplayerVout;
-    }
-
-    void setMplayerAout ( const int& _value ) {
-        m_MplayerAout = _value;
-    }
-
-
-    int getMplayerAout() const {
-        return m_MplayerAout;
-    }
-
-    void setXineVout ( const int& _value ) {
-        m_XineVout = _value;
-    }
-
-
-    int getXineVout() const {
-        return m_XineVout;
-    }
-
-    void setXineAout ( const int& _value ) {
-        m_XineAout = _value;
-    }
-
-
-    int getXineAout() const {
-        return m_XineAout;
     }
 
     bool getPrefShowOutput() const{

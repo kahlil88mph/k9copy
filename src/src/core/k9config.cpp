@@ -39,11 +39,7 @@ void k9Config::read() {
     m_prefOutputAudio=group.readEntry("outputAudio",QDir::homePath());
 
     group=m_config->group("programs");
-    m_prefMencoderPath=group.readEntry("Mencoder","");
-    if (m_prefMencoderPath.isEmpty()) m_prefMencoderPath=QStandardPaths::findExecutable("mencoder");
 
-    m_prefMplayerPath=group.readEntry("Mplayer","");
-    if (m_prefMplayerPath.isEmpty()) m_prefMplayerPath=QStandardPaths::findExecutable("mplayer");
 
     m_prefk3bPath=group.readEntry("k3b","");
     if (m_prefk3bPath.isEmpty()) m_prefk3bPath=QStandardPaths::findExecutable("k3b");
@@ -107,13 +103,7 @@ void k9Config::read() {
     m_devicesIO=group.readEntry("IO",QStringList());
 
     group=m_config->group("preview");
-    m_useMplayer=group.readEntry("useMplayer",false);
     m_useGL=group.readEntry("useGL",false);
-    m_MplayerVout=group.readEntry("MplayerVout",0);
-    m_MplayerAout=group.readEntry("MplayerAout",0);
-    m_useXine=group.readEntry("useXine",false);
-    m_XineVout=group.readEntry("XineVout",0);
-    m_XineAout=group.readEntry("XineAout",0);
     m_useMpv=group.readEntry("useMpv",true);
 
     group=m_config->group("authoring");
@@ -143,8 +133,6 @@ void k9Config::save() {
     group.writeEntry("outputIso",m_prefOutputIso);
     
     group=m_config->group("programs");
-    group.writeEntry("Mencoder",m_prefMencoderPath);
-    group.writeEntry("Mplayer",m_prefMplayerPath);
     group.writeEntry("k3b",m_prefk3bPath);
     group.writeEntry("Dvdauthor",m_prefDvdauthorPath);
     group.writeEntry("FFmpeg",m_prefFFmpegPath);
@@ -193,13 +181,7 @@ void k9Config::save() {
     group.writeEntry("IO",m_devicesIO);
 
     group=m_config->group("preview");
-    group.writeEntry("useMplayer",m_useMplayer);
     group.writeEntry("useGL",m_useGL);
-    group.writeEntry("MplayerVout",m_MplayerVout);
-    group.writeEntry("MplayerAout",m_MplayerAout);
-    group.writeEntry("useXine",m_useXine);
-    group.writeEntry("XineVout",m_XineVout);
-    group.writeEntry("XineAout",m_XineAout);
     group.writeEntry("useMpv",m_useMpv);
 
     group=m_config->group("authoring");

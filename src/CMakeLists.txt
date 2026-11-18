@@ -56,7 +56,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/backup
     ${CMAKE_CURRENT_SOURCE_DIR}/src/mpeg2
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/mplayer
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/preview
     ${CMAKE_CURRENT_SOURCE_DIR}/src/assistant
     ${CMAKE_CURRENT_SOURCE_DIR}/src/import
     ${CMAKE_CURRENT_SOURCE_DIR}/src/player
@@ -88,8 +88,8 @@ set(vamps_SRCS src/vamps/k9fifo.cpp src/vamps/k9requant.cpp src/vamps/k9vamps.cp
 set(subtitles_SRCS src/subtitles/k9subtitle2pgm.cpp)
 set(devices_SRCS src/devices/k9cddrive.cpp)
 
-set(mplayer_SRCS src/mplayer/k9mpv.cpp)
-k9_wrap_ui(mplayer_SRCS src/mplayer/phonon.ui)
+set(preview_SRCS src/preview/k9mpv.cpp)
+k9_wrap_ui(preview_SRCS src/preview/mpvpreview.ui)
 
 set(import_SRCS
     src/import/k9chapteredit.cpp src/import/k9avidecode.cpp src/import/k9avifile.cpp
@@ -116,14 +116,14 @@ set(main_SRCS
     src/main/k9updatefactor.cpp src/main/kviewmpeg2.cpp src/main/k9cropselect.cpp
     src/main/k9titlefactor.cpp src/main/k9mp4title.cpp src/main/k9settings.cpp
     src/main/k9copy.cpp src/main/kconfigdlg.cpp src/main/k9prefdvd.cpp
-    src/main/k9prefmencoder.cpp src/main/k9mencodercmdgen.cpp src/main/k9ffmpegcmdgen.cpp
+    src/main/k9prefmencoder.cpp src/main/k9ffmpegcmdgen.cpp
     src/main/k9prefmpeg4.cpp src/main/k9prefpreview.cpp src/main/k9prefauthor.cpp
     src/main/k9prefdirs.cpp src/batch/k9batch.cpp)
 k9_wrap_ui(main_SRCS
     src/main/k9mainw.ui src/main/configDlg.ui src/main/playbackoptionsw.ui
     src/main/prefDVD.ui src/main/prefMPEG4.ui src/main/prefMencoder.ui
     src/main/prefAuthor.ui src/main/prefpreview.ui src/main/langselectw.ui
-    src/main/viewmpeg2.ui src/main/titlefactor.ui src/main/mencoderCmdGen.ui
+    src/main/viewmpeg2.ui src/main/titlefactor.ui
     src/main/ffmpegCmdGen.ui src/main/prefDirs.ui)
 
 file(GLOB compat_SRCS src/compat/*.cpp)
@@ -134,7 +134,7 @@ target_link_libraries(k9copylib PUBLIC
     Qt6::Widgets Qt6::Xml Qt6::DBus ${CMAKE_DL_LIBS})
 
 qt_add_resources(k9copy_RCC k9copy.qrc)
-add_executable(k9copy ${k9copy_RCC} ${devices_SRCS} ${mplayer_SRCS} ${import_SRCS} ${main_SRCS} ${assistant_SRCS} main.cpp)
+add_executable(k9copy ${k9copy_RCC} ${devices_SRCS} ${preview_SRCS} ${import_SRCS} ${main_SRCS} ${assistant_SRCS} main.cpp)
 target_link_libraries(k9copy k9copylib PkgConfig::MPV Qt6::OpenGL Qt6::OpenGLWidgets)
 
 add_executable(k9play src/player/main.cpp)

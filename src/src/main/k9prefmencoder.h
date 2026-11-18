@@ -21,7 +21,6 @@
 #include <qstring.h>
 #include <qlineedit.h>
 
-enum SelectedEncoder {FFMPEG,MENCODER};
 class k9prefMencoder : public QWidget
 {
   Q_OBJECT
@@ -54,8 +53,6 @@ private:
     k9AudioCodecs m_audioCodecs;
     bool m_update;
     Ui::prefMencoder Ui_prefMencoder;
-    SelectedEncoder getSelectedEncoderA();
-    SelectedEncoder getSelectedEncoderV();
 protected slots:
   /*$PROTECTED_SLOTS$*/
   void lbvCodecsCurrentChanged(QListWidgetItem *_item,QListWidgetItem*);

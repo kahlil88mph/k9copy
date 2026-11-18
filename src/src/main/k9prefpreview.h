@@ -28,9 +28,7 @@ public:
 public slots:
   /*$PUBLIC_SLOTS$*/
   void rbInternalClick();
-  void rbMplayerClick();
-  void rbXineClick();
-  void rbPhononClick();
+  void rbMpvClick();
 protected:
   /*$PROTECTED_FUNCTIONS$*/
   void load();

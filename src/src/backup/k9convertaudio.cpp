@@ -57,24 +57,6 @@ void _k9ConvertOutput::getStdout( char *buffer, int buflen) {
 	if (m_parent->getOutput().count() > 40)
 	   m_parent->getOutput().removeAt(0);
     }
-    if (m_parent->getCmd().at(0).contains("mencoder")) {
-        
-
-        int pos=tmp.indexOf("Pos:");
-        if (pos!=-1) {
-            QString tmp2=tmp.mid(pos);
-            float t;
-            int frame;
-            int fps;
-            sscanf(tmp2.toUtf8(),"Pos: %f%*s%d",&t,&frame);
-            tmp2=tmp2.mid(tmp2.indexOf("(")+1);
-            tmp2=tmp2.mid(tmp2.indexOf(")")+1);
-            sscanf(tmp2.toUtf8(),"%d",&fps);
-
-            m_parent->setFps(QString::number(fps));
-        } //else
-          //  k9log::add(tmp,k9logLevel::INFO);
-    }
     if (m_parent->getCmd().at(0).contains("ffmpeg")) {
 	int pos=tmp.indexOf("fps=");
 	if (pos!=-1) {
@@ -103,8 +85,7 @@ void k9ConvertAudio::run() {
     if (m_fileName!="") {
         *m_process << "ffmpeg" << "-i" << "/dev/stdin" << m_fileName;
     } else {
-	//mencoder must be run in a shell cmd to enable filters !!
-        //ffmpeg too, in order to make 2 passes encoding
+        // run through a shell: the command line carries quoted filter graphs
         //setting the working directory as the output directory of k9copy
         k9Config cfg;
         m_process->setWorkingDirectory(cfg.getPrefOutput());

@@ -5,7 +5,7 @@
 #define K9MPV_H
 
 #include "k9common.h"
-#include "ui_phonon.h"
+#include "ui_mpvpreview.h"
 #include <QOpenGLWidget>
 #include <QWidget>
 
@@ -58,7 +58,7 @@ private:
     void command(const QStringList &args);
     void refreshTracks();
 
-    Ui::phonon Ui_phonon;
+    Ui::mpvPreview Ui_preview;
     mpv_handle *m_mpv = nullptr;
     k9MpvView *m_view = nullptr;
     QSlider *m_seek = nullptr;

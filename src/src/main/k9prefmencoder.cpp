@@ -14,7 +14,6 @@
 
 #include "k9prefmencoder.h"
 #include <qtextedit.h>
-#include "k9mencodercmdgen.h"
 #include "k9ffmpegcmdgen.h"
 #include <qpushbutton.h>
 #include "k9guiitem.h"
@@ -27,6 +26,10 @@ k9prefMencoder::k9prefMencoder(QWidget* parent)
 : QWidget(parent)
 {
    Ui_prefMencoder.setupUi(this);
+   // ffmpeg is the only encoder; the encoder pickers are kept for the codec
+   // list filter but not shown.
+   Ui_prefMencoder.cbEncoderV->hide();
+   Ui_prefMencoder.cbEncoderA->hide();
    m_update=false;
    load();
 
@@ -103,58 +106,27 @@ void k9prefMencoder::save()
 
 }
 
-SelectedEncoder k9prefMencoder::getSelectedEncoderV() {
-
-   if (Ui_prefMencoder.cbEncoderV->currentText() =="ffmpeg")
-	return FFMPEG;
-   else 
-	return MENCODER;
-
-}
-
-SelectedEncoder k9prefMencoder::getSelectedEncoderA() {
-
-   if (Ui_prefMencoder.cbEncoderA->currentText() =="ffmpeg")
-	return FFMPEG;
-   else 
-	return MENCODER;
-
-}
-
-
 void k9prefMencoder::btnOpt1Clicked() {
    QString s=Ui_prefMencoder.teOpt1->toPlainText();
-   if (getSelectedEncoderV()==FFMPEG)
-       k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::VIDEO,s);
-   else 
-      k9MencoderCmdGen::getMencoderOptions(s,Ui_prefMencoder.cbEncoderV->currentText());
+   k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::VIDEO,s);
 
    Ui_prefMencoder.teOpt1->setText(s);
 }
 void k9prefMencoder::btnOpt2Clicked() {
    QString s=Ui_prefMencoder.teOpt2->toPlainText();
-if (getSelectedEncoderV()==FFMPEG)
-       k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::VIDEO,s);
-   else 
-      k9MencoderCmdGen::getMencoderOptions(s,Ui_prefMencoder.cbEncoderV->currentText());
+k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::VIDEO,s);
 
    Ui_prefMencoder.teOpt2->setText(s);
 }
 void k9prefMencoder::btnOpt3Clicked() {
    QString s=Ui_prefMencoder.teOpt3->toPlainText();
-if (getSelectedEncoderV()==FFMPEG)
-       k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::VIDEO,s);
-   else 
-      k9MencoderCmdGen::getMencoderOptions(s,Ui_prefMencoder.cbEncoderV->currentText());
+k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::VIDEO,s);
 
    Ui_prefMencoder.teOpt3->setText(s);
 }
 void k9prefMencoder::btnOptAClicked() {
    QString s=Ui_prefMencoder.teOptA->toPlainText();
-if (getSelectedEncoderA()==FFMPEG)
-       k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::AUDIO,s);
-   else 
-      k9MencoderCmdGen::getMencoderOptions(s,Ui_prefMencoder.cbEncoderA->currentText());
+k9ffmpegCmdGen::getFFMpegCmd(k9ffmpegCmdGen::AUDIO,s);
 
    Ui_prefMencoder.teOptA->setHtml(s);
 }
@@ -164,10 +136,7 @@ void k9prefMencoder::btnAddVClicked() {
    QListWidgetItem *item=new QListWidgetItem(i18n("new profile"),Ui_prefMencoder.lbvCodecs);
    item->setData(Qt::UserRole,i);
    QString option;
-   if (getSelectedEncoderV()==FFMPEG)
-      option="-c:v copy";
-   else
-       option="-ovc copy";
+   option="-c:v copy";
    m_codecs.setOptions0(i,option);
    m_codecs.setOptions1(i,option);
    m_codecs.setOptions2(i,option);
@@ -194,10 +163,7 @@ void k9prefMencoder::btnAddAClicked() {
    QListWidgetItem *item=new QListWidgetItem(i18n("new profile"),Ui_prefMencoder.lbaCodecs);
    item->setData(Qt::UserRole,i);
    QString option;
-   if (getSelectedEncoderA()==FFMPEG)
-      option="-c:a copy";
-   else
-       option="-oac copy";
+   option="-c:a copy";
    m_audioCodecs.setOptions (i,option);
    m_audioCodecs.setCodecName(i,i18n("new profile"));
    m_audioCodecs.setEncoder(i,Ui_prefMencoder.cbEncoderA->currentText());

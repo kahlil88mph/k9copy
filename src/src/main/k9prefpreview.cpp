@@ -18,10 +18,6 @@ k9prefPreview::k9prefPreview(QWidget* parent)
 : QWidget(parent)
 { 
    Ui_prefPreview.setupUi(this);
-   // Only the built-in viewer and mpv remain.
-   Ui_prefPreview.rbMplayer->hide();
-   Ui_prefPreview.rbXine->hide();
-   Ui_prefPreview.rbPhonon->setText(QStringLiteral("mpv"));
    load();
 }
 
@@ -35,11 +31,11 @@ void k9prefPreview::load() {
     k9Config config;
 
 
-    Ui_prefPreview.rbPhonon->setChecked(config.getUseMpv());
+    Ui_prefPreview.rbMpv->setChecked(config.getUseMpv());
     Ui_prefPreview.rbInternal->setChecked(!config.getUseMpv());
     
-    if (Ui_prefPreview.rbPhonon->isChecked()) 
-	rbPhononClick();
+    if (Ui_prefPreview.rbMpv->isChecked()) 
+	rbMpvClick();
     else
 	rbInternalClick();
 
@@ -50,13 +46,13 @@ void k9prefPreview::load() {
 void k9prefPreview::save() {
     k9Config config;
 
-    config.setUseMpv( Ui_prefPreview.rbPhonon->isChecked());
+    config.setUseMpv( Ui_prefPreview.rbMpv->isChecked());
 
     config.save();
 }
 
 
-void k9prefPreview::rbPhononClick() {
+void k9prefPreview::rbMpvClick() {
   Ui_prefPreview.wsOptions->setCurrentIndex(0); // mpv has no options page
 }
 
@@ -64,12 +60,6 @@ void k9prefPreview::rbInternalClick() {
   Ui_prefPreview.wsOptions->setCurrentIndex(0);
 }
 
-void k9prefPreview::rbMplayerClick() {
-  Ui_prefPreview.wsOptions->setCurrentIndex(1);
-}
 
-void k9prefPreview::rbXineClick() {
-  Ui_prefPreview.wsOptions->setCurrentIndex(2);
-}
 
 
