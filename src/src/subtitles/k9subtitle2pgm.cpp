@@ -222,7 +222,7 @@ void k9Subtitle2Pgm::pes_ac3_loop (void) {
                 else if (buf + 5 > end)
                     goto copy;
                 else {
-                    fprintf (stderr, "(%s) weird pack header\n", __FILE__);
+                    fprintf (stderr, "(k9subtitle2pgm) weird pack header\n");
                     return;
                 }
 
@@ -241,7 +241,7 @@ void k9Subtitle2Pgm::pes_ac3_loop (void) {
                 else {	/* mpeg1 */
                     for (tmp1 = buf + 6; *tmp1 == 0xff; tmp1++)
                         if (tmp1 == buf + 6 + 16) {
-                            fprintf (stderr, "(%s) too much stuffing\n", __FILE__);
+                            fprintf (stderr, "(k9subtitle2pgm) too much stuffing\n");
                             buf = tmp2;
                             break;
                         }
@@ -302,7 +302,7 @@ void k9Subtitle2Pgm::pes_ac3_loop (void) {
 //                    m_chapter=ch;
                 }
             default:
-                if (buf[3] < 0xb9) fprintf (stderr, "(%s) broken stream - skipping data\n", __FILE__);
+                if (buf[3] < 0xb9) fprintf (stderr, "(k9subtitle2pgm) broken stream - skipping data\n");
 
                 /* skip */
                 tmp1 = buf + 6 + (buf[4] << 8) + buf[5];
