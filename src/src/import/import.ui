@@ -112,7 +112,7 @@
  <connections>
   <connection>
    <sender>cbFormat</sender>
-   <signal>activated(QString)</signal>
+   <signal>textActivated(QString)</signal>
    <receiver>import</receiver>
    <slot>cbFormatActivated(QString)</slot>
    <hints>

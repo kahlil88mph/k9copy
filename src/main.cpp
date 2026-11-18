@@ -35,14 +35,14 @@
 #include <QDBusError>
 #include <QTimer>
 #include <QApplication>
-#include <KAboutData>
+#include <QIcon>
 #include "k9i18n.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include "k9batch.h"
 
 static const char description[] =
-        I18N_NOOP("A DVD Backup software for KDE");
+        I18N_NOOP("A DVD backup tool");
 
 static const char version[] = VERSION ;
 
@@ -50,44 +50,26 @@ int main(int argc, char **argv) {
     k9batch batch;
     if (batch.exec(argc,argv)) 
       return 1;
-	KAboutData about("k9copy", i18n("K9copy"), version,
-	i18n(description),
-	KAboutLicense::GPL,
-	i18n("<p>Copyright (C) 2014 Pauline123</p>"
-	     "<p>(C) 2004-2011 Jean-Michel PETIT</p>"),
-	QStringLiteral("k9copy-reloaded.sourceforge.net"),
-        QString(i18n("<p>Please report bugs to:</p>")) + QStringLiteral("<p>pauline123@users.sourceforge.net</p>"));
-	about.addAuthor(i18n("Pauline123"), i18n("developer"), "pauline123@users.sourceforge.net", 0);
-        about.addAuthor(i18n("Jean-Michel PETIT"), i18n("developer"), "k9copy@free.fr", 0);
-	QList<KAboutPerson> people = about.authors();
-	about.addCredit(people[0].name(), people[0].task());
-
-
-
     QApplication app(argc, argv);
+    k9i18n::init();
+    QApplication::setApplicationName(QStringLiteral("k9copy"));
+    QApplication::setApplicationDisplayName(i18n("K9copy"));
+    QApplication::setApplicationVersion(QStringLiteral(VERSION));
+    QApplication::setOrganizationName(QStringLiteral("k9copy"));
+    QApplication::setDesktopFileName(QStringLiteral("k9copy"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("k9copy")));
+
     QCommandLineParser parser;
-    KAboutData::setApplicationData(about);
+    parser.setApplicationDescription(i18n(description));
     parser.addVersionOption();
     parser.addHelpOption();
-
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("input"), i18n("input device"), QLatin1String("device")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("output"), i18n("output device"), QLatin1String("device")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("assistant"), i18n("the k9copy backup assistant")));
-    about.setupCommandLine(&parser);
     parser.process(app);
-    about.processCommandLine(&parser);
-
-
-
-    //    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("+[URL]"), i18n( "Document to open" )));
-
-
-//    QApplication app(argc, argv);
     k9Tools::setMainThread();
 
-    if (app.isSessionRestored()) {
-        RESTORE(k9Copy);
-    } else {
+    {
         // no session.. just start up normally
         QString InputOptionArg( parser.value("input"));
         QString OutputOptionArg( parser.value("output"));

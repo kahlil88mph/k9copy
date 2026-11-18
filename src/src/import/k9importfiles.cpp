@@ -28,10 +28,7 @@
 #include <qstatusbar.h>
 #include <QMenuBar>
 
-#include <kstandardshortcut.h> 
 #include <KActionCollection>
-#include <KShortcutsDialog>
-#include <kedittoolbar.h>
 
 
 #include "k9import.h"
@@ -63,7 +60,7 @@
 
 
 k9ImportFiles::k9ImportFiles(k9Copy *_parent)
-        : KXmlGuiWindow(_parent,0 ) {
+        : KXmlGuiWindow(_parent) {
    // accept dnd
  
     m_parent=_parent;
@@ -168,8 +165,8 @@ bool k9ImportFiles::queryClose   (    ) {
 }
 
 void k9ImportFiles::setupActions() {
-    m_actions["create"] = new QAction(QIcon("author"),i18n("Create DVD"),this); 
-    backupAction = new QAction(QIcon("dvdcopy"),i18n("DVD Backup"),this );
+    m_actions["create"] = new QAction(k9Icon("author"),i18n("Create DVD"),this); 
+    backupAction = new QAction(k9Icon("dvdcopy"),i18n("DVD Backup"),this );
 
     m_actions["backup"]=backupAction;
     m_actions["quit"]=KStandardAction::quit(this, SLOT(quit()),(QObject*) actionCollection());
@@ -178,7 +175,7 @@ void k9ImportFiles::setupActions() {
     KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), (QObject*)actionCollection());
 
 
-    setStandardToolBarMenuEnabled(TRUE);
+    setStandardToolBarMenuEnabled(true);
     createStandardStatusBarAction();
 
     actionCollection()->addAction("Create",m_actions["create"]);
@@ -203,15 +200,11 @@ void k9ImportFiles::setActions( bool enabled) {
 
 void k9ImportFiles::optionsConfigureKeys() {
 
-    KShortcutsDialog::configure(actionCollection());
 
 }
 
 void k9ImportFiles::optionsConfigureToolbars() {
 
-    KEditToolBar dlg(factory());
-    connect(&dlg,SIGNAL(newToolbarConfig()),this,SLOT(newToolbarConfig()));
-    dlg.exec();
 
 }
 

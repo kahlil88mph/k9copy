@@ -933,7 +933,7 @@ crop height</string>
   </connection>
   <connection>
    <sender>cbEncoderA</sender>
-   <signal>currentIndexChanged(QString)</signal>
+   <signal>currentTextChanged(QString)</signal>
    <receiver>prefMencoder</receiver>
    <slot>cbEncoderATextChanged(QString)</slot>
    <hints>
@@ -965,7 +965,7 @@ crop height</string>
   </connection>
   <connection>
    <sender>cbEncoderV</sender>
-   <signal>currentIndexChanged(QString)</signal>
+   <signal>currentTextChanged(QString)</signal>
    <receiver>prefMencoder</receiver>
    <slot>cbEncoderVTextChanged(QString)</slot>
    <hints>

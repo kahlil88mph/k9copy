@@ -12,7 +12,6 @@
 //
 #include "k9menubutton.h"
 #include <qpainter.h>
-#include <qmatrix.h>
 #include <qbitmap.h>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>

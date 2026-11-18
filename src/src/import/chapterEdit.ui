@@ -327,9 +327,9 @@
  <connections>
   <connection>
    <sender>urFile</sender>
-   <signal>urlSelected(const KUrl&amp;)</signal>
+   <signal>urlSelected(QUrl)</signal>
    <receiver>chapterEdit</receiver>
-   <slot>urlSelected(const KUrl&amp;)</slot>
+   <slot>urlSelected(QUrl)</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>20</x>

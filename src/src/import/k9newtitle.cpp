@@ -38,7 +38,7 @@ k9NewTitle::k9NewTitle(QWidget* parent)
         Ui_newTitle.urFile->setFilter("*.avi|Audio Video Interleave (*.avi)\n*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)\n*.mp4|MPEG-4 format (*.mp4)\n*.asf|Advanced Streaming Format (*.asf)\n*.swf|Adobe Flash (*.swf)\n*.flv|Adobe Flash video files (*.flv)\n*.rm|RealVideo (*.rm)\n*.mov|QuickTime (*.mov)\n*.mkv|Matroska (*.mkv)\n*.*|All (*.*)");
         Ui_newTitle.urFile->setMode(KFile::File) ;
         //Qt5 Code
-        Ui_newTitle.urFile->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
+        Ui_newTitle.urFile->setAcceptMode(QFileDialog::AcceptOpen);
 
 
     KGuiItem::assign(Ui_newTitle.bAdd, KStandardGuiItem::add() );

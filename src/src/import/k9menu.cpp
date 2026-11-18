@@ -67,7 +67,7 @@ bool k9Menu::createMenus(QDomElement *_rootNode) {
     int lineWidth=2;
     img=QImage(720,height,QImage::Format_RGB32);
     QPixmap pixhi;
-    pixhi=QPixmap::fromImage(img,0);
+    pixhi=QPixmap::fromImage(img);
     pixhi.fill(Qt::transparent);
     QPainter phi(&pixhi);
     QPen penhi;

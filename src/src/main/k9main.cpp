@@ -42,12 +42,9 @@
 #include <qspinbox.h>
 #include <qpainter.h>
 
-#include <kcombobox.h>
-#include <kmountpoint.h>
 #include <kiconloader.h>
 
 #include <QStandardPaths>
-#include <KDiskFreeSpaceInfo>
 #include <qbitmap.h>
 #include "images.h"
 #include "k9execcopy.h"
@@ -1484,7 +1481,7 @@ void k9Main::cbInputChanged(int _index)
         Ui_MainDlg.urInput->setMode(KFile::ExistingOnly | KFile::File);
 
     // Qt5 code
-	Ui_MainDlg.urInput->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
+	Ui_MainDlg.urInput->setAcceptMode(QFileDialog::AcceptOpen);
         Ui_MainDlg.urInput->setFilter("*.iso|Iso Image (*.iso)");
 
 
@@ -1493,7 +1490,7 @@ void k9Main::cbInputChanged(int _index)
 	Ui_MainDlg.cbInputDev->hide();
         Ui_MainDlg.urInput->show();
         Ui_MainDlg.urInput->setMode(KFile::ExistingOnly | KFile::Directory);
-        Ui_MainDlg.urInput->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
+        Ui_MainDlg.urInput->setAcceptMode(QFileDialog::AcceptOpen);
 
       break;
    }
@@ -1515,7 +1512,7 @@ void k9Main::cbOutputChanged(int _index)
 	Ui_MainDlg.wOutput->hide();
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setMode( KFile::File);
-        Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+        Ui_MainDlg.urOutput->setAcceptMode(QFileDialog::AcceptSave);
         Ui_MainDlg.urOutput->setFilter("*.iso|Iso Image (*.iso)");
 
 
@@ -1526,7 +1523,7 @@ void k9Main::cbOutputChanged(int _index)
 	Ui_MainDlg.wOutput->hide();
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setMode( KFile::Directory);
-        Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+        Ui_MainDlg.urOutput->setAcceptMode(QFileDialog::AcceptSave);
 
         Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(_index==oAudio?config.getPrefOutputAudio():config.getPrefOutput())));
       break;
@@ -1535,7 +1532,7 @@ void k9Main::cbOutputChanged(int _index)
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setFilter("*.avi|Audio Video Interleave (*.avi)\n*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)\n*.mp4|MPEG-4 format (*.mp4)\n*.asf|Advanced Streaming Format (*.asf)\n*.swf|Adobe Flash (*.swf)\n*.flv|Adobe Flash video files (*.flv)\n*.rm|RealVideo (*.rm)\n*.mov|QuickTime (*.mov)\n*.mkv|Matroska (*.mkv)");
         Ui_MainDlg.urOutput->setMode(KFile::File) ;
-       	Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+       	Ui_MainDlg.urOutput->setAcceptMode(QFileDialog::AcceptSave);
 
       	Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputMpeg4()+"/"+title+".avi") ));
 	break;
@@ -1544,7 +1541,7 @@ void k9Main::cbOutputChanged(int _index)
         Ui_MainDlg.urOutput->show();
         Ui_MainDlg.urOutput->setFilter("*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)");
         Ui_MainDlg.urOutput->setMode(KFile::File) ;
-        Ui_MainDlg.urOutput->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+        Ui_MainDlg.urOutput->setAcceptMode(QFileDialog::AcceptSave);
 
       	Ui_MainDlg.urOutput->setUrl(QUrl(QDir::cleanPath(config.getPrefOutputMpeg2()+"/"+title+".mpg") ));
       break;

@@ -133,7 +133,8 @@ target_link_libraries(k9copylib PUBLIC
     PkgConfig::DVDREAD PkgConfig::DVDNAV PkgConfig::MPEG2 PkgConfig::FFMPEG PkgConfig::UDEV
     Qt6::Widgets Qt6::Xml Qt6::DBus ${CMAKE_DL_LIBS})
 
-add_executable(k9copy ${devices_SRCS} ${mplayer_SRCS} ${import_SRCS} ${main_SRCS} ${assistant_SRCS} main.cpp)
+qt_add_resources(k9copy_RCC k9copy.qrc)
+add_executable(k9copy ${k9copy_RCC} ${devices_SRCS} ${mplayer_SRCS} ${import_SRCS} ${main_SRCS} ${assistant_SRCS} main.cpp)
 target_link_libraries(k9copy k9copylib PkgConfig::MPV Qt6::OpenGL Qt6::OpenGLWidgets)
 
 add_executable(k9play src/player/main.cpp)

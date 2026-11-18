@@ -24,7 +24,7 @@ protected:
     k9DVDTitle *m_title;
 public:
 
-    lbItem(QListWidget * listbox, const QString & text = QString::null ):
+    lbItem(QListWidget * listbox, const QString & text = QString() ):
     QListWidgetItem(text,listbox) {}
     ;
     void setTitle(k9DVDTitle  *_value) {

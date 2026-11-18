@@ -77,9 +77,6 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="autoCompletion">
-        <bool>true</bool>
-       </property>
       </widget>
      </item>
      <item>
@@ -167,9 +164,6 @@
           </property>
           <property name="editable">
            <bool>false</bool>
-          </property>
-          <property name="autoCompletion">
-           <bool>true</bool>
           </property>
          </widget>
         </item>

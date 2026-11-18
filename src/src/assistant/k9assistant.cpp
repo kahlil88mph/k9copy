@@ -63,7 +63,7 @@ void k9Assistant::run() {
     k9astTitles *titles=new k9astTitles(this,m_dvd);
     m_titlesItem=new KPageWidgetItem(titles,i18n("titles"));
     m_titlesItem->setHeader(i18n("Select the titles you want to copy"));
-    m_titlesItem->setIcon(QIcon("titles"));
+    m_titlesItem->setIcon(k9Icon("titles"));
     m_titlesItem->setIcon(QIcon(loader->loadIconSet("title",  KIconLoader::Toolbar)));
 
     m_pageWidget->addPage(m_titlesItem);

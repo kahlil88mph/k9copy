@@ -40,37 +40,37 @@ k9Settings::k9Settings(QWidget *parent,const QString &):  KPageDialog (parent) {
     m_prefDVD =new k9prefDVD(this);
     page = addPage(m_prefDVD,i18n("DVD"));
     page->setHeader(i18n("DVD Backup"));
-    page->setIcon(QIcon("dvdcopy"));
+    page->setIcon(k9Icon("dvdcopy"));
 
     m_prefMencoder =new k9prefMencoder(this);
     page = addPage(m_prefMencoder,i18n("Encoders"));
     page->setHeader(i18n("MPEG-4 Codecs"));
-    page->setIcon(QIcon("mencoder"));
+    page->setIcon(k9Icon("mencoder"));
     m_prefMPEG4 =new k9prefMPEG4(this);
     page = addPage(m_prefMPEG4,i18n("MPEG-4"));
     page->setHeader(i18n("MPEG-4 Encoding"));
-    page->setIcon(QIcon("video-mp4"));
+    page->setIcon(k9Icon("video-mp4"));
 
     m_prefPreview =new k9prefPreview(this);
     page = addPage(m_prefPreview,i18n("Preview"));
     page->setHeader(i18n("Title preview"));
-    page->setIcon(QIcon("video-projector"));
+    page->setIcon(k9Icon("video-projector"));
 
     m_prefAuthor = new k9prefAuthor(this);
     page = addPage(m_prefAuthor,i18n("Authoring"));
     page->setHeader(i18n("Authoring"));
-    page->setIcon(QIcon("author"));
+    page->setIcon(k9Icon("author"));
 
     m_prefDirs=new k9prefDirs(this);
     page = addPage(m_prefDirs,i18n("Paths"));
     page->setHeader(i18n("Default paths"));
-    page->setIcon(QIcon("folder"));
+    page->setIcon(k9Icon("folder"));
     
 
     m_configDlg=new kConfigDlg(this);
     page = addPage(m_configDlg,i18n("Devices"));
     page->setHeader(i18n("Devices not detected by k9copy"));
-    page->setIcon(QIcon("drive-optical"));
+    page->setIcon(k9Icon("drive-optical"));
 
 connect(buttonBox()->button(QDialogButtonBox::Apply),SIGNAL(clicked()), SLOT(slotApplyClicked()));
 connect(buttonBox()->button(QDialogButtonBox::Ok),SIGNAL(clicked()), SLOT(slotOkClicked()));

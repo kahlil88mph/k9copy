@@ -15,11 +15,8 @@
 #include "k9settings.h"
 #include "k9playbackoptions.h"
 #include "k9langselect.h"
-#include <kstandardshortcut.h> 
 
 #include <KStandardAction>
-#include <kedittoolbar.h>
-#include <KShortcutsDialog>
 #include <KActionCollection>
 #include "k9importfiles.h"
 #include <QStyleFactory>
@@ -246,19 +243,19 @@ bool k9Copy::queryClose   (    ) {
 }
 
 void k9Copy::setupActions() {
-    CopyAction = new QAction(QIcon("dvdcopy"),i18n("Copy"),this);
+    CopyAction = new QAction(k9Icon("dvdcopy"),i18n("Copy"),this);
     connect(CopyAction, SIGNAL(triggered(bool)), SLOT(ActionCopy()));
     m_actions["copy"]=CopyAction;
 
-    ejectAction = new QAction(QIcon("media-eject"),i18n("Eject"),this);
+    ejectAction = new QAction(k9Icon("media-eject"),i18n("Eject"),this);
     connect(ejectAction, SIGNAL(triggered(bool)), SLOT(ActionEject()));
     m_actions["eject"]=ejectAction;
 
-    wizardAction = new QAction(QIcon("tools-wizard"),i18n("Wizard"),this);
+    wizardAction = new QAction(k9Icon("tools-wizard"),i18n("Wizard"),this);
     connect(wizardAction, SIGNAL(triggered(bool)), SLOT(ActionWizard()));
     m_actions["wizard"]=wizardAction;
 
-    authorAction = new QAction(QIcon("author"),i18n("DVD Author"),this );
+    authorAction = new QAction(k9Icon("author"),i18n("DVD Author"),this );
     connect(authorAction, SIGNAL(triggered(bool)), SLOT(ActionAuthor()));
     m_actions["author"]=authorAction;
 
@@ -268,7 +265,7 @@ void k9Copy::setupActions() {
     KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()), (QObject*)actionCollection());
     KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), (QObject*)actionCollection());
 
-    setStandardToolBarMenuEnabled(TRUE);
+    setStandardToolBarMenuEnabled(true);
     createStandardStatusBarAction();
 
     QStringList slEnv=QProcess::systemEnvironment();
@@ -278,7 +275,7 @@ void k9Copy::setupActions() {
             bGtk=false;
     }
     if (bGtk && foundGtkStyle()) {
-        m_actions["gtk-style"]=new QAction(QIcon("configure"),i18n("Use Gtk Style"),this);
+        m_actions["gtk-style"]=new QAction(k9Icon("configure"),i18n("Use Gtk Style"),this);
         m_actions["gtk-style"]->setCheckable(true);
         connect(m_actions["gtk-style"],SIGNAL(triggered(bool)),this,SLOT(setGtkStyle(bool)));
         k9Config config;
@@ -317,15 +314,11 @@ void k9Copy::setActions( bool enabled) {
 
 void k9Copy::optionsConfigureKeys() {
 
-    KShortcutsDialog::configure(actionCollection());
 
 }
 
 void k9Copy::optionsConfigureToolbars() {
 
-    KEditToolBar dlg(factory());
-    connect(&dlg,SIGNAL(newToolbarConfig()),this,SLOT(newToolbarConfig()));
-    dlg.exec();
 
 }
 
@@ -441,7 +434,7 @@ void k9Copy::changeStatusbar(const QString& text,int id) {
 
 void k9Copy::changeCaption(const QString& text) {
     // display the text on the caption
-    setCaption(text);
+    setWindowTitle(text);
 
 }
 

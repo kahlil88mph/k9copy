@@ -328,7 +328,7 @@
   </connection>
   <connection>
    <sender>urBackground</sender>
-   <signal>urlSelected(const KUrl &amp;)</signal>
+   <signal>urlSelected(QUrl)</signal>
    <receiver>menuEdit</receiver>
    <slot>urBackgroundSelected(const KUrl &amp;)</slot>
    <hints>

@@ -1,6 +1,7 @@
 // Developer: Pauline123 <pauline123@users.sf.net>, (C) 2014
 
 #include "k9logview.h"
+#include "kiconloader.h"
 #include "k9common.h"
 #include "ui_k9logview.h"
 #include <QDebug>
@@ -46,15 +47,15 @@ void k9LogView::timerDone() {
         QIcon *icon;
         switch(logItem->level) {
             case k9logLevel::ERROR :
-	       icon=new QIcon("dialog-error");
+	       icon=new QIcon(k9Icon("dialog-error"));
 	       icon->pixmap(24);
                break;
             case k9logLevel::WARNING :
-               icon=new QIcon("dialog-warning");
+               icon=new QIcon(k9Icon("dialog-warning"));
                icon->pixmap(24);
                break;
             default:
-               icon=new QIcon("dialog-information");
+               icon=new QIcon(k9Icon("dialog-information"));
                icon->pixmap(24);
                break;
         }

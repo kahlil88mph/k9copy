@@ -24,7 +24,6 @@
 #include "dvdread/dvd_reader.h"
 #include "k9copy.h"
 #include "k9play.h"
-#include <kaboutdata.h>
 #include "k9i18n.h"
 
 
@@ -37,33 +36,21 @@
 #include <QCommandLineOption>
 
 static const char description[] =
-    I18N_NOOP("A KDE 4 Application");
+    I18N_NOOP("k9copy DVD title streamer (internal helper)");
 
 static const char version[] = VERSION ;
 
 int main(int argc, char **argv) {
 
-    KAboutData about("k9player", i18n("k9copy"), version, i18n(description),
-                     KAboutLicense::GPL,
-		 i18n("<p>(C) 2014 Pauline123 </p>" 
-			  "<p>(C) 2007 Jean-Michel</p>"),
-        QStringLiteral("k9copy-reloaded.sourceforge.net"),
-        QString(i18n("<p>Please report bugs to:</p>")) + QStringLiteral("<p>pauline123@users.sourceforge.net</p>"));
-	about.addAuthor(i18n("Pauline123"), i18n("developer"), "pauline123@users.sourceforge.net", 0);
-        about.addAuthor(i18n("Jean-Michel PETIT"), i18n("developer"), "k9copy@free.fr", 0);
-	QList<KAboutPerson> people = about.authors();
-	about.addCredit(people[0].name(), people[0].task());
-
-     QApplication app(argc, argv);  
+    QApplication app(argc, argv);
+    k9i18n::init();
+    QApplication::setApplicationName(QStringLiteral("k9play"));
+    QApplication::setApplicationVersion(QStringLiteral(VERSION));
+    QApplication::setOrganizationName(QStringLiteral("k9copy"));
     QCommandLineParser parser;
-    KAboutData::setApplicationData(about);
+    parser.setApplicationDescription(i18n(description));
     parser.addVersionOption();
     parser.addHelpOption();
-    //PORTING SCRIPT: adapt aboutdata variable if necessary
-    about.setupCommandLine(&parser);
-    parser.process(app);
-    about.processCommandLine(&parser);
-
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("gui"), i18n("no gui")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("input"), i18n("input device"), QLatin1String("device")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("output"), i18n("output device"), QLatin1String("device")));
@@ -87,6 +74,8 @@ int main(int argc, char **argv) {
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("continue"), i18n("continue playing from last sector")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("firstpass"), i18n("don't save status at end")));
     parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("usecache"), i18n("save cell in a temporary file before encoding")));
+
+    parser.process(app);
 
     QString TitleNumber(parser.value("dvdtitle"));
     QString InputOptionArg( parser.value("input"));

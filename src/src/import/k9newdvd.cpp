@@ -280,7 +280,7 @@ void k9NewDVD::createMencoderCmd(QString &_cmd,QString &_chapters, k9AviFile *_a
         k9Process *process=m_processList->addProcess(i18n("Encoding %1").arg(_aviFile->getFileName()));
         m_processList->setFileName(process,_aviFile->getFileName());
 
-        QTime t(0,0);
+        QElapsedTimer t;
         t.start();
         m_timers[process]=t;
         connect(process, SIGNAL(receivedStdout(k9Process*, char *, int)),this, SLOT(getStdout(k9Process*,char *, int) ));

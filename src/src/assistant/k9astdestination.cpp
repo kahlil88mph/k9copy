@@ -40,13 +40,13 @@ k9astDestination::k9astDestination(k9Assistant* parent,k9CdDrives *_drives,k9DVD
     Ui_astDestination.urAudio->setVisible(false);
     Ui_astDestination.urAvi->setFilter("*.avi|Audio Video Interleave (*.avi)\n*.mpg|MPEG-1 and MPEG-2 systems (*.mpg)\n*.mp4|MPEG-4 format (*.mp4)\n*.asf|Advanced Streaming Format (*.asf)\n*.swf|Adobe Flash (*.swf)\n*.flv|Adobe Flash video files (*.flv)\n*.rm|RealVideo (*.rm)\n*.mov|QuickTime (*.mov)\n*.mkv|Matroska (*.mkv)");
     Ui_astDestination.urAvi->setMode(KFile::File) ;
-    Ui_astDestination.urAvi->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+    Ui_astDestination.urAvi->setAcceptMode(QFileDialog::AcceptSave);
     Ui_astDestination.urIso->setFilter("*.iso|Iso Image (*.iso)");
     Ui_astDestination.urIso->setMode(KFile::File) ;
-        Ui_astDestination.urIso->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+        Ui_astDestination.urIso->setAcceptMode(QFileDialog::AcceptSave);
     Ui_astDestination.urMpeg->setFilter("*.mpg|Mpeg video file (*.mpg)");
     Ui_astDestination.urMpeg->setMode(KFile::File);
-    Ui_astDestination.urMpeg->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+    Ui_astDestination.urMpeg->setAcceptMode(QFileDialog::AcceptSave);
     Ui_astDestination.urAudio->setMode(KFile::Directory | KFile::ExistingOnly);
 
 

@@ -71,7 +71,7 @@ k9MenuEdit::k9MenuEdit(QWidget* parent, const char* ,k9MenuScene *scene)
         Ui_menuEdit.urBackground->setFilter("*.jpg|jpeg (*.jpg)\n*.png|png (*.png)\n*.*|All (*.*)");
         Ui_menuEdit.urBackground->setMode(KFile::File) ;
 	//Qt5 Code
-        Ui_menuEdit.urBackground->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
+        Ui_menuEdit.urBackground->setAcceptMode(QFileDialog::AcceptOpen);
 
 
 }

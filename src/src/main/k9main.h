@@ -24,8 +24,6 @@
 #include <qmutex.h>
 
 #include <qfiledialog.h>
-#include <kmainwindow.h>
-#include <kaboutdata.h>
 
 
 enum  eStreamType {SUB,AUD,VID,NONE,CHAP} ;

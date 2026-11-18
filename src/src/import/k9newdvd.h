@@ -79,7 +79,7 @@ private:
     int m_totalEncodedSize;
     int m_offset;
     int m_lastvalue;
-    QMap <k9Process*,QTime> m_timers;
+    QMap <k9Process*,QElapsedTimer> m_timers;
     void calcVideoBitrate();
     void createMencoderCmd ( QString &_cmd,QString &_chapters, k9AviFile *_aviFile );
     void splitFile(k9AviFile *_aviFile);
