@@ -1,1 +1,1 @@
-install( FILES anim.mng mencoder.xml aright.png adown.png DESTINATION  ${DATA_INSTALL_DIR}/k9copy )
+install( FILES anim.mng mencoder.xml aright.png adown.png DESTINATION  ${KDE_INSTALL_DATADIR}/k9copy )

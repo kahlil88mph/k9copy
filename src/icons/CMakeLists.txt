@@ -1,7 +1,2 @@
-
-if(QT5_BUILD)
-ecm_install_icons( ${DATA_INSTALL_DIR}/k9copy/icons)
-else()
-kde4_install_icons( ${DATA_INSTALL_DIR}/k9copy/icons)
-endif()
-
+file(GLOB K9_ICONS ${CMAKE_CURRENT_SOURCE_DIR}/*.png ${CMAKE_CURRENT_SOURCE_DIR}/*.svgz)
+ecm_install_icons(ICONS ${K9_ICONS} DESTINATION ${KDE_INSTALL_DATADIR}/k9copy/icons)
