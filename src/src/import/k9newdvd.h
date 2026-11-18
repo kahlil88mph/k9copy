@@ -12,6 +12,7 @@
 #ifndef K9NEWDVD_H
 #define K9NEWDVD_H
 
+#include <QElapsedTimer>
 #include "k9common.h"
 #include <qobject.h>
 #include <qlist.h>
@@ -66,9 +67,9 @@ private:
     QDomDocument *m_xml;
     QString m_workDir;
     k9ProcessList *m_processList;
-    QTime m_timer;
-    QTime m_timer2;
-    QTime m_timer3;
+    QElapsedTimer m_timer;
+    QElapsedTimer m_timer2;
+    QElapsedTimer m_timer3;
     k9Menu *m_rootMenu;
     bool m_cancel;
     QString m_error;

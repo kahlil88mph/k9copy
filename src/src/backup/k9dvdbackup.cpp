@@ -19,6 +19,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#include <QElapsedTimer>
+#include <algorithm>
 #include "k9dvdbackup.h"
 #include "k9dvd.h"
 #include "bswap.h"
@@ -36,10 +38,9 @@
 #include <math.h>
 #include <qdir.h>
 
-#include <kmessagebox.h>
 #include <qapplication.h>
 #include <qstandardpaths.h>
-#include <KLocalizedString>
+#include "k9i18n.h"
 
 #include "k9backupdlg.h"
 //PM DVDNAV #include "dvdread.h"
@@ -205,7 +206,7 @@ void k9DVDBackup::prepareVTS(int _VTS) {
         }
 
         QString filename;
-        filename.sprintf("/VTS_%02d_1.VOB",_VTS);
+        filename = QString::asprintf("/VTS_%02d_1.VOB",_VTS);
         filename=output+filename;
         outputFile=new QFile(filename);
         if (! outputFile->open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
@@ -388,7 +389,7 @@ void k9DVDBackup::getOutput(uchar * buffer, uint32_t buflen) {
                 if (currVTS==0)
                     sName = "/VIDEO_TS.VOB";
                 else
-                    sName.sprintf("/VTS_%02d_%d.VOB",(int)currVTS,(int)currVOB);
+                    sName = QString::asprintf("/VTS_%02d_%d.VOB",(int)currVTS,(int)currVOB);
                 sName=output+sName;
                 outputFile=new QFile(sName);
                 if ( !outputFile->open(QIODevice::ReadWrite|QIODevice::Unbuffered)) {
@@ -457,7 +458,7 @@ uint32_t k9DVDBackup::copyMenu2(int _vts) {
     if (_vts == 0) {
         targetName="VIDEO_TS.VOB";
     } else {
-        targetName.sprintf("VTS_%02i_0.VOB",_vts);
+        targetName = QString::asprintf("VTS_%02i_0.VOB",_vts);
     }
     targetName=output+"/"+targetName;
 
@@ -516,7 +517,7 @@ uint32_t k9DVDBackup::copyMenu2(int _vts) {
             qDebug() << QString("cell start sector (%1) exceed menu size (%2)").arg((ptr+i)->start_sector).arg(menuLastSector);
     }
     //cadr.sort();
-    qSort(cadr.begin(),cadr.end(),k9CadtList::compareItems);
+    std::sort(cadr.begin(),cadr.end(),k9CadtList::compareItems);
 
     vamps->reset();
     vamps->setPreserve(true);
@@ -996,7 +997,7 @@ void k9DVDBackup::updateMainIfo() {
     //mise ï¿½jour des startSectors
     k9TitleSet *TSp=NULL;
     //titleSets.sort();
-    qSort(titleSets.begin(),titleSets.end(),k9TitleSetList::compareItems);
+    std::sort(titleSets.begin(),titleSets.end(),k9TitleSetList::compareItems);
 
     for (int iTS=0;iTS < titleSets.count();iTS++) {
         k9TitleSet *TS=titleSets.at(iTS);
@@ -1260,7 +1261,7 @@ void k9DVDBackup::updateIfo() {
     //    qDebug() << "numTitle:" << numTitle;
     //    qDebug() << "title length :"<< title->gettotallength().toString("hh:mm:ss");
     //    qDebug() << "new length :" << title->getSelectedLength().toString("hh:mm:ss");
-    //    QTime t;
+    //    QElapsedTimer t;
     //    t=t.addMSecs(DVD->dvdtime2msec(&pgc->playback_time));
         bool ok;
     //    qDebug() << "pgc length :" << t.toString("hh:mm:ss") << "  " << pgc->playback_time.frame_u << pgc->playback_time.hour << pgc->playback_time.minute << pgc->playback_time.second;;
@@ -1442,7 +1443,7 @@ void k9DVDBackup::updateVob(k9CellList *cellLst) {
                 if (currVTS==0)
                     sName="VIDEO_TS.VOB";
                 else
-                    sName.sprintf("VTS_%02d_%d.VOB",(int)currVTS,(int)VobNum);
+                    sName = QString::asprintf("VTS_%02d_%d.VOB",(int)currVTS,(int)VobNum);
                 dbg=i18n("Updating vob %1").arg(sName);
                 sName=output+"/"+sName;
                 QFileInfo finfo(sName);
@@ -1485,7 +1486,7 @@ void k9DVDBackup::updateVob(k9CellList *cellLst) {
                         dsiPack.dsi_gi.vobu_ea = vobu->size;
                         emptyPgc=vobu->empty;
                     } else {
-                        dbg.sprintf("remapVobu failed for %d",dsiPack.dsi_gi.nv_pck_lbn);
+                        dbg = QString::asprintf("remapVobu failed for %d",dsiPack.dsi_gi.nv_pck_lbn);
                     }
 
                     if (!emptyPgc) {
@@ -1558,7 +1559,7 @@ void k9DVDBackup::updateVob(k9CellList *cellLst) {
                                 QFile *file2;
                                 if ( vobu2->vobNum != VobNum) {
                                     QString sName;
-                                    sName.sprintf("/VTS_%02d_%d.VOB",(int)currVTS,(int)vobu2->vobNum);
+                                    sName = QString::asprintf("/VTS_%02d_%d.VOB",(int)currVTS,(int)vobu2->vobNum);
                                     sName=output+sName;
                                     file2=new QFile(sName);
                                     file2->open(QIODevice::ReadWrite |QIODevice::Unbuffered);
@@ -1711,7 +1712,7 @@ uint k9DVDBackup::getLastCell(k9CellCopyList *_cellCopyList, uint _index) {
 void k9DVDBackup::calcFactor() {
     double factor=m_cellCopyList->getfactor(m_withMenu,false);
     QString sFactor;
-    sFactor.sprintf("%.2f",factor);
+    sFactor = QString::asprintf("%.2f",factor);
     showFactor(sFactor);
     argFactor =  factor;
     m_forcedFactor=false;
@@ -1723,7 +1724,7 @@ void k9DVDBackup::forceFactor(double _factor) {
     if (factor<minFactor)
         factor=minFactor;
     QString sFactor;
-    sFactor.sprintf("%.2f",factor);
+    sFactor = QString::asprintf("%.2f",factor);
     showFactor(sFactor);
     argFactor =  factor;
     m_forcedFactor=true;

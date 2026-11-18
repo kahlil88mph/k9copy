@@ -9,6 +9,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include <algorithm>
 #include "k9common.h"
 #include "k9avifile.h"
 #include "k9title.h"
@@ -90,7 +91,7 @@ k9Title* k9AviFile::getTitle() const {
 void k9AviFile::setTitle ( k9Title* _value ) {
     m_title = _value;
     m_title->getFiles()->append(this);
-    qSort(m_title->getFiles()->begin(),m_title->getFiles()->end(),k9TitleItems::compareItems);
+    std::sort(m_title->getFiles()->begin(),m_title->getFiles()->end(),k9TitleItems::compareItems);
     // m_title->getFiles()->sort();
 }
 

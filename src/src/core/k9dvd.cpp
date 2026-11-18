@@ -452,9 +452,9 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
                 titleset->add
                 (l_track);
 
-                sh.sprintf("%02x",pgc->playback_time.hour);
-                sm.sprintf("%02x",pgc->playback_time.minute);
-                ss.sprintf("%02x",pgc->playback_time.second);
+                sh = QString::asprintf("%02x",pgc->playback_time.hour);
+                sm = QString::asprintf("%02x",pgc->playback_time.minute);
+                ss = QString::asprintf("%02x",pgc->playback_time.second);
                 l_track->length.setHMS(sh.toInt(&ok,10),sm.toInt(&ok,10),ss.toInt(&ok,10));
 
                 //printf(i18n("Title: %02d, Length: %02x:%02x:%02x "), j+1, pgc->playback_time.hour, pgc->playback_time.minute, pgc->playback_time.second);
@@ -485,7 +485,7 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
 
                 for (i=0; i<16; i++) {
                     QString pal;
-                    pal.sprintf("%08x",pgc->palette[i]);
+                    pal = QString::asprintf("%08x",pgc->palette[i]);
                     l_track->palette.append(pal);
                 }
 
@@ -507,7 +507,7 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
                         if (audio_attr->audio_format==6)
                             l_auds->m_streamId +=8;
                         //JMPaudio_attr = &vtsi_mat->vts_audio_attr[l_auds->id-1];
-                        langCode.sprintf("%c%c", audio_attr->lang_code>>8, audio_attr->lang_code & 0xff);
+                        langCode = QString::asprintf("%c%c", audio_attr->lang_code>>8, audio_attr->lang_code & 0xff);
                         if (! (audio_attr->lang_code>>8)) {
                             langCode = "xx";
                         }
@@ -648,7 +648,7 @@ int k9DVD::scandvd (const QString & device,bool _quickScan) {
                         }
                         l_track->subPictureCount++;
                         subp_attr = &vtsi_mat->vts_subp_attr[i];
-                        langCode.sprintf("%c%c", subp_attr->lang_code>>8, subp_attr->lang_code & 0xff);
+                        langCode = QString::asprintf("%c%c", subp_attr->lang_code>>8, subp_attr->lang_code & 0xff);
                         if (!(subp_attr->lang_code>>8)) {
                             langCode ="xx";
                         }

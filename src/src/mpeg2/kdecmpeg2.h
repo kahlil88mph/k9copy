@@ -20,6 +20,7 @@
 
 #ifndef KDECMPEG2_H
 #define KDECMPEG2_H
+#include <QElapsedTimer>
 #include "k9common.h"
 #include "k9internalplayer.h"
 
@@ -63,7 +64,7 @@ private:
   bool m_pause;
   k9DecodeThread *m_thread;
   QImage pix;
-  QTime m_timer;
+  QElapsedTimer m_timer;
   bool m_opened;
   int demux_pid;
   int demux_track;

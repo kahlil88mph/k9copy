@@ -36,7 +36,7 @@
 #include <QTimer>
 #include <QApplication>
 #include <KAboutData>
-#include <KLocalizedString>
+#include "k9i18n.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include "k9batch.h"

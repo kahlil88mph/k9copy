@@ -50,7 +50,7 @@
 
 
 
-#include <KLocalizedString>
+#include "k9i18n.h"
 
 
 #include "k9config.h"

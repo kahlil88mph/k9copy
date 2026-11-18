@@ -27,7 +27,7 @@ const QString k9DVDTitleset::getsize_mb()
 {
   double size_mb=(double)m_size /512;
   QString c;
-  c.sprintf("%.2f",size_mb);
+  c = QString::asprintf("%.2f",size_mb);
   return c;
 }
 

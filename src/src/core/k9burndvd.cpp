@@ -22,7 +22,6 @@
 
 #include "k9burndvd.h"
 #include <QDir>
-#include <KMessageBox>
 #include <QFileDialog>
 #include <qdialog.h>
 #include "k9cddrive.h"
@@ -188,7 +187,7 @@ void k9BurnDVD::getWodimCmd(QStringList &_cmd) {
 }
 
 void k9BurnDVD::burnWithGenisoimage() {
-    time = new QTime(0,0);
+    time = new QElapsedTimer();
     time->start();
     progress->setWindowTitle((i18n("Burning DVD")));
     progress->setTitle(i18n("Burning DVD"));
@@ -228,7 +227,7 @@ void k9BurnDVD::burnWithGenisoimage() {
  	        eject(burnDevice);
 
             if (!autoBurn) {
-               	if ( k9Dialogs::warningContinueCancel ( i18n("Insert a recordable DVD"), i18n("DVD burning"))!=QMessageBox::Ignore)
+               	if ( k9Dialogs::warningContinueCancel ( i18n("Insert a recordable DVD"), i18n("DVD burning"))!=k9Dialogs::Continue)
 
                     cancelled=true;
             }
@@ -259,7 +258,7 @@ void k9BurnDVD::burnWithGenisoimage() {
 			eject(burnDevice);
 
                     c=i18n("An error occured while Burning DVD") +"\n" +i18n("Insert an other DVD");
-                    if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"),lastMsg)!=QMessageBox::Ignore) {
+                    if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"),lastMsg)!=k9Dialogs::Continue) {
 
                         cancelled=true;
                     }
@@ -270,7 +269,7 @@ void k9BurnDVD::burnWithGenisoimage() {
 }
 
 void k9BurnDVD::burnWithGrowisofs() {
-    time = new QTime(0,0);
+    time = new QElapsedTimer();
     time->start();
     progress->setWindowTitle((i18n("Burning DVD")));
     progress->setTitle(i18n("Burning DVD"));
@@ -320,7 +319,7 @@ void k9BurnDVD::burnWithGrowisofs() {
         connect( proc, SIGNAL(receivedStdout(char *, int)),this, SLOT(growisoStdout(char *, int)) );
         if (!autoBurn && !iso) {
             c=i18n("Insert a recordable DVD");
-            if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"))!=KMessageBox::Continue)
+            if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"))!=k9Dialogs::Continue)
 
                 cancelled=true;
         }
@@ -349,7 +348,7 @@ void k9BurnDVD::burnWithGrowisofs() {
 
                     QString c;
                     c=i18n("An error occured while Burning DVD") +"\n" +i18n("Insert an other DVD");
-                    if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"),lastMsg)!=KMessageBox::Continue) {
+                    if ( k9Dialogs::warningContinueCancel ( c, i18n("DVD burning"),lastMsg)!=k9Dialogs::Continue) {
 
                         cancelled=true;
                     }

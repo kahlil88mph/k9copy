@@ -20,8 +20,8 @@
 #include "k9drawimage.h"
 #include "k9logview.h"
 #include <qdialog.h>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 #include <QStandardPaths>
 
 
@@ -36,7 +36,7 @@ k9MP4Dlg::k9MP4Dlg(QWidget* parent)
     l = new QGridLayout(Ui_MP4Dlg.tabLog);
     k9LogView *log=new k9LogView(Ui_MP4Dlg.tabLog);
     l->setSpacing(6);
-    l->setMargin(0);
+    l->setContentsMargins(0,0,0,0);
     l->addWidget(log, 0, 0, 1, 1);
 
     m_update=true;

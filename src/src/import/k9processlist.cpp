@@ -23,8 +23,8 @@
 #include <qapplication.h>
 #include <qeventloop.h>
 #include <qpushbutton.h>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 
 class _k9ProcessListItem : public QTreeWidgetItem {
 public:

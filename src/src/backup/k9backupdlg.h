@@ -21,6 +21,7 @@
 #ifndef K9BACKUPDLG_H
 #define K9BACKUPDLG_H
 
+#include <QElapsedTimer>
 #include "k9common.h"
 #include "ui_backupdlg.h"
 #include <qmutex.h>
@@ -50,8 +51,8 @@ public slots:
 private :
   bool Abort;
   QTimer *timer;
-  QTime time;
-  QTime m_timer;
+  QElapsedTimer time;
+  QElapsedTimer m_timer;
   uint64_t totalCopied,m_progressTotal;;
   QString m_progressLabel;
   uint32_t m_totalSteps,m_progress;

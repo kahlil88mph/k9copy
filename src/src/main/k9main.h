@@ -24,7 +24,6 @@
 #include <qmutex.h>
 
 #include <qfiledialog.h>
-#include <kmessagebox.h>
 #include <kmainwindow.h>
 #include <kaboutdata.h>
 

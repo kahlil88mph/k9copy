@@ -12,7 +12,7 @@
 //
 #include "k9config.h"
 #include <KConfigGroup>
-#include <KLocalizedString>
+#include "k9i18n.h"
 #include <QDir>
 
 #include "k9audiocodecs.h"
@@ -129,7 +129,7 @@ void k9Config::read() {
     group = m_config->group("gui");
     QList<bool> defCol;
     defCol << true << true <<true << true;
-    m_prefColumns=group.readEntry<bool>("columns",defCol);
+    m_prefColumns=group.readEntry("columns",defCol);
 
     m_prefShowOutput=group.readEntry("showOutput",true);
 }

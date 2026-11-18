@@ -12,6 +12,7 @@
 //
 
 
+#include <QElapsedTimer>
 #include "k9newtitle.h"
 #include "k9import.h"
 #include <qradiobutton.h>
@@ -24,8 +25,8 @@
         //Qt5 Code
         #include <QUrl>
 	#include <QFileDialog>
-	#include <KGuiItem>
-	#include <KStandardGuiItem>
+	#include "k9guiitem.h"
+	#include "k9guiitem.h"
 
 
 

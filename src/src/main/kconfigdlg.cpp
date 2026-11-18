@@ -22,14 +22,13 @@
 
 #include "kconfigdlg.h"
 
-#include "kmessagebox.h"
 #include <kiconloader.h>
-#include <kstandardguiitem.h>
+#include "k9guiitem.h"
 #include <qpushbutton.h>
-#include <kguiitem.h>
+#include "k9guiitem.h"
 
 #include <qdialog.h>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
 
 
 kConfigDlg::kConfigDlg(QWidget *parent)

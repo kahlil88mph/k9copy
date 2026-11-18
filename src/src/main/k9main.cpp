@@ -657,7 +657,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
     itemTrack->setFlags ( itemTrack->flags() | Qt::ItemIsEditable );
 
     itemTrack->setIcon ( col1,SmallIcon ( "title" ) );
-    c.sprintf ( "%.2f ", track->gettotalsize_mb() );
+    c = QString::asprintf( "%.2f ", track->gettotalsize_mb() );
 
     itemTrack->setText ( col2,c+i18n ( "MB" ) );
     itemTrack->setText (col4,track->gettotallength().toString ( "h:mm:ss" ));
@@ -682,7 +682,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
      
     video->setText ( col1, c );
     if ( track->gettotalvideosize_mb() ) {
-        c.sprintf ( "%.2f ",  track->gettotalvideosize_mb() );
+        c = QString::asprintf( "%.2f ",  track->gettotalvideosize_mb() );
         video->setText ( col2,c +i18n ( "MB" ) );
         video->setTextAlignment ( col2,Qt::AlignRight );
     }
@@ -692,7 +692,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
         l_auds=track->getaudioStream ( i );
         c=i18n ( "audio %1 ").arg(i+1 );
         c.append ( l_auds->getlanguage() + " " +l_auds->getformat() +" " );
-        ch.sprintf ( "%dch ",l_auds->getchannels() );
+        ch = QString::asprintf( "%dch ",l_auds->getchannels() );
         c.append ( ch+l_auds->getfrequency() +" "+l_auds->getquantization() );
         ckLvItem * item = new ckLvItem ( itemTrack,this,STREAM );
 
@@ -703,7 +703,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
         addListItem ( l_auds,item,AUD );
         item->setText ( col1,  c );
         if ( l_auds->getsize_mb() ) {
-            c.sprintf ( "%.2f ",  l_auds->getsize_mb());
+            c = QString::asprintf( "%.2f ",  l_auds->getsize_mb());
             item->setText ( col2,c +i18n ( "MB" ) );
             item->setTextAlignment ( col2,Qt::AlignRight );
         }
@@ -724,7 +724,7 @@ void k9Main::addTitle ( k9DVDTitle *track ) {
         addListItem ( l_sub,item,SUB );
         item->setText ( col1,  c );
         if ( l_sub->getsize_mb() ) {
-            c.sprintf ( "%.2f ",  l_sub->getsize_mb());
+            c = QString::asprintf( "%.2f ",  l_sub->getsize_mb());
             item->setText ( col2,c +i18n ( "MB" ) );
             item->setTextAlignment ( col2,Qt::AlignRight );
         }
@@ -1083,7 +1083,7 @@ void k9Main::itemRenamed ( QTreeWidgetItem * item,int ) {
 
     QString c;
     if ( t !=NULL ) {
-        //QMessageBox::critical( this, "test", c.sprintf("%d",it->tag));
+        //QMessageBox::critical( this, "test", c = QString::asprintf("%d",it->tag));
         t->setname ( newText );
         m_playbackOptions->titleRenamed ( t,newText );
     } else

@@ -12,6 +12,7 @@
 //
 
 
+#include <QElapsedTimer>
 #include "k9chapteredit.h"
 #include "k9drawimage.h"
 #include <qlabel.h>

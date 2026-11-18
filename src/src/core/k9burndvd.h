@@ -20,6 +20,7 @@
 #ifndef k9BurnDVD_H
 #define k9BurnDVD_H
 
+#include <QElapsedTimer>
 #include "k9burnprogress.h"
 
 
@@ -49,7 +50,7 @@ public:
   bool isCancelled() { return cancelled;}
   
 private:
-    QTime *time;
+    QElapsedTimer *time;
     k9BurnProgress *progress;
     k9Process *proc;
     k9Process *proc2;

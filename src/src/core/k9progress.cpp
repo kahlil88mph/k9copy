@@ -21,8 +21,8 @@
 #include <QPainter>
 #include <QMovie>
 #include <QLayout>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 
 
 k9Progress::k9Progress(QWidget* parent)

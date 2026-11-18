@@ -10,6 +10,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include <QElapsedTimer>
 #include "k9mp4enc.h"
 #include "k9mp4dlg.h"
 #include <qapplication.h>
@@ -31,7 +32,6 @@
 #include "k9log.h"
 
 
-#include <kmessagebox.h>
 #include <KShell>
 
 
@@ -195,7 +195,7 @@ void k9MP4Enc::execute(k9DVDTitle *_title) {
     if (m_error)
         return;
 
-    time = new QTime(0,0);
+    time = new QElapsedTimer();
     m_percent=m_totalBytes=m_offset=0;
     m_remain="--:--:--";
 

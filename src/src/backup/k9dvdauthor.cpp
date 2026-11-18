@@ -37,7 +37,6 @@
 #include <qlabel.h>
 #include <qprogressdialog.h>
 #include <qdialog.h>
-#include "kmessagebox.h"
 #include <KShell>
 
 #include <qapplication.h>
@@ -49,7 +48,7 @@
 #ifndef TRUE
 #define TRUE (!FALSE)
 #endif
-#include <KLocalizedString>
+#include "k9i18n.h"
 
 
 
@@ -155,7 +154,7 @@ void k9DVDAuthor::addMenus(QDomElement &titleSet) {
             sMsg=i18n("'%1' not selected").arg(l_track->getname());
             k9Dialogs::error( sMsg, i18n("authoring"));
         }
-        start.sprintf("jump titleset %d menu;",DVD->getnewTitleNum(l_track));
+        start = QString::asprintf("jump titleset %d menu;",DVD->getnewTitleNum(l_track));
     }
     factor=DVD->getfactor(false,false,true);
     menu=xml->createElement("menus");
@@ -176,7 +175,7 @@ void k9DVDAuthor::addMenus(QDomElement &titleSet) {
     for (i=0;i < DVD->gettitleCount();i++) {
         if (DVD->gettitle(i)->isSelected() && DVD->gettitle(i)->getIndexed()) {
             ++numt;
-            cmd+=c.sprintf("if (g1==%d) {jump titleset %d menu;}\n", numt,numt);
+            cmd+=c = QString::asprintf("if (g1==%d) {jump titleset %d menu;}\n", numt,numt);
         }
     }
 
@@ -252,7 +251,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
         files.append(paletteFile);
         palette=paletteFile->fileName();
 
-        //palette.sprintf("palette%d.yuv",l_track->getnumTitle());
+        //palette = QString::asprintf("palette%d.yuv",l_track->getnumTitle());
         //palette= locateLocal("tmp", "k9copy/k9" +palette);
         QTextStream stream( paletteFile );
         for (j=0;j<16;j++) {
@@ -282,7 +281,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
                 t.appendChild(e);
                 if (caud != "")
                     caud+=',';
-                caud+=c.sprintf("%d",l_auds->getID());
+                caud+=c = QString::asprintf("%d",l_auds->getID());
             }
         }
 
@@ -294,7 +293,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
                 t.appendChild(e);
                 if (csub !="")
                     csub+=',';
-                csub+=c.sprintf("%d",(l_sub->getID()).first());
+                csub+=c = QString::asprintf("%d",(l_sub->getID()).first());
             }
         }
 
@@ -310,7 +309,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
                         t.appendChild(e);
                         if (caud != "")
                             caud+=',';
-                        caud+=c.sprintf("%d",l_auds->getID());
+                        caud+=c = QString::asprintf("%d",l_auds->getID());
                     }
                 }
 
@@ -322,7 +321,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
                         t.appendChild(e);
                         if (csub !="")
                             csub+=',';
-                        csub+=c.sprintf("%d",(l_sub->getID()).first());
+                        csub+=c = QString::asprintf("%d",(l_sub->getID()).first());
                     }
                 }
         */
@@ -403,7 +402,7 @@ void k9DVDAuthor::addTitle(QDomElement &root, k9DVDTitle *title) {
 
         k9DVDTitle * l_next=l_track->getnextTitle();
         if (l_next!=NULL) {
-            c.sprintf("g1=%d;\ncall vmgm menu;",DVD->getnewTitleNum(l_next));
+            c = QString::asprintf("g1=%d;\ncall vmgm menu;",DVD->getnewTitleNum(l_next));
             if ( DVD->getnewTitleNum(l_next)==-1) {
                 error=true;
                 c=i18n("'%1' not selected").arg(l_next->getname());
@@ -440,7 +439,7 @@ void k9DVDAuthor::author() {
     //nettoyage du répertoire de sortie
     k9Tools::clearOutput(workDir+DVD->getDVDTitle());
 
-    time = new QTime(0,0);
+    time = new QElapsedTimer();
     time->start();
 
     m_tempPath=config.getPrefOutput();

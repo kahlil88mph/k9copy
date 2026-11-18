@@ -17,8 +17,8 @@
 #include "k9mencodercmdgen.h"
 #include "k9ffmpegcmdgen.h"
 #include <qpushbutton.h>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 
 #include <kiconloader.h>
 

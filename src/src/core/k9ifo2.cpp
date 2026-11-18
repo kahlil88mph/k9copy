@@ -106,7 +106,7 @@ void k9Ifo2::saveIFO() {
     if (mainIfo) {
         filename="/VIDEO_TS/VIDEO_TS.IFO";
     } else {
-        filename.sprintf("/VIDEO_TS/VTS_%02d_0.IFO",numIfo);
+        filename = QString::asprintf("/VIDEO_TS/VTS_%02d_0.IFO",numIfo);
     }
     if (numIfo==0) 
 	size=_ifo->vmgi_mat->vmgi_last_sector +1;
@@ -184,10 +184,10 @@ void k9Ifo2::saveIFO() {
             filename=output + "/VIDEO_TS.IFO";
             filename2=output + "/VIDEO_TS.BUP";
         } else {
-            filename.sprintf("/VTS_%02d_0.IFO",numIfo);
+            filename = QString::asprintf("/VTS_%02d_0.IFO",numIfo);
             filename=output + filename;
 
-            filename2.sprintf("/VTS_%02d_0.BUP",numIfo);
+            filename2 = QString::asprintf("/VTS_%02d_0.BUP",numIfo);
             filename2=output + filename2;
         }
 

@@ -23,8 +23,8 @@
 #include <QLayout>
 
 #include <QListWidget>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 
 k9BurnProgress::k9BurnProgress(QWidget* parent)
         : QDialog(parent) {
@@ -34,7 +34,7 @@ k9BurnProgress::k9BurnProgress(QWidget* parent)
     m_logView=new k9LogView(this);
     Ui_Progress.image->setPalette(this->palette());
     QGridLayout *l=new QGridLayout(Ui_Progress.image);
-    l->setMargin(0);
+    l->setContentsMargins(0,0,0,0);
     l->addWidget(m_logView,0,0);
 
     KGuiItem::assign(Ui_Progress.bCancel, KStandardGuiItem::stop() );

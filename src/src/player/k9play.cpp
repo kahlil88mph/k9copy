@@ -27,8 +27,7 @@
 //PM DVDNAV #include "dvdread.h"
 
 
-#include <KLocalizedString>
-#include <KMessageBox>
+#include "k9i18n.h"
 #include "k9config.h"
 
 #include <QApplication>

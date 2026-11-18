@@ -20,6 +20,7 @@
 #ifndef K9DVDAUTHOR_H
 #define K9DVDAUTHOR_H
 
+#include <QElapsedTimer>
 #include "k9common.h"
 #include "k9dvd.h"
 #include "k9progress.h"
@@ -47,7 +48,7 @@ public:
   virtual QWidget *getDialog(){return progress;};
 private: // Private attributes
   /**  */
-  QTime *time;
+  QElapsedTimer *time;
   k9DVD* DVD;
   double factor;
   QDomDocument *xml;

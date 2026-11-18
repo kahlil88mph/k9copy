@@ -12,6 +12,7 @@
 #ifndef K9PROCESS_H
 #define K9PROCESS_H
 #include <QDateTime>
+#include <QElapsedTimer>
 #include <QEventLoop>
 #include <KProcess>
 /**
@@ -39,7 +40,7 @@ private:
     bool m_shellCmd;
     QString m_debug;
     bool m_debugOutput;
-    QTime m_elapsed;
+    QElapsedTimer m_elapsed;
     QEventLoop *m_eventLoop;
     void syncStart();
 protected:

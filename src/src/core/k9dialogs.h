@@ -30,6 +30,7 @@
 class k9Dialogs
 {
 public:
+    enum Result { Cancel = 2, Continue = 5 }; // values match the old KMessageBox codes
     static QString getOpenFileName (const QString &_initialDir,const QString &_filter,QWidget *_parent,const QString &_title);
     static QString getSaveFileName (const QString &_initialDir,const QString &_filter,QWidget *_parent,const QString &_title);
     static QString getExistingDirectory (const QString &_initialDir) ;

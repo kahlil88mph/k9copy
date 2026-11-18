@@ -11,6 +11,7 @@
 //
 #ifndef K9MP4ENC_H
 #define K9MP4ENC_H
+#include <QElapsedTimer>
 #include "k9common.h"
 #include "k9dvdtitle.h"
 #include "k9dvdbackupinterface.h"
@@ -93,7 +94,7 @@ private:
 
     int m_cpt;
     int m_currentChapter;
-    QTime *time;
+    QElapsedTimer *time;
     QString replaceParams(QString _input);
     void Flush();
     bool check();

@@ -24,9 +24,6 @@
 
 #include "k9dialogs.h"
 
-#include <kdesu/su.h>
-#include <KPasswordDialog>
-#include <KUser>
 
 #include <QDebug>
 #include <stdlib.h>
@@ -35,7 +32,6 @@
 #include <QThread>
 
 QStringList m_temporaryDirs;
-QString g_password="";
 bool gBatchCopy=false;
 Qt::HANDLE g_mainThread;
 
@@ -85,7 +81,7 @@ QString k9Tools::findExe(const QString _program) {
 }
 
 bool k9Tools::checkProgram(QString _progName,bool _msg) {
-    bool res=QStandardPaths::findExecutable( _progName) !=NULL ;
+    bool res=!QStandardPaths::findExecutable( _progName).isEmpty();
     if (_msg && !res)
         k9Dialogs::error(i18n("Error starting program %1").arg(_progName),i18n("Running program"));
     return res;
@@ -93,26 +89,16 @@ bool k9Tools::checkProgram(QString _progName,bool _msg) {
 }
 
 bool k9Tools::runAsRoot(const QString &_command,const QString &_description) {
-
-    KDESu::SuProcess suprocess("root",_command.toUtf8());
-    int res=3;
-    while (res==3) {
-        if (suprocess.checkInstall(g_password.toUtf8())!=0) {
-            KPasswordDialog pwd(k9Dialogs::getMainWidget(),KPasswordDialog::UsernameReadOnly  );
-            KUser user;
-            QString username=suprocess.useUsersOwnPassword()?user.loginName():QString("root");
-            pwd.setUsername(username);
-            pwd.setPrompt(i18n("Enter the root password"));
-            pwd.addCommentLine("",_description);
-            if (!pwd.exec())
-                return false;
-            g_password=pwd.password();
-            res=suprocess.exec(g_password.toUtf8());
-        } else
-            res=suprocess.exec(g_password.toUtf8());
-        if (res==3)
-            k9Dialogs::error(i18n("The root password is not valid"),i18n("Running program"));
+    // Elevation goes through polkit (pkexec); the desktop's agent asks for
+    // credentials, so k9copy never sees or stores a password.
+    Q_UNUSED(_description);
+    if (QStandardPaths::findExecutable(QStringLiteral("pkexec")).isEmpty()) {
+        k9Dialogs::error(i18n("pkexec (polkit) is required to run this command as root"),i18n("Running program"));
+        return false;
     }
+    int res=QProcess::execute(QStringLiteral("pkexec"), {QStringLiteral("/bin/sh"), QStringLiteral("-c"), _command});
+    if (res==126 || res==127)   // dismissed or not authorized
+        return false;
     return res==0;
 }
 

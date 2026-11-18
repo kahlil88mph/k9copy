@@ -12,6 +12,7 @@
 #ifndef K9SAVEIMAGE_H
 #define K9SAVEIMAGE_H
 
+#include <QElapsedTimer>
 #include <qthread.h>
 #include <qobject.h>
 #include <qdatetime.h>
@@ -48,7 +49,7 @@ private:
     k9DecodeThread *m_decoder;
     k9MemoryFifo m_fifo;
     bool m_stop;
-    QTime m_timer;
+    QElapsedTimer m_timer;
     uint m_cpt;
     QTemporaryFile *m_tempFile;
     uchar *m_buffer;

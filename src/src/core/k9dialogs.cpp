@@ -23,7 +23,6 @@
 #include "k9common.h"
 #include <QDebug>
 #include <QString>
-#include <KMessageBox>
 
 #include <QFontDialog>
 #include <QFileDialog>
@@ -93,7 +92,7 @@ void k9Dialogs::information(const QString &_message, const QString &_title) {
     QWidget *activeWindow=QApplication::activeWindow();
     if (activeWindow==0)
 	activeWindow=k9MainWidget;
-    QMessageBox message(QMessageBox::Information,_title, _message, 0, activeWindow);
+    QMessageBox message(QMessageBox::Information,_title, _message, QMessageBox::Ok, activeWindow);
     message.exec();
 
 }
@@ -109,11 +108,11 @@ int k9Dialogs::warningContinueCancel(const QString &  _message,const QString & _
     if (ret == QMessageBox::Ignore) // Continue is 5 in KDE land... this Ignore must be 5, and Cancel is 1
     {qDebug() << "Continue Clicked";
     qDebug() << ret;
-    return 5;}
+    return Continue;}
     else
     {qDebug() << "Cancel Clicked";
     qDebug() << ret;
-    return 2;}
+    return Cancel;}
 
 
 }

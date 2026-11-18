@@ -10,6 +10,8 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include <QElapsedTimer>
+#include <algorithm>
 #include "k9newdvd.h"
 #include "k9title.h"
 #include "k9tools.h"
@@ -462,7 +464,7 @@ void k9NewDVD::getStdout(k9Process *_process,char *_buffer, int _length) {
 void k9NewDVD::appendTitle(k9Title *_title) {
     m_config=new k9Config();
     m_titles.append(_title);
-    qSort(m_titles.begin(),m_titles.end(),k9NewDVDItems::compareItems);;
+    std::sort(m_titles.begin(),m_titles.end(),k9NewDVDItems::compareItems);;
     //create the menu button
     k9MenuButton *btn=m_rootMenu->addButton();
     _title->setButton(btn);

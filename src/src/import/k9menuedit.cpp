@@ -26,8 +26,8 @@
 
 #include <KIconLoader>
 #include <QFileDialog>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 #include <QGraphicsView>
 #include <QResizeEvent>
 #include <QFontDialog>
@@ -50,7 +50,7 @@ k9MenuEdit::k9MenuEdit(QWidget* parent, const char* ,k9MenuScene *scene)
     Ui_menuEdit.setupUi(this);
     QGridLayout *gridLayout = new QGridLayout(Ui_menuEdit.widget);
     gridLayout->setSpacing(6);
-    gridLayout->setMargin(0);
+    gridLayout->setContentsMargins(0,0,0,0);
     m_graphicsView = new k9GraphicsView(Ui_menuEdit.widget);
     gridLayout->addWidget(m_graphicsView, 0, 0, 1, 1);
      KGuiItem::assign(Ui_menuEdit.bAddText, KStandardGuiItem::add() );

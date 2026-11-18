@@ -287,7 +287,7 @@ void k9Cell::addNewVobus(char *_buffer,uint32_t _len,uint32_t _position,int _vob
             vobu->vobNum=_vobNum;
             vobu->vobPos=_vobPos;
             //QString c;
-            //c.sprintf("vobu : %d  old: %d  new :%d",numVobu-1,vobu->oldSector,vobu->newSector);
+            //c = QString::asprintf("vobu : %d  old: %d  new :%d",numVobu-1,vobu->oldSector,vobu->newSector);
             //qDebug (c.latin1());
 
         } else {

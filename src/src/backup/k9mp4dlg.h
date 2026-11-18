@@ -12,6 +12,7 @@
 
 #ifndef K9MP4DLG_H
 #define K9MP4DLG_H
+#include <QElapsedTimer>
 #include "k9common.h"
 #include "ui_mp4dlg.h"
 #include <QTimer>
@@ -41,7 +42,7 @@ signals:
   void sigCancel();
 private:
     k9DrawImage *m_wimage;
-    QTime m_timer;
+    QElapsedTimer m_timer;
     QTimer m_timerUpdate;
     Ui::MP4Dlg Ui_MP4Dlg;
 

@@ -17,6 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#include <algorithm>
 #include "k9cellcopylist.h"
 #include "k9dvdtitle.h"
 #include "k9ifo2.h"
@@ -158,7 +159,7 @@ void k9CellCopyList::setVTS(uint _numVTS,uint32_t _size) {
 }
 
 void k9CellCopyList::sortVTSList() {
-    qSort(VTSList.begin(),VTSList.end(),k9CellVTSList::compareItems);
+    std::sort(VTSList.begin(),VTSList.end(),k9CellVTSList::compareItems);
 }
 
 

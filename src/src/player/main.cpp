@@ -25,7 +25,7 @@
 #include "k9copy.h"
 #include "k9play.h"
 #include <kaboutdata.h>
-#include <KLocalizedString>
+#include "k9i18n.h"
 
 
 #include <QDBusAbstractAdaptor>

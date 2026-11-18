@@ -28,17 +28,17 @@
 #include <qlabel.h>
 
 // Qt 5 Code
-#include <kstandardguiitem.h>
+#include "k9guiitem.h"
 #include <qpushbutton.h>
-#include <kguiitem.h>
+#include "k9guiitem.h"
 
 #include <qlabel.h>
 #include <qpainter.h>
 #include <qlayout.h>
 #include "k9drawimage.h"
 #include <qdialog.h>
-#include <KGuiItem>
-#include <KStandardGuiItem>
+#include "k9guiitem.h"
+#include "k9guiitem.h"
 
 k9BackupDlg::k9BackupDlg(QWidget* parent)
         : QDialog(parent),k9InternalPlayer() {

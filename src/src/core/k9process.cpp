@@ -27,7 +27,7 @@ k9Process::k9Process(QObject *parent, const char *)
    connect(this,SIGNAL(readyReadStandardOutput ()),this,SLOT(slotReadyReadStandardOutput ()));
    connect(this,SIGNAL(finished ( int , QProcess::ExitStatus )),this,SLOT(slotFinished(int, QProcess::ExitStatus)));
    connect(this,SIGNAL(started()),this,SLOT(slotStarted()));
-   connect(this,SIGNAL(error(QProcess::ProcessError)),this,SLOT(slotError(QProcess::ProcessError)));
+   connect(this,SIGNAL(errorOccurred(QProcess::ProcessError)),this,SLOT(slotError(QProcess::ProcessError)));
    m_shellCmd=false;
    m_debugOutput=false;
 }

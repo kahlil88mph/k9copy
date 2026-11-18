@@ -21,7 +21,6 @@
 
 #include "k9burndvd.h"
 #include "k9play.h"
-#include <KMessageBox>
 
 #include "k9mp4enc.h"
 #include <QFileInfo>
@@ -53,7 +52,7 @@ void k9ExecCopy::copyDVD() {
     bool burn=false;
     int cancel;
 
-        cancel=KMessageBox::Cancel;
+        cancel=k9Dialogs::Cancel;
 
 
     if (m_output==oISO) {
